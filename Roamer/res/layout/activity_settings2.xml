@@ -1,0 +1,191 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/DarkGrey"
+    tools:context=".SettingsActivity2" >
+
+    <ImageView
+        android:id="@+id/imageChildImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:background="@color/transparent"
+        android:src="@drawable/createaccount_bottom_image" />
+
+    <ImageView
+        android:id="@+id/backFromEvents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:scaleType="center"
+        android:src="@drawable/gray_gradient" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/backFromEvents"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:scaleType="center"
+        android:src="@drawable/red_gradient" />
+
+    <TextView
+        android:id="@+id/currentEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="9dp"
+        android:text="Edit your tag!"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_alignTop="@+id/textRecentDate"
+        android:layout_toRightOf="@+id/textRecentDate"
+        android:src="@drawable/red_star_red" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/roamer" />
+
+    <TextView
+        android:id="@+id/locationSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/finishProfile"
+        android:layout_alignTop="@+id/mapImage"
+        android:layout_below="@id/imageView5"
+        android:text="Select your industry"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageButton
+        android:id="@+id/backProfile2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mapImage"
+        android:layout_alignTop="@+id/imageView2"
+        android:background="@color/transparent"
+        android:src="@drawable/back" />
+
+    <Spinner
+        android:id="@+id/spinnerIndustryProf"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/locationSpinner"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/locationSpinner"
+        android:background="@drawable/field_entry" />
+
+    <Spinner
+        android:id="@+id/spinnerJobProf"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/textRecentDate"
+        android:layout_below="@+id/textRecentDate"
+        android:background="@drawable/field_entry" />
+
+    <Spinner
+        android:id="@+id/spinnerAirlineProf"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_below="@+id/textView3"
+        android:background="@drawable/field_entry" />
+
+    <TextView
+        android:id="@+id/textEventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinnerAirlineProf"
+        android:layout_below="@+id/spinnerAirlineProf"
+        android:layout_marginTop="14dp"
+        android:text="Preferred Hotel (opt)"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageButton
+        android:id="@+id/finishProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageChildImage"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/transparent"
+        android:src="@drawable/next" />
+
+    <ImageView
+        android:id="@+id/backFromProfile"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_alignTop="@+id/locationSpinner"
+        android:layout_toRightOf="@+id/textEventDate"
+        android:src="@drawable/red_star_red" />
+
+    <Spinner
+        android:id="@+id/spinnerHotelProf"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/textEventDate"
+        android:layout_below="@+id/textEventDate"
+        android:background="@drawable/field_entry" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinnerJobProf"
+        android:layout_below="@+id/spinnerJobProf"
+        android:layout_marginTop="16dp"
+        android:text="Preferred Airline (opt)"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageView
+        android:id="@+id/mapImage"
+        android:layout_width="125dp"
+        android:layout_height="130dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageView5"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="25dp"
+        android:background="@color/DarkWhite"
+        android:scaleType="fitCenter"
+        android:src="@drawable/default_userpic" />
+
+    <TextView
+        android:id="@+id/textRecentDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinnerIndustryProf"
+        android:layout_below="@+id/spinnerIndustryProf"
+        android:layout_marginTop="14dp"
+        android:text="Select your job"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageButton
+        android:id="@+id/findPicturePros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mapImage"
+        android:layout_alignTop="@+id/textEventDate"
+        android:background="@color/transparent"
+        android:src="@drawable/select_image" />
+
+</RelativeLayout>

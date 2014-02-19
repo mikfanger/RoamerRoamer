@@ -1,0 +1,108 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/DarkGrey"
+    android:orientation="vertical"
+    tools:context=".SendMessage" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/imageChildImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:scaleType="center"
+            android:src="@drawable/gray_gradient" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageChildImage"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:scaleType="center"
+            android:src="@drawable/red_gradient" />
+
+        <ImageView
+            android:id="@+id/roamerCreateTag"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/roamer" />
+
+        <ImageButton
+            android:id="@+id/inboxBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/roamerCreateTag"
+            android:layout_marginLeft="17dp"
+            android:background="@color/transparent"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/textRecentDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageChildImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="3dp"
+            android:text="Find roamers near you!"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/DarkWhite" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="wrap_content"
+        android:layout_height="348dp"
+        android:cacheColorHint="@color/DarkWhite"
+        tools:listitem="@android:layout/simple_expandable_list_item_1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginBottom="100dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/backFromEvents"
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/gray_gradient" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="50dp"
+            android:src="@drawable/next" />
+
+        <TextView
+            android:id="@+id/textChildDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView3"
+            android:layout_marginRight="39dp"
+            android:layout_toLeftOf="@+id/imageView3"
+            android:text="Send Message"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </RelativeLayout>
+
+</LinearLayout>

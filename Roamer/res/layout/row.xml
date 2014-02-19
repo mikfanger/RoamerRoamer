@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="100dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/btn_black"
+    android:padding="10dp"
+    android:paddingLeft="10dp" >
+
+    <TextView
+        android:id="@+id/textEventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView3"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_marginLeft="19dp"
+        android:layout_toRightOf="@+id/textView3"
+        android:text="2/15/14"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textViewLocation"
+        android:layout_width="100dp"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/textViewAttend"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textViewAttend"
+        android:gravity="center_vertical"
+        android:textColor="@color/Red" />
+
+    <TextView
+        android:id="@+id/textViewHost"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageHostPicture"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="37dp"
+        android:layout_toLeftOf="@+id/textView4"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/Red"
+        android:textColorHint="@color/DarkWhite" />
+
+    <ImageView
+        android:id="@+id/imageHostPicture"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/textView4"
+        android:layout_toLeftOf="@+id/textViewHost"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textViewLocation"
+        android:layout_alignLeft="@+id/textViewLocation"
+        android:text="at"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkGrey"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textEventType"
+        android:layout_width="97dp"
+        android:layout_height="20dp"
+        android:layout_alignBaseline="@+id/textViewHost"
+        android:layout_alignBottom="@+id/textViewHost"
+        android:layout_alignLeft="@+id/textView4"
+        android:textColor="@color/Red" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_alignBaseline="@+id/textViewAttend"
+        android:layout_alignBottom="@+id/textViewAttend"
+        android:layout_alignLeft="@+id/imageHostPicture"
+        android:text="Date"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkGrey" />
+
+    <TextView
+        android:id="@+id/textAttendScript"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageHostPicture"
+        android:layout_below="@+id/imageHostPicture"
+        android:text="Goin so far: "
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkGrey"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textViewAttend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="8"
+        android:visibility="invisible"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/Grey"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textAttendNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textEventDate"
+        android:layout_alignRight="@+id/textEventDate"
+        android:text="8"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="italic" />
+
+</RelativeLayout>

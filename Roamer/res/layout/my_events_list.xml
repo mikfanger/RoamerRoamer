@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/DarkGrey"
+    android:orientation="vertical"
+    tools:context=".ProfileListActivity" >
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:cacheColorHint="@color/DarkWhite"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
+        android:paddingLeft="30dp"
+        tools:listitem="@android:layout/simple_expandable_list_item_1" />
+
+</LinearLayout>

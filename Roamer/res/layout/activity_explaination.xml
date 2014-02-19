@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/plane_bg"
+    tools:context=".ExplainationActivity" >
+
+    <TextView
+        android:id="@+id/textUsername"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textStepTwo"
+        android:layout_below="@+id/textStepTwo"
+        android:layout_marginTop="28dp"
+        android:text="The reality is that we are all Roamers, it&apos;s about time that we meet."
+        android:textColor="@color/DarkWhite" />
+
+    <ImageView
+        android:id="@+id/imageChildImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:scaleType="center"
+        android:src="@drawable/gray_gradient" />
+
+    <TextView
+        android:id="@+id/textStepTwo"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageChildImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="Roamer is designed to connect like-minded travelers.  Whether in the air or on the road, life moves quickly.  As Roamers, work can quickly consume our entire day."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/roamer" />
+
+    <ImageButton
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@color/transparent"
+        android:src="@drawable/create_account" />
+
+</RelativeLayout>

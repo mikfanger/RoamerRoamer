@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/generalnotitle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/DarkGrey" >
+
+    <ImageView
+        android:id="@+id/imageChildImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/createaccount_bottom_image" />
+
+    <CheckBox
+        android:id="@+id/agreeCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageChildImage"
+        android:layout_alignParentLeft="true"
+        android:text="I agree to"
+        android:textColor="@color/DarkWhite"
+        android:textSize="14sp" />
+
+    <CheckBox
+        android:id="@+id/checkMale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/submitInfo"
+        android:layout_alignParentLeft="true"
+        android:text="Male"
+        android:textColor="@color/DarkWhite"
+        android:textSize="14sp" />
+
+    <ImageButton
+        android:id="@+id/submitInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/agreeCheck"
+        android:layout_marginRight="17dp"
+        android:background="@color/transparent"
+        android:contentDescription="@string/continue_button"
+        android:minHeight="55dp"
+        android:src="@drawable/next"
+        android:text="Continue"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/mapImage"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_alignTop="@+id/textEmailAddress"
+        android:layout_toRightOf="@+id/textEmailAddress"
+        android:scaleType="fitCenter"
+        android:src="@drawable/red_star_red" />
+
+    <ImageView
+        android:id="@+id/tag"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_alignTop="@+id/textUsername"
+        android:layout_toRightOf="@+id/textUsername"
+        android:scaleType="fitCenter"
+        android:src="@drawable/red_star_red" />
+
+    <ImageView
+        android:id="@+id/backFromEvents"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_alignLeft="@+id/tag"
+        android:layout_alignTop="@+id/textPassword"
+        android:src="@drawable/red_star_red" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_alignTop="@+id/textConfirmPassword"
+        android:layout_toRightOf="@+id/textConfirmPassword"
+        android:src="@drawable/red_star_red" />
+
+    <CheckBox
+        android:id="@+id/checkFemale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/checkMale"
+        android:layout_alignBottom="@+id/checkMale"
+        android:layout_toRightOf="@+id/mapImage"
+        android:text="Female"
+        android:textColor="@color/DarkWhite"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textStepTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/submitInfo"
+        android:layout_alignTop="@+id/tag"
+        android:text="Step 1 of 3"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite"
+        android:typeface="normal" />
+
+    <EditText
+        android:id="@+id/newUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/newEmail"
+        android:layout_alignRight="@+id/textWhereFrom"
+        android:layout_below="@id/textUsername"
+        android:background="@drawable/field_entry"
+        android:ems="10" />
+
+    <EditText
+        android:id="@+id/newEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/textPassword"
+        android:layout_alignRight="@+id/textWhereFrom"
+        android:layout_below="@id/textEmailAddress"
+        android:background="@drawable/field_entry"
+        android:ems="10"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/newPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/textPassword"
+        android:layout_alignRight="@+id/newEmail"
+        android:layout_below="@id/textPassword"
+        android:background="@drawable/field_entry"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/textConfirmPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newPassword"
+        android:layout_below="@id/newPassword"
+        android:text="Confirm Password"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newEmail"
+        android:layout_toLeftOf="@+id/backFromEvents"
+        android:text="Password"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textEmailAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/agreeCheck"
+        android:layout_below="@id/newUsername"
+        android:text="Email Address"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textEmailAddress"
+        android:layout_below="@+id/roamerCreateTag"
+        android:layout_marginTop="75dp"
+        android:text="Username"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textWhereFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/agreeCheck"
+        android:layout_alignBottom="@+id/agreeCheck"
+        android:layout_toRightOf="@+id/mapImage"
+        android:text="@string/txtCredits"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/Red" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:scaleType="center"
+        android:src="@drawable/gray_gradient" />
+
+    <ImageView
+        android:id="@+id/roamerCreateTag"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/roamer" />
+
+    <ImageView
+        android:id="@+id/imageRedView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageView2"
+        android:adjustViewBounds="true"
+        android:scaleType="center"
+        android:src="@drawable/red_gradient" />
+
+    <TextView
+        android:id="@+id/locationSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageRedView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="9dp"
+        android:text="Create your tag and check in!"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <EditText
+        android:id="@+id/newConfirmPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/textConfirmPassword"
+        android:layout_alignRight="@+id/newPassword"
+        android:layout_below="@id/textConfirmPassword"
+        android:background="@drawable/field_entry"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+</RelativeLayout>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/DarkGrey" >
+
+    <ImageView
+        android:id="@+id/imageChildImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/transparent"
+        android:adjustViewBounds="true"
+        android:src="@drawable/createaccount_bottom_image" />
+
+    <TextView
+        android:id="@+id/textStepTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/mapImage"
+        android:layout_alignRight="@+id/submitInfo2"
+        android:layout_marginBottom="22dp"
+        android:text="Step 2 of 3"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite"
+        android:typeface="normal" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/gray_gradient" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/red_gradient" />
+
+    <ImageButton
+        android:id="@+id/backButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textWhereFrom"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:background="@color/transparent"
+        android:src="@drawable/back" />
+
+    <ImageButton
+        android:id="@+id/submitInfo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageChildImage"
+        android:layout_marginBottom="14dp"
+        android:layout_toRightOf="@+id/backFromEvents"
+        android:background="@color/transparent"
+        android:src="@drawable/next" />
+
+    <TextView
+        android:id="@+id/locationSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
+        android:text="Create your tag and check in!"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageView
+        android:id="@+id/backFromEvents"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignTop="@+id/backButton2"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/roamer" />
+
+    <Spinner
+        android:id="@+id/spinnerRegion"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/backButton2"
+        android:layout_alignRight="@+id/textWhereFrom"
+        android:layout_below="@+id/imageView5"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/field_entry" />
+
+    <TextView
+        android:id="@+id/textWhereFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageView5"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="16dp"
+        android:text="Where are you from?"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageView
+        android:id="@+id/mapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/submitInfo2"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/spinnerRegion"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/regionsmap" />
+
+</RelativeLayout>

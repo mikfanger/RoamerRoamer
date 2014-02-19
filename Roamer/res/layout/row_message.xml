@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="2dp"
+    android:gravity="center_vertical"
+    android:minHeight="64dp" >
+
+    <ImageView
+        android:id="@+id/imageViewRowBackground"
+        android:layout_width="300dp"
+        android:layout_height="66dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_black" />
+        
+    <ImageView
+        android:id="@+id/imageInboxPicture"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="15dp"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/textInboxName"
+        android:layout_width="97dp"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/imageInboxPicture"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/imageViewRowBackground"
+        android:layout_marginLeft="66dp"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageInboxPicture"
+        android:layout_below="@+id/imageInboxPicture"
+        android:text="Most recent on:"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textRecentDate"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:text="12/1/13"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite"
+        android:textStyle="italic" />
+
+</RelativeLayout>

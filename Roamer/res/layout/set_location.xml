@@ -1,0 +1,62 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/terminal_landscape"
+    android:contentDescription="@string/credit_tag"
+    tools:context=".MyRoamersActivity" >
+
+    <RelativeLayout
+        android:layout_width="468dp"
+        android:layout_height="60dp"
+        android:layout_x="32dp"
+        android:layout_y="0dp"
+        android:background="@color/black" >
+
+        <Button
+            android:id="@+id/getMyRoamersButton"
+            android:layout_width="150dp"
+            android:layout_height="33dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/btn_blue"
+            android:minHeight="55dp"
+            android:minWidth="85dp"
+            android:text="Refresh Location"
+            android:textSize="12sp" />
+
+        <CheckBox
+            android:id="@+id/gpsLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="90dp"
+            android:text="Set location with GPS"
+            android:textColor="@color/tan" />
+
+        <CheckBox
+            android:id="@+id/zipLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/gpsLocation"
+            android:layout_alignParentBottom="true"
+            android:text="Use custom zip code:"
+            android:textColor="@color/tan" />
+
+        <EditText
+            android:id="@+id/customZip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/zipLocation"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+
+    </RelativeLayout>
+
+</AbsoluteLayout>

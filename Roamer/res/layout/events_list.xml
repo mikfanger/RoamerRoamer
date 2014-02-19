@@ -1,0 +1,84 @@
+<graphics.FlyOutContainer xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+   
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:background="@color/NewBlack"
+        android:orientation="vertical" >
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_black"
+            android:onClick="toggleMenu"
+            android:padding="2dp"
+            android:text="Date"
+            android:textColor="@color/DarkWhite"
+            android:textSize="20sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_black"
+            android:onClick="toggleMenu"
+            android:padding="2dp"
+            android:text="Type"
+            android:textColor="@color/DarkWhite"
+            android:textSize="20sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_black"
+            android:onClick="toggleMenu"
+            android:padding="2dp"
+            android:text="Location"
+            android:textColor="@color/DarkWhite"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+    
+<LinearLayout 
+   
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/DarkGrey"
+    android:orientation="vertical"
+    tools:context=".ProfileListActivity" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ListView
+            android:id="@+id/listViewEvents"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@color/DarkWhite"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp"
+            android:paddingLeft="40dp"
+            tools:listitem="@android:layout/simple_expandable_list_item_1" >
+
+        </ListView>
+
+        <ImageButton
+            android:id="@+id/sortButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@color/transparent"
+            android:onClick="toggleMenu"
+            android:src="@drawable/sort" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+
+
+</graphics.FlyOutContainer>
