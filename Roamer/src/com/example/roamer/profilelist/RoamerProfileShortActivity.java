@@ -1,12 +1,14 @@
 package com.example.roamer.profilelist;
 
 import com.example.roamer.R;
-import com.example.roamer.R.layout;
-import com.example.roamer.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 public class RoamerProfileShortActivity extends Activity {
 
@@ -14,6 +16,17 @@ public class RoamerProfileShortActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_roamer_profile_short);
+		
+		 ImageButton backButton = (ImageButton) findViewById(R.id.imageOutOfProfile);
+	        backButton.setOnClickListener(new OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	            	
+	            	Intent i=new Intent(RoamerProfileShortActivity.this,ProfileListActivity.class);
+	                startActivity(i);
+	            		  
+	            }
+	        });
 	}
 
 	@Override

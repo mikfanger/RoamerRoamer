@@ -156,8 +156,9 @@ public class ProfileListActivity extends Activity {
 	                int position, long id) {
 	            	
 	              // When clicked, show a dialog with event information
-	            	
-	            	
+	            	Intent i=new Intent(ProfileListActivity.this,RoamerProfileShortActivity.class);
+	                startActivity(i);
+	            	/*
 	            	final Dialog dialog = new Dialog(context);
 	            	
 	    			dialog.setContentView(R.layout.activity_roamer_profile_short);
@@ -179,13 +180,15 @@ public class ProfileListActivity extends Activity {
 	    					addToMyRoamers(newIcon, newName, newLocation);
 	    					dialog.dismiss();
 	    				}
+	    				
 	    			});
-
+			*/
 	            }
-
+		
 	            public void onNothingSelected(AdapterView<?> parent){
 				}
 	          });
+		
     }
     
     public void addToMyRoamers(String icon, String name, String location){

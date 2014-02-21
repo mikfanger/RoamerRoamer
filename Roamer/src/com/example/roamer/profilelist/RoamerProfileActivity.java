@@ -1,10 +1,14 @@
-package com.example.roamer;
+package com.example.roamer.profilelist;
 
+import com.example.roamer.R;
+import com.example.roamer.R.layout;
+import com.example.roamer.R.menu;
 import com.example.roamer.events.Model;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,8 +23,18 @@ public class RoamerProfileActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_roamer_profile_short);
+		setContentView(R.layout.activity_roamer_profile);
 		
+		 ImageButton backButton = (ImageButton) findViewById(R.id.imageOutOfProfile);
+	        backButton.setOnClickListener(new OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	            	
+	            	Intent i=new Intent(RoamerProfileActivity.this,MyRoamersListActivity.class);
+	                startActivity(i);
+	            		  
+	            }
+	        });
 
 	}
 

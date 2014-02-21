@@ -8,7 +8,6 @@ public class Model {
 	
     public static ArrayList<Item> Items;
     public static ArrayList<Item> allItems;
-    public static final String fields[] = {DatabaseSetup.colName};
 
     public static void LoadModel(String location) {
 

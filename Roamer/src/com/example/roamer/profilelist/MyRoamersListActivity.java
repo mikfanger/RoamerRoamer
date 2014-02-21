@@ -61,16 +61,19 @@ public class MyRoamersListActivity extends Activity {
 	              // When clicked, show a dialog with event information
 	            	
 	            	
-	            	final Dialog dialog = new Dialog(context);
+	            	//final Dialog dialog = new Dialog(context);
 	            	
-	    			dialog.setContentView(R.layout.activity_roamer_profile_short);
-	    			dialog.setTitle("Roamer Profile");
+	    			//dialog.setContentView(R.layout.activity_roamer_profile_short);
+	    			//dialog.setTitle("Roamer Profile");
 	    			
 	            
-	    			dialog.show();
+	    			//dialog.show();
+	            	
+	            	Intent i=new Intent(MyRoamersListActivity.this,RoamerProfileActivity.class);
+	                startActivity(i);
 	    			
-	    			ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageAddRoamer);
-	    			dialogButton.setVisibility(View.INVISIBLE);
+	    			//ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageAddRoamer);
+	    			//dialogButton.setVisibility(View.INVISIBLE);
 	    			/*
 	    			// if button is clicked, close the custom dialog
 	    			dialogButton.setOnClickListener(new OnClickListener() {

@@ -182,7 +182,7 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.RoamerProfileActivity"
+            android:name="com.example.roamer.profilelist.RoamerProfileActivity"
             android:label="@string/title_activity_roamer_profile"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
@@ -216,7 +216,8 @@
 
         <activity
             android:name="com.example.roamer.profilelist.RoamerProfileShortActivity"
-            android:label="@string/title_activity_roamer_profile_short" >
+            android:label="@string/title_activity_roamer_profile_short"
+            android:theme="@android:style/Theme.NoTitleBar"  >
         </activity>
     </application>
 

@@ -5,15 +5,6 @@
     android:background="@color/DarkGrey"
     tools:context=".RoamerProfileShortActivity" >
 
-    <TextView
-        android:id="@+id/textProfileJob"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/imageProfilePicture"
-        android:layout_centerVertical="true"
-        android:text="Job"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
@@ -22,15 +13,6 @@
         android:layout_centerHorizontal="true"
         android:scaleType="center"
         android:src="@drawable/gray_gradient" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_alignLeft="@+id/imageAddRoamer"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/roamer" />
 
     <ImageButton
         android:id="@+id/imageButton1"
@@ -72,26 +54,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textStyle="italic" />
 
-    <TextView
-        android:id="@+id/textProfileIndustry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textProfileJob"
-        android:layout_below="@+id/textProfileJob"
-        android:layout_marginTop="49dp"
-        android:text="Industry"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textPofileLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textProfileIndustry"
-        android:layout_below="@+id/textProfileIndustry"
-        android:layout_marginTop="41dp"
-        android:text="Location"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <ImageButton
         android:id="@+id/imageAddRoamer"
         android:layout_width="wrap_content"
@@ -112,14 +74,141 @@
         android:text="Roaming Since"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/roamer" />
+
     <TextView
         android:id="@+id/textRoamerDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
-        android:layout_alignRight="@+id/imageView3"
+        android:layout_alignRight="@+id/imageAddRoamer"
         android:text="Date"
         android:textStyle="italic" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textProfileSex"
+        android:layout_alignRight="@+id/imageAddRoamer"
+        android:layout_below="@+id/textProfileSex"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/hr" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView4"
+        android:layout_below="@+id/imageView4"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/personal_info" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView5"
+        android:layout_alignRight="@+id/imageView4"
+        android:layout_below="@+id/imageView5"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/field_entry" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView6"
+        android:layout_alignRight="@+id/imageView6"
+        android:layout_below="@+id/imageView6"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/field_entry" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView7"
+        android:layout_below="@+id/imageView7"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/preferences" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView8"
+        android:layout_alignRight="@+id/imageView7"
+        android:layout_below="@+id/imageView8"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/field_entry" />
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView9"
+        android:layout_alignRight="@+id/imageView9"
+        android:layout_below="@+id/imageView9"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/field_entry" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView6"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/textProfileSex"
+        android:text="Job Position"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignTop="@+id/imageView7"
+        android:layout_marginTop="10dp"
+        android:text="Location"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView9"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/textProfileSex"
+        android:text="Hotel Preference"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignTop="@+id/imageView10"
+        android:layout_marginTop="10dp"
+        android:text="Airline Preference"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageButton
+        android:id="@+id/imageOutOfProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/textView2"
+        android:background="@color/transparent"
+        android:src="@drawable/x" />
 
 </RelativeLayout>
