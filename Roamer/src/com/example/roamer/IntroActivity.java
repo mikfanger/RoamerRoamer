@@ -33,6 +33,7 @@ public class IntroActivity extends Activity {
     	final String myCredTable = "MyCred";
     	final String myLocationTable = "MyLocation";
     	final String myEventsTable = "MyEvents";
+    	final String tempRoamer = "TempRoamer";
     	
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -44,6 +45,10 @@ public class IntroActivity extends Activity {
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
           + chatTable
           + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Field1 VARCHAR,Field2 INT(1));");
+        
+        myDB.execSQL("CREATE TABLE IF NOT EXISTS "
+                + tempRoamer
+                + " (rowid INT(2),Pic VARCHAR,Name VARCHAR, Loc VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myRoamersTable
@@ -62,6 +67,7 @@ public class IntroActivity extends Activity {
                 + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Type VARCHAR, Location VARCHAR, Time VARCHAR, Host VARCHAR, HostPic VARCHAR, Blurb VARCHAR, Attend VARCHAR);");
         
         myDB.delete(myCredTable, null, null);
+        myDB.delete(tempRoamer, null, null);
         
         
        myDB.close();

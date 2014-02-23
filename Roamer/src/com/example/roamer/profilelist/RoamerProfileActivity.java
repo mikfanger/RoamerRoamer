@@ -25,7 +25,7 @@ public class RoamerProfileActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_roamer_profile);
 		
-		 ImageButton backButton = (ImageButton) findViewById(R.id.imageOutOfProfile);
+		 ImageButton backButton = (ImageButton) findViewById(R.id.imageButtonOut);
 	        backButton.setOnClickListener(new OnClickListener() {
 	            @Override
 	            public void onClick(View v) {

@@ -16,10 +16,10 @@
  * Modify at your own risk.
  */
 
-package com.appenginephoneside.messageEndpoint.model;
+package com.example.messageEndpoint.model;
 
 /**
- * Model definition for CollectionResponseMessageData.
+ * Model definition for MessageData.
  *
  * <p> This is the Java data model class that specifies how to parse/serialize into the JSON that is
  * transmitted over HTTP when working with the messageEndpoint. For a detailed explanation see:
@@ -29,64 +29,79 @@ package com.appenginephoneside.messageEndpoint.model;
  * @author Google, Inc.
  */
 @SuppressWarnings("javadoc")
-public final class CollectionResponseMessageData extends com.google.api.client.json.GenericJson {
+public final class MessageData extends com.google.api.client.json.GenericJson {
 
   /**
    * The value may be {@code null}.
    */
   @com.google.api.client.util.Key
-  private java.util.List<MessageData> items;
-
-  static {
-    // hack to force ProGuard to consider MessageData used, since otherwise it would be stripped out
-    // see http://code.google.com/p/google-api-java-client/issues/detail?id=528
-    com.google.api.client.util.Data.nullOf(MessageData.class);
-  }
+  private Key key;
 
   /**
    * The value may be {@code null}.
    */
   @com.google.api.client.util.Key
-  private java.lang.String nextPageToken;
+  private java.lang.String message;
+
+  /**
+   * The value may be {@code null}.
+   */
+  @com.google.api.client.util.Key @com.google.api.client.json.JsonString
+  private java.lang.Long timestamp;
 
   /**
    * @return value or {@code null} for none
    */
-  public java.util.List<MessageData> getItems() {
-    return items;
+  public Key getKey() {
+    return key;
   }
 
   /**
-   * @param items items or {@code null} for none
+   * @param key key or {@code null} for none
    */
-  public CollectionResponseMessageData setItems(java.util.List<MessageData> items) {
-    this.items = items;
+  public MessageData setKey(Key key) {
+    this.key = key;
     return this;
   }
 
   /**
    * @return value or {@code null} for none
    */
-  public java.lang.String getNextPageToken() {
-    return nextPageToken;
+  public java.lang.String getMessage() {
+    return message;
   }
 
   /**
-   * @param nextPageToken nextPageToken or {@code null} for none
+   * @param message message or {@code null} for none
    */
-  public CollectionResponseMessageData setNextPageToken(java.lang.String nextPageToken) {
-    this.nextPageToken = nextPageToken;
+  public MessageData setMessage(java.lang.String message) {
+    this.message = message;
+    return this;
+  }
+
+  /**
+   * @return value or {@code null} for none
+   */
+  public java.lang.Long getTimestamp() {
+    return timestamp;
+  }
+
+  /**
+   * @param timestamp timestamp or {@code null} for none
+   */
+  public MessageData setTimestamp(java.lang.Long timestamp) {
+    this.timestamp = timestamp;
     return this;
   }
 
   @Override
-  public CollectionResponseMessageData set(String fieldName, Object value) {
-    return (CollectionResponseMessageData) super.set(fieldName, value);
+  public MessageData set(String fieldName, Object value) {
+    return (MessageData) super.set(fieldName, value);
   }
 
   @Override
-  public CollectionResponseMessageData clone() {
-    return (CollectionResponseMessageData) super.clone();
+  public MessageData clone() {
+    return (MessageData) super.clone();
   }
 
 }

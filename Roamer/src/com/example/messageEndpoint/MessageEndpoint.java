@@ -16,7 +16,7 @@
  * Modify at your own risk.
  */
 
-package com.appenginephoneside.messageEndpoint;
+package com.example.messageEndpoint;
 
 /**
  * Service definition for MessageEndpoint (v1).
@@ -131,7 +131,7 @@ public class MessageEndpoint extends com.google.api.client.googleapis.services.j
     return result;
   }
 
-  public class ListMessages extends MessageEndpointRequest<com.appenginephoneside.messageEndpoint.model.CollectionResponseMessageData> {
+  public class ListMessages extends MessageEndpointRequest<com.example.messageEndpoint.model.CollectionResponseMessageData> {
 
     private static final String REST_PATH = "messagedata";
 
@@ -147,7 +147,7 @@ public class MessageEndpoint extends com.google.api.client.googleapis.services.j
      * @since 1.13
      */
     protected ListMessages() {
-      super(MessageEndpoint.this, "GET", REST_PATH, null, com.appenginephoneside.messageEndpoint.model.CollectionResponseMessageData.class);
+      super(MessageEndpoint.this, "GET", REST_PATH, null, com.example.messageEndpoint.model.CollectionResponseMessageData.class);
     }
 
     @Override

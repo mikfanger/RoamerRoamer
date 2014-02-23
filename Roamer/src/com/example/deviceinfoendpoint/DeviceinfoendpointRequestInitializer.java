@@ -16,7 +16,7 @@
  * Modify at your own risk.
  */
 
-package com.appenginephoneside.deviceinfoendpoint;
+package com.example.deviceinfoendpoint;
 
 /**
  * Deviceinfoendpoint request initializer for setting properties like key and userIp.

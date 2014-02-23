@@ -16,7 +16,7 @@
  * Modify at your own risk.
  */
 
-package com.appenginephoneside.deviceinfoendpoint.model;
+package com.example.deviceinfoendpoint.model;
 
 /**
  * Model definition for CollectionResponseDeviceInfo.

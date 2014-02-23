@@ -16,7 +16,7 @@
  * Modify at your own risk.
  */
 
-package com.appenginephoneside.messageEndpoint;
+package com.example.messageEndpoint;
 
 /**
  * MessageEndpoint request initializer for setting properties like key and userIp.

@@ -202,7 +202,7 @@
         android:textColor="@color/DarkWhite" />
 
     <ImageButton
-        android:id="@+id/imageOutOfProfile"
+        android:id="@+id/imageButtonOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

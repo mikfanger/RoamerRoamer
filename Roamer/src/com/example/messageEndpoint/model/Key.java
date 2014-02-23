@@ -16,7 +16,7 @@
  * Modify at your own risk.
  */
 
-package com.appenginephoneside.messageEndpoint.model;
+package com.example.messageEndpoint.model;
 
 /**
  * Model definition for Key.

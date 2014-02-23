@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.example.deviceinfoendpoint.Deviceinfoendpoint;
+import com.example.deviceinfoendpoint.model.DeviceInfo;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -14,8 +16,6 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson.JacksonFactory;
 
-import com.appenginephoneside.deviceinfoendpoint.Deviceinfoendpoint;
-import com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo;
 
 /**
  * This class is started up as a service of the Android application. It listens

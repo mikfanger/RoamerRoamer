@@ -16,7 +16,7 @@
  * Modify at your own risk.
  */
 
-package com.appenginephoneside.deviceinfoendpoint;
+package com.example.deviceinfoendpoint;
 
 /**
  * Service definition for Deviceinfoendpoint (v1).
@@ -132,7 +132,7 @@ public class Deviceinfoendpoint extends com.google.api.client.googleapis.service
     return result;
   }
 
-  public class GetDeviceInfo extends DeviceinfoendpointRequest<com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo> {
+  public class GetDeviceInfo extends DeviceinfoendpointRequest<com.example.deviceinfoendpoint.model.DeviceInfo> {
 
     private static final String REST_PATH = "deviceinfo/{id}";
 
@@ -149,7 +149,7 @@ public class Deviceinfoendpoint extends com.google.api.client.googleapis.service
      * @since 1.13
      */
     protected GetDeviceInfo(java.lang.String id) {
-      super(Deviceinfoendpoint.this, "GET", REST_PATH, null, com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo.class);
+      super(Deviceinfoendpoint.this, "GET", REST_PATH, null, com.example.deviceinfoendpoint.model.DeviceInfo.class);
       this.id = com.google.api.client.util.Preconditions.checkNotNull(id, "Required parameter id must be specified.");
     }
 
@@ -226,16 +226,16 @@ public class Deviceinfoendpoint extends com.google.api.client.googleapis.service
    * optional parameters, call the {@link InsertDeviceInfo#execute()} method to invoke the remote
    * operation.
    *
-   * @param content the {@link com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo}
+   * @param content the {@link com.example.deviceinfoendpoint.model.DeviceInfo}
    * @return the request
    */
-  public InsertDeviceInfo insertDeviceInfo(com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo content) throws java.io.IOException {
+  public InsertDeviceInfo insertDeviceInfo(com.example.deviceinfoendpoint.model.DeviceInfo content) throws java.io.IOException {
     InsertDeviceInfo result = new InsertDeviceInfo(content);
     initialize(result);
     return result;
   }
 
-  public class InsertDeviceInfo extends DeviceinfoendpointRequest<com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo> {
+  public class InsertDeviceInfo extends DeviceinfoendpointRequest<com.example.deviceinfoendpoint.model.DeviceInfo> {
 
     private static final String REST_PATH = "deviceinfo";
 
@@ -248,11 +248,11 @@ public class Deviceinfoendpoint extends com.google.api.client.googleapis.service
      * ces.AbstractGoogleClientRequest)} must be called to initialize this instance immediately after
      * invoking the constructor. </p>
      *
-     * @param content the {@link com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo}
+     * @param content the {@link com.example.deviceinfoendpoint.model.DeviceInfo}
      * @since 1.13
      */
-    protected InsertDeviceInfo(com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo content) {
-      super(Deviceinfoendpoint.this, "POST", REST_PATH, content, com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo.class);
+    protected InsertDeviceInfo(com.example.deviceinfoendpoint.model.DeviceInfo content) {
+      super(Deviceinfoendpoint.this, "POST", REST_PATH, content, com.example.deviceinfoendpoint.model.DeviceInfo.class);
     }
 
     @Override
@@ -311,7 +311,7 @@ public class Deviceinfoendpoint extends com.google.api.client.googleapis.service
     return result;
   }
 
-  public class ListDeviceInfo extends DeviceinfoendpointRequest<com.appenginephoneside.deviceinfoendpoint.model.CollectionResponseDeviceInfo> {
+  public class ListDeviceInfo extends DeviceinfoendpointRequest<com.example.deviceinfoendpoint.model.CollectionResponseDeviceInfo> {
 
     private static final String REST_PATH = "deviceinfo";
 
@@ -327,7 +327,7 @@ public class Deviceinfoendpoint extends com.google.api.client.googleapis.service
      * @since 1.13
      */
     protected ListDeviceInfo() {
-      super(Deviceinfoendpoint.this, "GET", REST_PATH, null, com.appenginephoneside.deviceinfoendpoint.model.CollectionResponseDeviceInfo.class);
+      super(Deviceinfoendpoint.this, "GET", REST_PATH, null, com.example.deviceinfoendpoint.model.CollectionResponseDeviceInfo.class);
     }
 
     @Override
@@ -511,16 +511,16 @@ public class Deviceinfoendpoint extends com.google.api.client.googleapis.service
    * optional parameters, call the {@link UpdateDeviceInfo#execute()} method to invoke the remote
    * operation.
    *
-   * @param content the {@link com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo}
+   * @param content the {@link com.example.deviceinfoendpoint.model.DeviceInfo}
    * @return the request
    */
-  public UpdateDeviceInfo updateDeviceInfo(com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo content) throws java.io.IOException {
+  public UpdateDeviceInfo updateDeviceInfo(com.example.deviceinfoendpoint.model.DeviceInfo content) throws java.io.IOException {
     UpdateDeviceInfo result = new UpdateDeviceInfo(content);
     initialize(result);
     return result;
   }
 
-  public class UpdateDeviceInfo extends DeviceinfoendpointRequest<com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo> {
+  public class UpdateDeviceInfo extends DeviceinfoendpointRequest<com.example.deviceinfoendpoint.model.DeviceInfo> {
 
     private static final String REST_PATH = "deviceinfo";
 
@@ -533,11 +533,11 @@ public class Deviceinfoendpoint extends com.google.api.client.googleapis.service
      * ces.AbstractGoogleClientRequest)} must be called to initialize this instance immediately after
      * invoking the constructor. </p>
      *
-     * @param content the {@link com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo}
+     * @param content the {@link com.example.deviceinfoendpoint.model.DeviceInfo}
      * @since 1.13
      */
-    protected UpdateDeviceInfo(com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo content) {
-      super(Deviceinfoendpoint.this, "PUT", REST_PATH, content, com.appenginephoneside.deviceinfoendpoint.model.DeviceInfo.class);
+    protected UpdateDeviceInfo(com.example.deviceinfoendpoint.model.DeviceInfo content) {
+      super(Deviceinfoendpoint.this, "PUT", REST_PATH, content, com.example.deviceinfoendpoint.model.DeviceInfo.class);
     }
 
     @Override

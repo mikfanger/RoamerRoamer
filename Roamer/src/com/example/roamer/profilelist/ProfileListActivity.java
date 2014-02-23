@@ -158,31 +158,12 @@ public class ProfileListActivity extends Activity {
 	              // When clicked, show a dialog with event information
 	            	Intent i=new Intent(ProfileListActivity.this,RoamerProfileShortActivity.class);
 	                startActivity(i);
-	            	/*
-	            	final Dialog dialog = new Dialog(context);
 	            	
-	    			dialog.setContentView(R.layout.activity_roamer_profile_short);
-	    			dialog.setTitle("Roamer Profile");
 	    			newIcon = Model.GetbyId(position+1).IconFile;
   	                newName = Model.GetbyId(position+1).Name;
   	                newLocation = Model.GetbyId(position+1).Location;
-	            
-	    			dialog.show();
-	    			
-	    			ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageAddRoamer);
-	    			// if button is clicked, close the custom dialog
-	    			dialogButton.setOnClickListener(new OnClickListener() {
-	    				
-	    				  
-	    	                 
-	    				@Override
-	    				public void onClick(View v) {
-	    					addToMyRoamers(newIcon, newName, newLocation);
-	    					dialog.dismiss();
-	    				}
-	    				
-	    			});
-			*/
+  	                addTempRoamer(newIcon,newName,newLocation);
+  	                
 	            }
 		
 	            public void onNothingSelected(AdapterView<?> parent){
@@ -191,14 +172,15 @@ public class ProfileListActivity extends Activity {
 		
     }
     
-    public void addToMyRoamers(String icon, String name, String location){
+    public void addTempRoamer(String icon, String name, String location){
    	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
    	 
    	myDB.execSQL("INSERT INTO "
-			       + "MyRoamers "
-			       + "(Pic,Name,Loc) "
-			       + "VALUES ('"+icon+"','"+name+"','"+location+"');");
+			       + "TempRoamer "
+			       + "(rowid,Pic,Name,Loc) "
+			       + "VALUES ("+01+",'"+icon+"','"+name+"','"+location+"');");
    	
+   	/*
    	//Update count of events in Credentials
    	ContentValues args = new ContentValues();
    	Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
@@ -206,7 +188,7 @@ public class ProfileListActivity extends Activity {
    	int index = c.getColumnIndex("CountR");
    	args.put("CountR",c.getInt(index)+1);
    	myDB.update("MyCred", args, "rowid"+"="+1, null);
-   	
+   	*/
    	myDB.close();
    }
 }
