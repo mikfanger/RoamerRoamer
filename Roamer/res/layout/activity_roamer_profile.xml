@@ -1,0 +1,214 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/DarkGrey"
+    tools:context=".RoamerProfileActivity" >
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:scaleType="center"
+        android:src="@drawable/gray_gradient" />
+
+    <ImageButton
+        android:id="@+id/imageButtonPostEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView3"
+        android:layout_toLeftOf="@+id/imageProfilePicture"
+        android:background="@color/transparent"
+        android:src="@drawable/back" />
+
+    <ImageView
+        android:id="@+id/imageProfilePicture"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageView2"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/default_userpic" />
+
+    <TextView
+        android:id="@+id/textProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageProfilePicture"
+        android:layout_below="@+id/imageProfilePicture"
+        android:layout_marginTop="5dp"
+        android:text="Name"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textProfileSex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textProfileName"
+        android:layout_below="@+id/textProfileName"
+        android:text="Sex"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="italic" />
+
+    <ImageButton
+        android:id="@+id/imageAddRoamer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textProfileSex"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="18dp"
+        android:background="@color/transparent"
+        android:src="@drawable/add" />
+
+    <TextView
+        android:id="@+id/textCreateType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageProfilePicture"
+        android:layout_alignLeft="@+id/imageAddRoamer"
+        android:layout_marginBottom="14dp"
+        android:text="Roaming Since"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/roamer" />
+
+    <TextView
+        android:id="@+id/textRoamerDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textCreateType"
+        android:layout_alignBottom="@+id/textCreateType"
+        android:layout_alignRight="@+id/imageAddRoamer"
+        android:text="Date"
+        android:textStyle="italic" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textProfileSex"
+        android:layout_alignRight="@+id/imageAddRoamer"
+        android:layout_below="@+id/textProfileSex"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/hr" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView4"
+        android:layout_below="@+id/imageView4"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/personal_info" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView5"
+        android:layout_alignRight="@+id/imageView4"
+        android:layout_below="@+id/imageView5"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/field_entry" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView6"
+        android:layout_alignRight="@+id/imageView6"
+        android:layout_below="@+id/imageView6"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/field_entry" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView7"
+        android:layout_below="@+id/imageView7"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/preferences" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView8"
+        android:layout_alignRight="@+id/imageView7"
+        android:layout_below="@+id/imageView8"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/field_entry" />
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView9"
+        android:layout_alignRight="@+id/imageView9"
+        android:layout_below="@+id/imageView9"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/field_entry" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView6"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/textProfileSex"
+        android:text="Job Position"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignTop="@+id/imageView7"
+        android:layout_marginTop="10dp"
+        android:text="Location"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView9"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/textProfileSex"
+        android:text="Hotel Preference"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignTop="@+id/imageView10"
+        android:layout_marginTop="10dp"
+        android:text="Airline Preference"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageButton
+        android:id="@+id/imageButtonOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageProfilePicture"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:background="@color/transparent"
+        android:src="@drawable/x" />
+
+</RelativeLayout>
