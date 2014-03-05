@@ -15,7 +15,7 @@
         android:src="@drawable/gray_gradient" />
 
     <ImageButton
-        android:id="@+id/imageButton1"
+        android:id="@+id/imageButtonPostEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView3"
@@ -65,7 +65,7 @@
         android:src="@drawable/add" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textCreateType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageProfilePicture"
@@ -87,8 +87,8 @@
         android:id="@+id/textRoamerDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignBaseline="@+id/textCreateType"
+        android:layout_alignBottom="@+id/textCreateType"
         android:layout_alignRight="@+id/imageAddRoamer"
         android:text="Date"
         android:textStyle="italic" />

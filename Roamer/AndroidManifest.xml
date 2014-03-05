@@ -18,11 +18,23 @@
     </uses-permission>
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" >
+    </uses-permission>
+    <permission
+        android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
     <uses-permission android:name="com.example.roamer.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -33,6 +45,9 @@
         android:icon="@drawable/logo_no_text"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <uses-library android:name="com.google.android.maps" />
+        
+      
         <activity
             android:name="com.example.roamer.IntroActivity"
             android:label="@string/app_name"
@@ -143,20 +158,6 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.events.AllEventsActivity"
-            android:label="@string/title_activity_all_events"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.example.roamer.MyEventsActivity"
-            android:label="@string/title_activity_my_events"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.example.roamer.TestScrollTabActivity"
-            android:label="@string/title_activity_test_scroll_tab" >
-        </activity>
-        <activity
             android:name="com.example.roamer.events.EventsActivity"
             android:label="@string/title_activity_events"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -219,6 +220,18 @@
             android:label="@string/title_activity_roamer_profile_short"
             android:theme="@android:style/Theme.NoTitleBar"  >
         </activity>
+        <activity
+            android:name="graphics.HelloGoogleMaps"
+            android:label="@string/title_profile_list_activity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDZNFK0C8VJhwvZsr9FStU_BwRVk1UxQ74" />
+        <meta-data
+    		android:name="com.google.android.gms.version"
+    		android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

@@ -78,16 +78,16 @@ public class LoginActivity extends Activity {
 		   //Add default credentials		   
 	        myDB.execSQL("INSERT INTO "
 				       + "MyCred "
-				       + "(Field1,Field2,CountM,CountR) "
-				       + "VALUES ('jon@roamer.com', 'roam',"+countEvents+","+countRoamers+" );");
+				       + "(Email,Password,Username,Pic,CountM,CountR) "
+				       + "VALUES ('jon@roamer.com', 'roam', 'mike_man', 'default_userpic.png',"+countEvents+","+countRoamers+" );");
 	        
 		   c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
 		   
 		   System.out.println("Count of cred is: "+c.getCount());
 		   c.moveToFirst();
 		   
-		   int Column1 = c.getColumnIndex("Field1");
-		   int Column2 = c.getColumnIndex("Field2");
+		   int Column1 = c.getColumnIndex("Email");
+		   int Column2 = c.getColumnIndex("Password");
 		   int Column3 = c.getColumnIndex("CountM");
 		   System.out.println("Count of CountM is: "+c.getCount());
 
@@ -324,7 +324,7 @@ public class LoginActivity extends Activity {
 		  Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
 		  c.moveToFirst();
 
-		 int Column1 = c.getColumnIndex("Field4");
+		 int Column1 = c.getColumnIndex("Save");
 		 credSave = c.getInt(Column1);
 		if(credSave == 1){
 			cred.setChecked(true);
@@ -334,7 +334,7 @@ public class LoginActivity extends Activity {
 			
 	        myDB.execSQL("INSERT INTO "
 				       + "MyCred "
-				       + "(Field4) "
+				       + "(Save) "
 				       + "VALUES ("+1+");");
 			
 			myDB.close();		
@@ -343,7 +343,7 @@ public class LoginActivity extends Activity {
 			
 	        myDB.execSQL("INSERT INTO "
 				       + "MyCred "
-				       + "(Field4) "
+				       + "(Save) "
 				       + "VALUES ("+0+");");
 			
 			myDB.close();
@@ -357,7 +357,7 @@ public class LoginActivity extends Activity {
 		  Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
 		  c.moveToFirst();
 
-		   int Column1 = c.getColumnIndex("Field4");
+		   int Column1 = c.getColumnIndex("Save");
 		   cred = c.getInt(Column1);
 		   
 		return cred;

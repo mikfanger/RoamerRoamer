@@ -60,11 +60,11 @@ public class IntroActivity extends Activity {
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myCredTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Field1 VARCHAR, Field2 VARCHAR, Field3 VARCHAR, Field4 INT(1), CountM INT(1), CountR INT(1));");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Save INT(1), CountM INT(1), CountR INT(1));");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myEventsTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Type VARCHAR, Location VARCHAR, Time VARCHAR, Host VARCHAR, HostPic VARCHAR, Blurb VARCHAR, Attend VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Type VARCHAR, Location VARCHAR, Time VARCHAR, Date VARCHAR, Host VARCHAR, HostPic VARCHAR, Blurb VARCHAR, Attend VARCHAR);");
         
         myDB.delete(myCredTable, null, null);
         myDB.delete(tempRoamer, null, null);

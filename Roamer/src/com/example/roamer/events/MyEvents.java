@@ -181,7 +181,7 @@ public class MyEvents extends Activity {
 		
 		 int C1 = c.getColumnIndex("Type");
 		 int C2 = c.getColumnIndex("Location");
-		 int C3 = c.getColumnIndex("Time");
+		 int C3 = c.getColumnIndex("Date");
 		 int C4 = c.getColumnIndex("Host");
 		 int C5 = c.getColumnIndex("HostPic");
 		 int C6 = c.getColumnIndex("Blurb");
@@ -198,7 +198,7 @@ public class MyEvents extends Activity {
 			
 			  C1 = c.getColumnIndex("Type");
 			  C2 = c.getColumnIndex("Location");
-			  C3 = c.getColumnIndex("Time");
+			  C3 = c.getColumnIndex("Date");
 			  C4 = c.getColumnIndex("Host");
 			  C5 = c.getColumnIndex("HostPic");
 			  C6 = c.getColumnIndex("Blurb");

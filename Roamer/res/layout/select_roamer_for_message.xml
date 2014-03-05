@@ -8,9 +8,9 @@
         android:id="@+id/spinnerSelectRoamer"
         android:layout_width="150dp"
         android:layout_height="40dp"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_below="@+id/textView1"
+        android:layout_alignLeft="@+id/textCreateType"
+        android:layout_alignRight="@+id/textCreateType"
+        android:layout_below="@+id/textCreateType"
         android:layout_marginTop="24dp"
         android:background="@drawable/black_greyh_9_patch"
         android:gravity="center"
@@ -29,7 +29,7 @@
         android:src="@drawable/post" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textCreateType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

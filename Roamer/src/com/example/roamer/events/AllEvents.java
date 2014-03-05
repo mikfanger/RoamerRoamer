@@ -151,7 +151,7 @@ public class AllEvents extends Activity {
     	 
     	myDB.execSQL("INSERT INTO "
 			       + "MyEvents "
-			       + "(Type,Location,Time,Host,HostPic,Blurb,Attend) "
+			       + "(Type,Location,Date,Host,HostPic,Blurb,Attend) "
 			       + "VALUES ('"+type+"','"+location+"','"+date+"','"+host+"','"+image+"','"+desc+"','"+attend+"');");
     	
     	//Update count of events in Credentials

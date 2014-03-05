@@ -104,12 +104,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView2"
         android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_toRightOf="@+id/textCreateType"
         android:background="@color/transparent"
         android:src="@drawable/selector_post_event" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textCreateType"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/roamerCreateTag"

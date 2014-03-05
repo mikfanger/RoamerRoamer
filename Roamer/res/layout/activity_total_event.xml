@@ -65,8 +65,8 @@
         android:id="@+id/imageChildImage"
         android:layout_width="50dp"
         android:layout_height="80dp"
-        android:layout_above="@+id/textView1"
-        android:layout_alignLeft="@+id/textView1"
+        android:layout_above="@+id/textCreateType"
+        android:layout_alignLeft="@+id/textCreateType"
         android:src="@drawable/chicago_cartoon" />
 
     <TextView
@@ -84,14 +84,14 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textChildDate"
         android:layout_alignBottom="@+id/textChildDate"
-        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignLeft="@+id/textCreateType"
         android:text="Date: "
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/black"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textCreateType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textChildHost"

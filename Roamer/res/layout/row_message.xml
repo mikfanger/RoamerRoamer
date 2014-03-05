@@ -36,7 +36,7 @@
         android:gravity="center_vertical" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textCreateType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/imageInboxPicture"
@@ -49,8 +49,8 @@
         android:id="@+id/textRecentDate"
         android:layout_width="65dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignBaseline="@+id/textCreateType"
+        android:layout_alignBottom="@+id/textCreateType"
         android:layout_centerHorizontal="true"
         android:text="12/1/13"
         android:textAppearance="?android:attr/textAppearanceSmall"
