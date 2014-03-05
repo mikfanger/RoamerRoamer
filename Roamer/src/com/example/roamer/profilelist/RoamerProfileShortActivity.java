@@ -22,12 +22,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RoamerProfileShortActivity extends Activity {
-
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_roamer_profile_short);
+		
+
 		
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		Cursor c = myDB.rawQuery("SELECT * FROM " + "TempRoamer" , null);
@@ -48,9 +49,11 @@ public class RoamerProfileShortActivity extends Activity {
 	   	System.out.println("Picture location is: "+picString);
 	   	nameView.setText(nameString);
 	   	locView.setText(locString);
-	    InputStream ims = null;
+
+	   	// get input stream
+        InputStream ims = null;
         try {
-            ims = this.getAssets().open(locString);
+            ims = this.getAssets().open(picString);
         } catch (IOException e) {
             e.printStackTrace();
         }

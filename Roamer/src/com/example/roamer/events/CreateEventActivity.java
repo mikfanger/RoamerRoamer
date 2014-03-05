@@ -214,7 +214,7 @@ public class CreateEventActivity extends Activity {
     	myDB.execSQL("INSERT INTO "
 			       + "MyEvents "
 			       + "(Type,Location,Time,Date,Host,HostPic,Blurb,Attend) "
-			       + "VALUES ('"+type+"','"+location+"','"+time1+"','"+date+"','"+host+"','"+image+"','"+desc+"','"+"1"+"');");
+			       + "VALUES ('"+host+"','"+image+"','"+time1+"','"+type+"','"+date+"','"+desc+"','"+location+"','"+"1"+"');");
     
     	/*
     	myDB.execSQL("INSERT INTO "
