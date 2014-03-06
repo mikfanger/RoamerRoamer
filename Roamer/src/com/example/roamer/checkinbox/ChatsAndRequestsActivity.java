@@ -1,27 +1,43 @@
 package com.example.roamer.checkinbox;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.zip.Inflater;
 
+import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
-import com.example.roamer.R.id;
-import com.example.roamer.R.layout;
-import com.example.roamer.R.menu;
-import com.example.roamer.R.string;
+import com.example.roamer.checkinbox.InboxActivity.MyData;
+import com.example.roamer.profilelist.Item;
+import com.example.roamer.profilelist.MyRoamerModel;
 
+
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 public class ChatsAndRequestsActivity extends FragmentActivity {
 
@@ -39,11 +55,14 @@ public class ChatsAndRequestsActivity extends FragmentActivity {
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	final Context context = this;
+	private Dialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chats_and_requests);
+		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -53,6 +72,37 @@ public class ChatsAndRequestsActivity extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		
+		Button messageButton = (Button) findViewById(R.id.newMessageButton);
+        messageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	
+            	dialog = new Dialog(context);
+            	
+    			dialog.setContentView(R.layout.select_roamer_for_message);
+    			dialog.setTitle("Select Roamer");
+
+    			dialog.show();
+    			
+    			//populateRoamers(dialog);
+    			ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageStartMessage);
+    			// if button is clicked, close the custom dialog
+    			dialogButton.setOnClickListener(new OnClickListener() {
+    				@Override
+    				public void onClick(View v) {
+    					    	            	
+    					//createTable(selectedName);
+    					    					
+    					dialog.dismiss();
+    					Intent i=new Intent(ChatsAndRequestsActivity.this,DiscussActivity.class);
+    	                startActivity(i);
+    	            		  
+    				}
+    			});
+
+            }
+        });
 
 	}
 
@@ -78,11 +128,27 @@ public class ChatsAndRequestsActivity extends FragmentActivity {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
-			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
-			return fragment;
+			switch(position) {
+
+            case 0: 
+            	Fragment fragment = new DummySectionFragment();
+    			Bundle args = new Bundle();
+    			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+    			fragment.setArguments(args);
+    			return fragment;
+            case 1: 
+            	Fragment fragment1 = new RequestSectionFragment();
+            	Bundle args1 = new Bundle();
+            	args1.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+            	fragment1.setArguments(args1);
+            	return fragment1;
+            default:
+            	Fragment fragment2 = new DummySectionFragment();
+    			Bundle args2 = new Bundle();
+    			args2.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+    			fragment2.setArguments(args2);
+    			return fragment2;
+			}
 		}
 
 		@Override
@@ -96,9 +162,11 @@ public class ChatsAndRequestsActivity extends FragmentActivity {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return "Open Chats".toUpperCase(l);
+				//return "Open Chats".toUpperCase(l);
+				return "";
 			case 1:
-				return "Open Requests".toUpperCase(l);
+				//return "Open Requests".toUpperCase(l);
+				return "";
 			}
 			return null;
 		}
@@ -124,12 +192,28 @@ public class ChatsAndRequestsActivity extends FragmentActivity {
 			View rootView = inflater.inflate(
 					R.layout.inbox_list, container,
 					false);
-			/*
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
-					*/
+
+			return rootView;
+		}
+	}
+	
+	public static class RequestSectionFragment extends Fragment {
+		/**
+		 * The fragment argument representing the section number for this
+		 * fragment.
+		 */
+		public static final String ARG_SECTION_NUMBER = "section_number";
+		
+		public RequestSectionFragment() {
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(
+					R.layout.request_list, container,
+					false);
+
 			return rootView;
 		}
 	}

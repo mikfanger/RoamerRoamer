@@ -39,6 +39,7 @@ public class InboxActivity extends Activity {
     private String selectedName;
     private Spinner position;
     private Dialog dialog;
+    private int count;
     ArrayList<Item> loadArray;
 
     @Override
@@ -47,7 +48,7 @@ public class InboxActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.inbox_list);
-
+        loadArray();
 
         MyRoamerModel.LoadModel(loadArray);
         
@@ -265,5 +266,53 @@ public class InboxActivity extends Activity {
         
         System.out.println("Items length is: "+items1.length);
         
+    }
+    
+    public void loadArray(){
+    	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    	
+    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
+    	cur.moveToFirst();
+    	int index;
+    	index = cur.getColumnIndex("CountR");
+    	count = cur.getInt(index);
+    	
+    	System.out.println("Checking Count of MyRoamers");
+    	System.out.println("Count of my roamers is: " + count);
+    	
+    	if (count > 0) {
+    		
+    		
+    	loadArray = new ArrayList<Item>();
+    	int i = 1;
+
+		Cursor c = myDB.rawQuery("SELECT * FROM " + "MyRoamers ", null);
+		c.moveToFirst();
+		
+		 int C1 = c.getColumnIndex("Pic");
+		 int C2 = c.getColumnIndex("Name");
+		 int C3 = c.getColumnIndex("Loc");
+		 
+		 System.out.println("value is: " +c.getString(C1));
+
+		 
+		 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));
+		
+		while(c.moveToNext()){
+			i++;
+			
+			  C1 = c.getColumnIndex("Pic");
+			  C2 = c.getColumnIndex("Name");
+			  C3 = c.getColumnIndex("Loc");
+
+			 
+			 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));			
+		}
+		
+		myDB.close();
+    }
+    	else{
+    		 System.out.println("Row Count is: " + 0);
+    	}
     }
 }

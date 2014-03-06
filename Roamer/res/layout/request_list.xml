@@ -1,0 +1,89 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/DarkGrey"
+    android:orientation="vertical"
+    tools:context=".InboxActivity" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/imageChildImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:scaleType="center"
+            android:src="@drawable/gray_gradient" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageChildImage"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:scaleType="center"
+            android:src="@drawable/red_gradient" />
+
+        <ImageView
+            android:id="@+id/roamerCreateTag"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/roamer" />
+
+        <ImageButton
+            android:id="@+id/inboxBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/roamerCreateTag"
+            android:layout_marginLeft="17dp"
+            android:background="@color/transparent"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/textRecentDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageChildImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="3dp"
+            android:text="See your Requests!"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/DarkWhite" />
+
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/imageView2" >
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="wrap_content"
+                android:layout_height="450dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="20dp"
+                android:cacheColorHint="@color/DarkWhite"
+                android:divider="@drawable/hr"
+                android:dividerHeight="5.0sp"
+                android:paddingLeft="30dp"
+                tools:listitem="@android:layout/simple_expandable_list_item_1" >
+
+            </ListView>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
