@@ -10,4 +10,15 @@
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.SupportMapFragment" />
 
+<ImageButton
+    android:id="@+id/imageBackFromMap"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="18dp"
+    android:background="@color/transparent"
+    android:src="@drawable/x" />
+
 </RelativeLayout> 

@@ -25,14 +25,6 @@ public class IntroActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
     	
     	
-    	Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
-    	
-    	ParseObject testObject = new ParseObject("TestObject");
-    	testObject.put("foo", "bar");
-    	testObject.saveInBackground();
-    	
-    	
-
     	final String chatTable = "ChatTable";
     	final String myRoamersTable = "MyRoamers";
     	final String myCredTable = "MyCred";

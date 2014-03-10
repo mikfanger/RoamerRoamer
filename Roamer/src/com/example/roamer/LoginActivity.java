@@ -1,5 +1,11 @@
 package com.example.roamer;
 
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -42,8 +48,8 @@ public class LoginActivity extends Activity {
 	private String mEmail;
 	private String mPassword;
 	
-	private String userName;
-	private String passWord;
+	private String userName = "1";
+	private String passWord = "1";
 
 	// UI references.
 	private EditText mEmailView;
@@ -60,8 +66,6 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
-
 		
 		//Get defauly cred from database
 		   SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
@@ -173,14 +177,48 @@ public class LoginActivity extends Activity {
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		
-		
 		mEmail = mEmailView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
-
+		
 		boolean cancel = false;
 		View focusView = null;
+		
+		//Check for email and password in database
+		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+		
+		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+		query.whereEqualTo("Email", mEmail);
+		
+		query.getFirstInBackground(new GetCallback<ParseObject>() {
 
+		@Override
+		public void done(ParseObject object, ParseException e) {
+			 if (e == null) {
+				 userName = query.toString();
+			    } else {
+			    	//Do nothing
+			    }		
+		}
+		});
+		
+		final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
+		query1.whereEqualTo("Password", mPassword);
+		
+		query1.getFirstInBackground(new GetCallback<ParseObject>() {
+
+		@Override
+		public void done(ParseObject object, ParseException e) {
+			 if (e == null) {
+				 passWord = query1.toString();
+				 System.out.println("The password from entry is: "+mPassword);
+				 System.out.println("The password from database is: "+passWord);
+			    } else {
+			    	//Do nothing
+			    }		
+		}
+		});
+		
+	
 		// Check for a valid password.
 		if (TextUtils.isEmpty(mPassword)) {
 			mPasswordView.setError(getString(R.string.error_field_required));
@@ -205,8 +243,6 @@ public class LoginActivity extends Activity {
 		
 		//Check that email address match
 			if (!userName.equals(mEmail)) {
-				System.out.println("Entered email is: " + mEmail);
-				System.out.println("Valid email is: " + userName);
 				
 				mEmailView.setError("No record of email address");
 				focusView = mEmailView;

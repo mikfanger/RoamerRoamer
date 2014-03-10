@@ -1,35 +1,42 @@
 package graphics;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
+import android.app.SearchManager;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Canvas;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Base64;
-import android.util.Log;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.SupportMapFragment;
+import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
+import com.example.roamer.events.CreateEventActivity;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
-import com.google.gwt.canvas.client.Canvas;
 
-public class HelloGoogleMaps extends FragmentActivity {
+public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks<Cursor>{
 
 	private GoogleMap Mmap;
 	
@@ -45,11 +52,6 @@ public class HelloGoogleMaps extends FragmentActivity {
 	    
 	    setUpMapIfNeeded();
 	    
-	    /*
-	    locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
-	    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, (LocationListener) this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER 
-	     */
-	    
 	    //Set my location
 	    Mmap.setMyLocationEnabled(true);
 	    
@@ -63,13 +65,107 @@ public class HelloGoogleMaps extends FragmentActivity {
 	    .compassEnabled(false)
 	    .rotateGesturesEnabled(false)
 	    .tiltGesturesEnabled(false);
+	    
+	    //handleIntent(getIntent());
 
+	    ImageButton backButton = (ImageButton) findViewById(R.id.imageBackFromMap);
+        backButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	
+            	finish();
+            	Intent i=new Intent(HelloGoogleMaps.this,CreateEventActivity.class);
+                startActivity(i);
+            		  
+            }
+        });
 	}
 	
 	@Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+	
+	private void handleIntent(Intent intent){
+        if(intent.getAction().equals(Intent.ACTION_SEARCH)){
+            doSearch(intent.getStringExtra(SearchManager.QUERY));
+        }else if(intent.getAction().equals(Intent.ACTION_VIEW)){
+            getPlace(intent.getStringExtra(SearchManager.EXTRA_DATA_KEY));
+        }
+    }
+ 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+ 
+    private void doSearch(String query){
+        Bundle data = new Bundle();
+        data.putString("query", query);
+        getSupportLoaderManager().restartLoader(0, data, this);
+    }
+    
+    private void getPlace(String query){
+        Bundle data = new Bundle();
+        data.putString("query", query);
+        getSupportLoaderManager().restartLoader(1, data, this);
+    }
+ 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu
+        getMenuInflater().inflate(R.menu.hello_google_maps, menu);
+        return true;
+    }
+ 
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch(item.getItemId()){
+        case R.id.action_search:
+            onSearchRequested();
+            break;
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+ 
+    @Override
+    public Loader<Cursor> onCreateLoader(int arg0, Bundle query) {
+        CursorLoader cLoader = null;
+        if(arg0==0)
+            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.SEARCH_URI, null, null, new String[]{ query.getString("query") }, null);
+        else if(arg0==1)
+            cLoader = new CursorLoader(getBaseContext(), PlaceProvider.DETAILS_URI, null, null, new String[]{ query.getString("query") }, null);
+        return cLoader;
+    }
+ 
+    @Override
+    public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
+        showLocations(c);
+    }
+ 
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
+        // TODO Auto-generated method stub
+    }
+ 
+    private void showLocations(Cursor c){
+        MarkerOptions markerOptions = null;
+        LatLng position = null;
+        Mmap.clear();
+        while(c.moveToNext()){
+            markerOptions = new MarkerOptions();
+            position = new LatLng(Double.parseDouble(c.getString(1)),Double.parseDouble(c.getString(2)));
+            markerOptions.position(position);
+            markerOptions.title(c.getString(0));
+            Mmap.addMarker(markerOptions);
+        }
+        if(position!=null){
+            CameraUpdate cameraPosition = CameraUpdateFactory.newLatLng(position);
+            Mmap.animateCamera(cameraPosition);
+        }
     }
 
     private void setUpMapIfNeeded() {
@@ -98,28 +194,6 @@ public class HelloGoogleMaps extends FragmentActivity {
     public void onProviderDisabled(String provider) { }
     
     
-    private void getShaKey() {
-
-    	String TAG = "new tag";
-    	 try {
-    	 PackageInfo info = getPackageManager().getPackageInfo("com.example.roamer",
-    	 PackageManager.GET_SIGNATURES);
-    	 for (Signature signature : info.signatures) {
-    	 MessageDigest md = MessageDigest.getInstance("SHA");
-    	 md.update(signature.toByteArray());
-    	 Log.v(TAG, "KeyHash:" + Base64.encodeToString(md.digest(),
-    	 Base64.DEFAULT));
-    	 }
-    	 } catch (NameNotFoundException e) {
-    	 e.printStackTrace();
-
-    	 } catch (NoSuchAlgorithmException e) {
-    	 e.printStackTrace();
-
-    	 }
-
-    	 }
-    
     class MapOverlay extends com.google.android.maps.Overlay
     {
         public boolean draw(Canvas canvas, MapView mapView, 
@@ -145,5 +219,19 @@ public class HelloGoogleMaps extends FragmentActivity {
             return false;
         }        
     }
-	
+    
+    public void onMapClick(LatLng point) {
+        // TODO Auto-generated method stub
+        // tvLocInfo.setText(point.toString());
+        Mmap.animateCamera(CameraUpdateFactory.newLatLng(point));
+        Mmap.clear();
+
+        Marker Kiel = Mmap.addMarker(new MarkerOptions()
+            .position(point)
+            .title("Kiel")
+            .snippet("Kiel is cool").draggable(true)
+            .icon(BitmapDescriptorFactory
+            .fromResource(R.drawable.ic_launcher)));
+    }
+		
 }

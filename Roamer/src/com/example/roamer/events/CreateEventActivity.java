@@ -49,7 +49,7 @@ public class CreateEventActivity extends Activity {
 		setContentView(R.layout.activity_create_event);
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
-		 blurbText = (EditText)findViewById(R.id.editText1);
+		 blurbText = (EditText)findViewById(R.id.editText2);
 		 ImageButton postButton = (ImageButton) findViewById(R.id.imageButtonPostEvent);
 	        postButton.setOnClickListener(new OnClickListener() {
 	            @Override
