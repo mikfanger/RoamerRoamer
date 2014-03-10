@@ -2,12 +2,15 @@ package com.example.roamer;
 
 import com.example.roamer.appengine.GCMIntentService;
 
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseObject;
+
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
@@ -17,17 +20,19 @@ import android.widget.ImageButton;
 
 public class IntroActivity extends Activity { 
 
-	enum State {
-	    REGISTERED, REGISTERING, UNREGISTERED, UNREGISTERING
-	  }
-
-	  private State curState = State.UNREGISTERED;
 	  
     @Override 
     protected void onCreate(Bundle savedInstanceState) {
     	
-    	updateState(State.REGISTERING);
     	
+    	Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+    	
+    	ParseObject testObject = new ParseObject("TestObject");
+    	testObject.put("foo", "bar");
+    	testObject.saveInBackground();
+    	
+    	
+
     	final String chatTable = "ChatTable";
     	final String myRoamersTable = "MyRoamers";
     	final String myCredTable = "MyCred";
@@ -52,7 +57,7 @@ public class IntroActivity extends Activity {
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myRoamersTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Pic VARCHAR, Name VARCHAR, Loc VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Pic VARCHAR, Name VARCHAR, Loc VARCHAR, Travel VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myLocationTable
@@ -60,7 +65,7 @@ public class IntroActivity extends Activity {
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myCredTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Save INT(1), CountM INT(1), CountR INT(1));");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Travel VARCHAR, Industry VARCHAR, Job VARCHAR, Hotel VARCHAR, Air VARCHAR, Location VARCHAR, Start VARCHAR, Save INT(1), CountM INT(1), CountR INT(1));");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myEventsTable
@@ -93,15 +98,7 @@ public class IntroActivity extends Activity {
         return true;
     }
     
-    public void registerWithEngine(){
-    	GCMIntentService.register(getApplicationContext());
-    	updateState(State.REGISTERED);
-    	
-    }
-    
-    private void updateState(State newState) {      
-        curState = newState;
-      }
+
 
     
 }

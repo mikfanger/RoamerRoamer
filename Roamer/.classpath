@@ -8,6 +8,9 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER/GWT"/>
 	<classpathentry kind="lib" path="libs/gwt-maps.jar"/>
-	<classpathentry kind="lib" path="/google-play-services_lib/bin/google-play-services_lib.jar"/>
+	<classpathentry kind="lib" path="/CodeLabEx1-starter/war/WEB-INF/lib/geronimo-jpa_3.0_spec-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/CodeLabEx1-starter/war/WEB-INF/lib/geronimo-jta_1.1_spec-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/CodeLabEx1-starter/war/WEB-INF/lib/jdo2-api-2.3-eb.jar"/>
+	<classpathentry kind="lib" path="/CodeLabEx1-starter/war/WEB-INF/lib/jsr107cache-1.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

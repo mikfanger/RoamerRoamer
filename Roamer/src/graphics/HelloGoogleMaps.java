@@ -7,27 +7,36 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.example.roamer.R;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
+import com.google.gwt.canvas.client.Canvas;
 
 public class HelloGoogleMaps extends FragmentActivity {
 
 	private GoogleMap Mmap;
 	
-	  static final LatLng HAMBURG = new LatLng(53.558, 9.927);
-	  static final LatLng KIEL = new LatLng(53.551, 9.993);
+	private LocationManager locationManager;
+	private static final long MIN_TIME = 400;
+	private static final float MIN_DISTANCE = 1000;
+
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,20 +45,17 @@ public class HelloGoogleMaps extends FragmentActivity {
 	    
 	    setUpMapIfNeeded();
 	    
-	        Marker hamburg = Mmap.addMarker(new MarkerOptions().position(HAMBURG)
-	            .title("Hamburg"));
-	        Marker kiel = Mmap.addMarker(new MarkerOptions()
-	            .position(KIEL)
-	            .title("Kiel")
-	            .snippet("Kiel is cool")
-	            .icon(BitmapDescriptorFactory
-	                .fromResource(R.drawable.ic_launcher)));
-
-	        // Move the camera instantly to hamburg with a zoom of 15.
-	        Mmap.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
-
-	        // Zoom in, animating the camera.
-	       Mmap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+	    /*
+	    locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+	    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, (LocationListener) this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER 
+	     */
+	    
+	    //Set my location
+	    Mmap.setMyLocationEnabled(true);
+	    
+	    // Zoom in, animating the camera.
+	    Mmap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+	    
 	    
 	    //Set up map options
 	    GoogleMapOptions options = new GoogleMapOptions();
@@ -57,9 +63,6 @@ public class HelloGoogleMaps extends FragmentActivity {
 	    .compassEnabled(false)
 	    .rotateGesturesEnabled(false)
 	    .tiltGesturesEnabled(false);
-	   
-
-        LatLng sydney = new LatLng(-33.867, 151.206);
 
 	}
 	
@@ -81,11 +84,25 @@ public class HelloGoogleMaps extends FragmentActivity {
         
     }
     
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+        Mmap.animateCamera(cameraUpdate);
+        locationManager.removeUpdates((LocationListener) this);
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) { }
+
+    public void onProviderEnabled(String provider) { }
+
+    public void onProviderDisabled(String provider) { }
+    
+    
     private void getShaKey() {
 
     	String TAG = "new tag";
     	 try {
-    	 PackageInfo info = getPackageManager().getPackageInfo("your.package.name",
+    	 PackageInfo info = getPackageManager().getPackageInfo("com.example.roamer",
     	 PackageManager.GET_SIGNATURES);
     	 for (Signature signature : info.signatures) {
     	 MessageDigest md = MessageDigest.getInstance("SHA");
@@ -102,5 +119,31 @@ public class HelloGoogleMaps extends FragmentActivity {
     	 }
 
     	 }
+    
+    class MapOverlay extends com.google.android.maps.Overlay
+    {
+        public boolean draw(Canvas canvas, MapView mapView, 
+        boolean shadow, long when) 
+        {
+			return shadow;
+           //...
+        }
+ 
+        @Override
+        public boolean onTouchEvent(MotionEvent event, MapView mapView) 
+        {   
+            //---when user lifts his finger---
+            if (event.getAction() == 1) {                
+                GeoPoint p = mapView.getProjection().fromPixels(
+                    (int) event.getX(),
+                    (int) event.getY());
+                    Toast.makeText(getBaseContext(), 
+                        p.getLatitudeE6() / 1E6 + "," + 
+                        p.getLongitudeE6() /1E6 , 
+                        Toast.LENGTH_SHORT).show();
+            }                            
+            return false;
+        }        
+    }
 	
 }
