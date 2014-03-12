@@ -78,6 +78,7 @@ public class EventsActivity extends TabActivity implements
             @Override
             public void onClick(View v) {
             	
+            	finish();
             	Intent i=new Intent(EventsActivity.this,HomeScreenActivity.class);
                 startActivity(i);
             		  

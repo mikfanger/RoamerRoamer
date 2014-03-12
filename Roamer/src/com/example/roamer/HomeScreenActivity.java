@@ -11,16 +11,20 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 public class HomeScreenActivity extends Activity {
 	
 	Point p;
+	private String curLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,9 @@ public class HomeScreenActivity extends Activity {
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
+        getCurrentLocation();
+        TextView location = (TextView) findViewById(R.id.textCurLocation);
+        location.setText(curLocation);
         
         ImageButton sendButton = (ImageButton) findViewById(R.id.checkInboxButton);
         sendButton.setOnClickListener(new OnClickListener() {
@@ -97,6 +104,18 @@ public class HomeScreenActivity extends Activity {
             }
         });
         
+    }
+    
+    public void getCurrentLocation(){
+    	
+    	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
+    	cur.moveToFirst();
+    	int index;
+    	index = cur.getColumnIndex("CurrentLocation");
+    	curLocation = cur.getString(index);
+    	
+    	myDB.close();
     }
      
     @Override

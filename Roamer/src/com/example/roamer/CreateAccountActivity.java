@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -142,9 +143,21 @@ public class CreateAccountActivity extends Activity {
     		PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("RoamerPassword", mPassword).commit();
     		PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("RoamerUsername", mUsername).commit();
     		
-    		Intent i=new Intent(CreateAccountActivity.this,CreateAccountActivity2.class);
-            startActivity(i);
-    	}
+    		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    		
+    		myDB.delete("TempRoamer",null,null);
+    	    myDB.execSQL("INSERT INTO "
+    				       + "TempRoamer "
+    				       + "(Email,Password,Username) "
+    				       + "VALUES ('"+mEmailAddress+"','"+mPassword+"','"+mUsername+"');");
+    			
+    			myDB.close();	
+    			
+        		Intent i=new Intent(CreateAccountActivity.this,CreateAccountActivity2.class);
+                startActivity(i);   			
+    		}
+    		
+
     	else
     	{
     		Context context = getApplicationContext();

@@ -1,12 +1,5 @@
 package com.example.roamer;
 
-import com.example.roamer.appengine.GCMIntentService;
-
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
-import com.parse.ParseObject;
-
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -45,11 +38,11 @@ public class IntroActivity extends Activity {
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + tempRoamer
-                + " (rowid INT(2),Pic VARCHAR,Name VARCHAR, Loc VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Sex INT(1), Travel VARCHAR, Industry INT(2), Job INT(2), Hotel INT(2), Air VARCHAR, Loc VARCHAR, Start VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myRoamersTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Pic VARCHAR, Name VARCHAR, Loc VARCHAR, Travel VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Sex INT(1), Travel VARCHAR, Industry INT(2), Job INT(2), Hotel INT(2), Air VARCHAR, Loc VARCHAR, Start VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myLocationTable
@@ -57,7 +50,7 @@ public class IntroActivity extends Activity {
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myCredTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Travel VARCHAR, Industry VARCHAR, Job VARCHAR, Hotel VARCHAR, Air VARCHAR, Location VARCHAR, Start VARCHAR, Save INT(1), CountM INT(1), CountR INT(1));");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Sex INT(1), Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Travel VARCHAR, Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Location INT(2), Start VARCHAR, CurrentLocation VARCHAR, Save INT(1), CountM INT(1), CountR INT(1));");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myEventsTable

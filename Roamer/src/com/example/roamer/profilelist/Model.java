@@ -25,13 +25,13 @@ public class Model {
         */
         
         
-        allItems.add(new Item(1, "pic1.png", "George", "Boston"));
-        allItems.add(new Item(2, "pic2.png", "Steve","Boston"));
-        allItems.add(new Item(3, "pic3.png", "Sandy","Boston"));
-        allItems.add(new Item(4, "pic4.png", "Roy","Boston"));
-        allItems.add(new Item(5, "pic5.png", "Alabaster", "Boston"));
-        allItems.add(new Item(6, "pic4.png", "Roy","Boston"));
-        allItems.add(new Item(7, "pic5.png", "Alabaster","Boston"));
+        allItems.add(new Item(1, "pic1.png", "George", "Boston",1));
+        allItems.add(new Item(2, "pic2.png", "Steve","Boston",1));
+        allItems.add(new Item(3, "pic3.png", "Sandy","Boston",1));
+        allItems.add(new Item(4, "pic4.png", "Roy","Boston",1));
+        allItems.add(new Item(5, "pic5.png", "Alabaster", "Boston",1));
+        allItems.add(new Item(6, "pic4.png", "Amanda","Boston",0));
+        allItems.add(new Item(7, "pic5.png", "Alabaster","Boston",1));
         
 
         for (Item item: allItems){        	
@@ -41,14 +41,15 @@ public class Model {
         		String iconTemp = item.IconFile;
         		String nameTemp = item.Name;
         		String locTemp = item.Location;
+        		int sexTemp = item.Sex;
         		
-        		Items.add(new Item (idTemp,iconTemp,nameTemp,locTemp));
+        		Items.add(new Item (idTemp,iconTemp,nameTemp,locTemp, sexTemp));
         	}
         }
         
         if (Items.size()<1)
         {
-        	Items.add(new Item (1,"none", "none", "none"));
+        	Items.add(new Item (1,"none", "none", "none",1));
         }
     
     }

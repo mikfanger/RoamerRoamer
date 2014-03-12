@@ -1,11 +1,15 @@
 package com.example.roamer;
 
 
+import com.google.appengine.api.datastore.Cursor;
+
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +37,7 @@ public class CreateAccountActivity2 extends Activity {
 	            	Spinner position = (Spinner) findViewById(R.id.spinnerRegion);
 	            	spinnerPos = position.getSelectedItemPosition();
 	            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerRegion", spinnerPos).commit();
+	            		            	
 	            	Intent i=new Intent(CreateAccountActivity2.this,CreateAccountActivityPic.class);
 	                startActivity(i);
 	            }
@@ -56,8 +61,8 @@ public class CreateAccountActivity2 extends Activity {
 	        items1[0] = new MyData("Midwest", "value1");
 	        items1[1] = new MyData("West", "value2");
 	        items1[2] = new MyData("Southwest", "value3");
-	        items1[3] = new MyData("Southeast", "value2");
-	        items1[4] = new MyData("Northeast", "value3");
+	        items1[3] = new MyData("Southeast", "value4");
+	        items1[4] = new MyData("Northeast", "value5");
 	        ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
 	                android.R.layout.simple_spinner_item, items1);
 	        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -78,6 +83,17 @@ public class CreateAccountActivity2 extends Activity {
 				}
 	        });
 	    }
+	 
+	 public void enterTempInfo(){
+		 
+		 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+ 		
+		 ContentValues args = new ContentValues();
+		 args.put("Location", spinnerPos);
+		 myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
+ 			
+ 	     myDB.close();	
+	 }
 	 
 	
 	    

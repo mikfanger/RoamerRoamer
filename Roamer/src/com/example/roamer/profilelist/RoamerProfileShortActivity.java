@@ -8,9 +8,7 @@ import com.example.roamer.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
@@ -35,20 +33,32 @@ public class RoamerProfileShortActivity extends Activity {
 	   	c.moveToFirst();
 	   	
 	   	int picDex= c.getColumnIndex("Pic");
-	   	int nameDex= c.getColumnIndex("Name");
+	   	int nameDex= c.getColumnIndex("Username");
+	   	int sexDex= c.getColumnIndex("Sex");
 	   	int locDex= c.getColumnIndex("Loc");
 	   	
 	   	final String picString = c.getString(picDex);
 	   	final String nameString = c.getString(nameDex);
+	   	final int sexInt = c.getInt(sexDex);
 	   	final String locString = c.getString(locDex);
+	   	String sex;
+	   	
+	   	if(sexInt == 1){
+	   		sex = "Male";
+	   	}
+	   	else{
+	   		sex = "Female";
+	   	}
+	   	
+	   	System.out.println("Sex of Roamer is: " + sexInt);
 	   	
 	   	TextView nameView = (TextView) findViewById(R.id.textProfileName);
-	   	TextView locView = (TextView) findViewById(R.id.textView3);
+	   	TextView sexView = (TextView) findViewById(R.id.textProfileSex);
 	   	ImageView picView = (ImageView) findViewById(R.id.imageProfilePicture);
 	   	
 	   	System.out.println("Picture location is: "+picString);
 	   	nameView.setText(nameString);
-	   	locView.setText(locString);
+	   	sexView.setText(sex);
 
 	   	// get input stream
         InputStream ims = null;
@@ -68,6 +78,7 @@ public class RoamerProfileShortActivity extends Activity {
 	            @Override
 	            public void onClick(View v) {
 	            	
+	            	finish();
 	            	Intent i=new Intent(RoamerProfileShortActivity.this,ProfileListActivity.class);
 	                startActivity(i);
 	            		  
@@ -80,7 +91,7 @@ public class RoamerProfileShortActivity extends Activity {
 	            public void onClick(View v) {
 	            	
 	            	//Add Roamer to myroamers
-	            	addRoamer(picString,nameString,locString);
+	            	addRoamer(picString,nameString,sexInt,locString);
 	            	
 	            	//Move back to global roamers list
 	            	Intent i=new Intent(RoamerProfileShortActivity.this,ProfileListActivity.class);
@@ -97,13 +108,13 @@ public class RoamerProfileShortActivity extends Activity {
 		return true;
 	}
 	
-	public void addRoamer(String icon, String name, String location){
+	public void addRoamer(String icon, String name, int sex, String loc){
 	   	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 	   	 
 	   	myDB.execSQL("INSERT INTO "
 				       + "MyRoamers "
-				       + "(Pic,Name,Loc) "
-				       + "VALUES ('"+icon+"','"+name+"','"+location+"');");
+				       + "(Pic,Username,Sex,Loc) "
+				       + "VALUES ('"+icon+"','"+name+"',"+sex+",'"+loc+"');");
 	   	
 	   	
 	   	//Update count of events in Credentials

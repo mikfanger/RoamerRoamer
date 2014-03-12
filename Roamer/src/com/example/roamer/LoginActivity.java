@@ -17,7 +17,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -66,45 +65,12 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
-		//Get defauly cred from database
-		   SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-		   countRoamers = 0;
-		   countEvents = 0;
-		   Cursor c = myDB.rawQuery("SELECT * FROM " + "MyEvents" , null);
-		   countEvents = c.getCount();
-		   System.out.println("Count of Events is: "+countEvents);
-		   
-		   c = myDB.rawQuery("SELECT * FROM " + "MyRoamers" , null);
-		   countRoamers = c.getCount();
-		   System.out.println("Count of Roamers is: "+c.getCount());
-		   
-		   //Add default credentials		   
-	        myDB.execSQL("INSERT INTO "
-				       + "MyCred "
-				       + "(Email,Password,Username,Pic,CountM,CountR) "
-				       + "VALUES ('jon@roamer.com', 'roam', 'mike_man', 'default_userpic.png',"+countEvents+","+countRoamers+" );");
-	        
-		   c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
-		   
-		   System.out.println("Count of cred is: "+c.getCount());
-		   c.moveToFirst();
-		   
-		   int Column1 = c.getColumnIndex("Email");
-		   int Column2 = c.getColumnIndex("Password");
-		   int Column3 = c.getColumnIndex("CountM");
-		   System.out.println("Count of CountM is: "+c.getCount());
-
-		   passWord = c.getString(Column2);
-		   userName = c.getString(Column1);
-		  
-		   myDB.close();
 
 		setContentView(R.layout.activity_login);
 		
 		cred = (CheckBox)findViewById(R.id.checkSaveLogin);
 		
-		saveCredIfChecked();
+		
 		
 		int checkStatus = checkForSavedCred();
 		// Set up the login form.
@@ -127,6 +93,8 @@ public class LoginActivity extends Activity {
 				});
 		
 		if (checkStatus == 1){
+			
+			getCredLocally();
 			mEmailView.setText(userName);
 			mPasswordView.setText(passWord);
 		}
@@ -165,9 +133,6 @@ public class LoginActivity extends Activity {
 	 */
 	public void attemptLogin() {
 		
-		
-		
-		
 		if (mAuthTask != null) {
 			return;
 		}
@@ -194,13 +159,14 @@ public class LoginActivity extends Activity {
 		@Override
 		public void done(ParseObject object, ParseException e) {
 			 if (e == null) {
-				 userName = query.toString();
+				 userName = mEmail;
 			    } else {
 			    	//Do nothing
 			    }		
 		}
 		});
 		
+		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
 		final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
 		query1.whereEqualTo("Password", mPassword);
 		
@@ -209,11 +175,9 @@ public class LoginActivity extends Activity {
 		@Override
 		public void done(ParseObject object, ParseException e) {
 			 if (e == null) {
-				 passWord = query1.toString();
-				 System.out.println("The password from entry is: "+mPassword);
-				 System.out.println("The password from database is: "+passWord);
+				 passWord = mPassword;
 			    } else {
-			    	//Do nothing
+
 			    }		
 		}
 		});
@@ -334,6 +298,11 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
+				
+				saveCredIfChecked();
+				
+				saveFromDatabaseToCred();
+				finish();
 				Intent i=new Intent(LoginActivity.this,HomeScreenActivity.class);
                 startActivity(i);
 			} else {
@@ -357,11 +326,8 @@ public class LoginActivity extends Activity {
 		int credSave = 0;
 		
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-		  Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
-		  c.moveToFirst();
+		
 
-		 int Column1 = c.getColumnIndex("Save");
-		 credSave = c.getInt(Column1);
 		if(credSave == 1){
 			cred.setChecked(true);
 		}
@@ -370,8 +336,8 @@ public class LoginActivity extends Activity {
 			
 	        myDB.execSQL("INSERT INTO "
 				       + "MyCred "
-				       + "(Save) "
-				       + "VALUES ("+1+");");
+				       + "(Email,Password,CurrentLocation,Save) "
+				       + "VALUES ('"+userName+"','"+passWord+"','Boston',"+1+");");
 			
 			myDB.close();		
 		}
@@ -379,23 +345,63 @@ public class LoginActivity extends Activity {
 			
 	        myDB.execSQL("INSERT INTO "
 				       + "MyCred "
-				       + "(Save) "
-				       + "VALUES ("+0+");");
+				       + "(Email,Password,CurrentLocation,Save) "
+				       + "VALUES ('"+userName+"','"+passWord+"','Boston',"+0+");");
 			
 			myDB.close();
 		}
 	}
 	
 	public int checkForSavedCred(){
-		int cred = 0;
+		  int cred = 0;
 		
 		  SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		  Cursor c = myDB.rawQuery("SELECT  COUNT (*) FROM " + "MyCred ", null);
+		  
+		  if(c!=null){
+		      c.moveToFirst();
+		      if(c.getInt(0) ==0){
+		    	  cred = 0;
+		      }
+		      else{
+		    	  c = myDB.rawQuery("SELECT (*) FROM " + "MyCred ", null);
+		    	  c.moveToFirst();
+		    	  int Column1 = c.getColumnIndex("Save");
+				  cred = c.getInt(Column1);
+		      }
+		  }
+		return cred;
+	}
+	
+	public void getCredLocally(){
+		 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		  Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
 		  c.moveToFirst();
+		  
+		  int user = c.getColumnIndex("Email");
+		  int pass = c.getColumnIndex("Password");
+		  
+		  userName = c.getString(user);
+		  passWord = c.getString(pass);
+	}
+	
+	public void saveFromDatabaseToCred(){
+		
+		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+		
+		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+		query.whereEqualTo("Email", mEmail);
+		
+		query.getFirstInBackground(new GetCallback<ParseObject>() {
 
-		   int Column1 = c.getColumnIndex("Save");
-		   cred = c.getInt(Column1);
-		   
-		return cred;
+		@Override
+		public void done(ParseObject object, ParseException e) {
+			 if (e == null) {
+				 
+			    } else {
+			    	//Do nothing
+			    }		
+		}
+		});
 	}
 }

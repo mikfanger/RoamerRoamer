@@ -98,7 +98,7 @@
         android:id="@+id/buttonSelectFromMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/editText1"
+        android:layout_above="@+id/editText2"
         android:layout_alignLeft="@+id/spinnerCreateTime"
         android:layout_below="@+id/spinnerCreateTime"
         android:text="Select From Map" />
@@ -114,7 +114,7 @@
         android:id="@+id/textCreateType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
+        android:layout_alignLeft="@+id/editText2"
         android:layout_below="@+id/imageView1"
         android:layout_marginTop="54dp"
         android:text="Select Type"

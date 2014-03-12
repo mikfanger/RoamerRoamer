@@ -3,13 +3,19 @@ package com.example.roamer;
 
 import java.io.FileNotFoundException;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -30,6 +36,11 @@ public class CreateAccountActivityPic extends Activity {
 	
 	public int spinnerPos;
 	public String pictureUri = "";
+	public int airline;
+	public int hotel;
+	public int job;
+	public int industry;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,28 +69,29 @@ public class CreateAccountActivityPic extends Activity {
             	
             	//commit selections
             	Spinner position = (Spinner) findViewById(R.id.spinnerIndustry);
-            	spinnerPos = position.getSelectedItemPosition();
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerIndustry", spinnerPos).commit();
+            	industry = position.getSelectedItemPosition();
+            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerIndustry", industry).commit();
             	System.out.println("Spinner location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerIndustry",1));
             	
             	Spinner position2 = (Spinner) findViewById(R.id.spinnerJob);
-            	spinnerPos = position2.getSelectedItemPosition();
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerJob", spinnerPos).commit();
+            	job = position2.getSelectedItemPosition();
+            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerJob", job).commit();
             	System.out.println("Spinner location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerJob",1));
             	
             	Spinner position3 = (Spinner) findViewById(R.id.spinnerAirline);
-            	spinnerPos = position3.getSelectedItemPosition();
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerAirline", spinnerPos).commit();
+            	airline = position3.getSelectedItemPosition();
+            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerAirline", airline).commit();
             	System.out.println("Spinner location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerAirline",1));
             	
             	Spinner position4 = (Spinner) findViewById(R.id.spinnerHotel);
-            	spinnerPos = position4.getSelectedItemPosition();
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerHotel", spinnerPos).commit();
+            	hotel = position4.getSelectedItemPosition();
+            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerHotel", hotel).commit();
             	System.out.println("Spinner location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerHotel",1));
             	
             	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("RoamerPicture", pictureUri).commit();
             	System.out.println("Uri location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("RoamerPicture",""));
             	
+            	enterTempInfo();
             	//Move to Home Screen
             	Intent i=new Intent(CreateAccountActivityPic.this,HomeScreenActivity.class);
                 startActivity(i);
@@ -337,6 +349,47 @@ public class CreateAccountActivityPic extends Activity {
         o2.inSampleSize = scale;
         return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
 
+    }
+    
+    public void enterTempInfo(){
+    	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+  		
+		 ContentValues args = new ContentValues();
+		 args.put("Job", job);
+		 args.put("Industry", industry);
+		 args.put("Air", airline);
+		 args.put("Hotel", hotel);
+		 args.put("Pic", pictureUri);
+		 myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
+		 
+		 Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "TempRoamer", null);
+ 		 c.moveToFirst();
+ 		 
+ 		int index1 = c.getColumnIndex("Email");
+ 		int index2 = c.getColumnIndex("Password");
+ 		int index3 = c.getColumnIndex("Username");
+ 		int index4 = c.getColumnIndex("Location");
+ 		
+ 		String email = c.getString(index1);
+ 		String password = c.getString(index2);
+ 		String username = c.getString(index3);
+ 		int location = c.getInt(index4);
+ 		myDB.close();	
+ 		
+ 		//Enter data into parse as new user
+ 		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+ 		
+ 		ParseObject user1 = new ParseObject("Roamer");
+		user1.put("Username", username);
+		user1.put("Password", password);
+		user1.put("Email", email);
+		user1.put("Location", location);
+		user1.saveInBackground();
+ 	     
+    }
+    
+    public void saveToDatabase(){
+    	
     }
 
 }

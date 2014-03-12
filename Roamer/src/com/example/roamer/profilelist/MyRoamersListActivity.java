@@ -6,7 +6,6 @@ import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -58,32 +57,9 @@ public class MyRoamersListActivity extends Activity {
 	            public void onItemClick(AdapterView<?> parent, View view,
 	                int position, long id) {
 	            	
-	              // When clicked, show a dialog with event information
-	            	
-	            	
-	            	//final Dialog dialog = new Dialog(context);
-	            	
-	    			//dialog.setContentView(R.layout.activity_roamer_profile_short);
-	    			//dialog.setTitle("Roamer Profile");
-	    			
-	            
-	    			//dialog.show();
-	            	
 	            	Intent i=new Intent(MyRoamersListActivity.this,RoamerProfileActivity.class);
 	                startActivity(i);
 	    			
-	    			//ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageAddRoamer);
-	    			//dialogButton.setVisibility(View.INVISIBLE);
-	    			/*
-	    			// if button is clicked, close the custom dialog
-	    			dialogButton.setOnClickListener(new OnClickListener() {
-	    				@Override
-	    				public void onClick(View v) {
-	    					dialog.dismiss();
-	    				}
-	    				
-	    			});
-					*/
 	            }
 
 	            public void onNothingSelected(AdapterView<?> parent){
@@ -144,6 +120,17 @@ public class MyRoamersListActivity extends Activity {
     	
     }
     
+    public void addTempRoamer(String icon, String name, String sex){
+      	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+      	 
+      	myDB.execSQL("INSERT INTO "
+   			       + "TempRoamer "
+   			       + "(rowid,Pic,Username,Loc) "
+   			       + "VALUES ("+01+",'"+icon+"','"+name+"','"+sex+"');");
+      	
+      	myDB.close();
+      }
+    
     public void loadArray(){
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
@@ -166,23 +153,26 @@ public class MyRoamersListActivity extends Activity {
 		c.moveToFirst();
 		
 		 int C1 = c.getColumnIndex("Pic");
-		 int C2 = c.getColumnIndex("Name");
+		 int C2 = c.getColumnIndex("Username");
 		 int C3 = c.getColumnIndex("Loc");
+		 int C4 = c.getColumnIndex("Sex");
 		 
-		 System.out.println("value is: " +c.getString(C1));
+		 
+		 System.out.println("value of location is: " +c.getString(C3));
 
 		 
-		 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));
+		 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3),c.getInt(C4)));
 		
 		while(c.moveToNext()){
 			i++;
 			
 			  C1 = c.getColumnIndex("Pic");
-			  C2 = c.getColumnIndex("Name");
+			  C2 = c.getColumnIndex("Username");
 			  C3 = c.getColumnIndex("Loc");
+			  C4 = c.getColumnIndex("Sex");
 
 			 
-			 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));			
+			 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3),c.getInt(C4)));			
 		}
 		
 		myDB.close();

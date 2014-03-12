@@ -14,15 +14,6 @@ public class MyRoamerModel {
 
         Items = new ArrayList<Item>();
         allItems = new ArrayList<Item>();
-        /*
-        DatabaseSetup.init(this);
-        for (int i = 0; i<100; i++)
-        {
-        	Database
-        	Items.add(newItem())
-        	
-        }
-        */
         
         for(Item item : loadArray) {
 	           allItems.add(item);
@@ -34,13 +25,14 @@ public class MyRoamerModel {
         		String iconTemp = item.IconFile;
         		String nameTemp = item.Name;
         		String locTemp = item.Location;
+        		int sexTemp = item.Sex;
         		
-        		Items.add(new Item (idTemp,iconTemp,nameTemp,locTemp));
+        		Items.add(new Item (idTemp,iconTemp,nameTemp,locTemp,sexTemp));
         }
         
         if (Items.size()<1)
         {
-        	Items.add(new Item (1,"none", "none", "none"));
+        	Items.add(new Item (1,"none", "none", "none",1));
         }
         
     }

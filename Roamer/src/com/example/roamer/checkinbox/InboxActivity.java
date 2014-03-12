@@ -292,11 +292,12 @@ public class InboxActivity extends Activity {
 		 int C1 = c.getColumnIndex("Pic");
 		 int C2 = c.getColumnIndex("Name");
 		 int C3 = c.getColumnIndex("Loc");
+		 int C4 = c.getColumnIndex("Sex");
 		 
 		 System.out.println("value is: " +c.getString(C1));
 
 		 
-		 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));
+		 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3),c.getInt(C4)));
 		
 		while(c.moveToNext()){
 			i++;
@@ -304,9 +305,10 @@ public class InboxActivity extends Activity {
 			  C1 = c.getColumnIndex("Pic");
 			  C2 = c.getColumnIndex("Name");
 			  C3 = c.getColumnIndex("Loc");
+			  C4 = c.getColumnIndex("Sex");
 
 			 
-			 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));			
+			 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3),c.getInt(C4)));			
 		}
 		
 		myDB.close();

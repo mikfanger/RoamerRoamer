@@ -172,23 +172,14 @@ public class ProfileListActivity extends Activity {
 		
     }
     
-    public void addTempRoamer(String icon, String name, String location){
+    public void addTempRoamer(String icon, String name, String sex){
    	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
    	 
    	myDB.execSQL("INSERT INTO "
 			       + "TempRoamer "
-			       + "(rowid,Pic,Name,Loc) "
-			       + "VALUES ("+01+",'"+icon+"','"+name+"','"+location+"');");
+			       + "(rowid,Pic,Username,Loc) "
+			       + "VALUES ("+01+",'"+icon+"','"+name+"','"+sex+"');");
    	
-   	/*
-   	//Update count of events in Credentials
-   	ContentValues args = new ContentValues();
-   	Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
-   	c.moveToFirst();
-   	int index = c.getColumnIndex("CountR");
-   	args.put("CountR",c.getInt(index)+1);
-   	myDB.update("MyCred", args, "rowid"+"="+1, null);
-   	*/
    	myDB.close();
    }
 }
