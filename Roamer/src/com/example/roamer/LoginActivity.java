@@ -144,44 +144,20 @@ public class LoginActivity extends Activity {
 		// Store values at the time of the login attempt.
 		mEmail = mEmailView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
+		System.out.println("Email from login is: "+mEmail);
+		System.out.println("Password from login is: "+ mPassword);
 		
 		boolean cancel = false;
 		View focusView = null;
 		
 		//Check for email and password in database
-		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+		checkPassword();
 		
-		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
-		query.whereEqualTo("Email", mEmail);
 		
-		query.getFirstInBackground(new GetCallback<ParseObject>() {
-
-		@Override
-		public void done(ParseObject object, ParseException e) {
-			 if (e == null) {
-				 userName = mEmail;
-			    } else {
-			    	//Do nothing
-			    }		
-		}
-		});
-		
-		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
-		final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
-		query1.whereEqualTo("Password", mPassword);
-		
-		query1.getFirstInBackground(new GetCallback<ParseObject>() {
-
-		@Override
-		public void done(ParseObject object, ParseException e) {
-			 if (e == null) {
-				 passWord = mPassword;
-			    } else {
-
-			    }		
-		}
-		});
-		
+		checkEmail();
+		mAuthTask = null;
+		showProgress(false);
+				
 	
 		// Check for a valid password.
 		if (TextUtils.isEmpty(mPassword)) {
@@ -364,7 +340,7 @@ public class LoginActivity extends Activity {
 		    	  cred = 0;
 		      }
 		      else{
-		    	  c = myDB.rawQuery("SELECT (*) FROM " + "MyCred ", null);
+		    	  c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
 		    	  c.moveToFirst();
 		    	  int Column1 = c.getColumnIndex("Save");
 				  cred = c.getInt(Column1);
@@ -404,4 +380,41 @@ public class LoginActivity extends Activity {
 		}
 		});
 	}
+	
+public void checkEmail(){
+		
+		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+		
+		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+		query.whereEqualTo("Email", mEmail);
+		
+		System.out.println("Email before check is: "+ userName);
+
+		try {
+			query.getFirst();
+			userName = mEmail;
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+	}
+
+public void checkPassword(){
+	
+	Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+	
+	final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+	query.whereEqualTo("Password", mPassword);
+	
+	System.out.println("Password before check is: "+ passWord);
+	try {
+		query.getFirst();
+		passWord = mPassword;
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+}
 }

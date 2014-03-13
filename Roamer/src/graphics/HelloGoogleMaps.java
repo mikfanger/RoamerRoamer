@@ -1,9 +1,18 @@
 package graphics;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Point;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,10 +26,11 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
 import com.example.roamer.events.CreateEventActivity;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -33,20 +43,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 
 public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks<Cursor>{
 
 	private GoogleMap Mmap;
+	private EditText searchText;
+	private double latitude= 0.0, longtitude= 0.0;
+	private LatLng curLocation;
+	private TextView locText;
 	
 	private LocationManager locationManager;
-	private static final long MIN_TIME = 400;
-	private static final float MIN_DISTANCE = 1000;
 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+	    
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.map);
 	    
@@ -66,7 +78,21 @@ public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks
 	    .rotateGesturesEnabled(false)
 	    .tiltGesturesEnabled(false);
 	    
-	    //handleIntent(getIntent());
+	    searchText = (EditText) findViewById(R.id.editTextSearchMap);
+	    ImageButton searchButton = (ImageButton) findViewById(R.id.imageButtonSearchMap);
+        searchButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	
+            	getFromLocation(searchText.getText().toString());
+            	
+            	Mmap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longtitude) , 14.0f) );
+            	curLocation = new LatLng(latitude,longtitude);
+            	Marker locMarker = Mmap.addMarker(new MarkerOptions().position(curLocation)
+            			.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));          	
+            	
+            }
+        });
 
 	    ImageButton backButton = (ImageButton) findViewById(R.id.imageBackFromMap);
         backButton.setOnClickListener(new OnClickListener() {
@@ -198,7 +224,18 @@ public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks
     {
         public boolean draw(Canvas canvas, MapView mapView, 
         boolean shadow, long when) 
-        {
+        {  
+        	
+        	GeoPoint p = null;
+            super.draw(canvas, mapView, shadow);                   
+
+        //---translate the GeoPoint to screen pixels---
+        Point screenPts = new Point();
+        mapView.getProjection().toPixels(p, screenPts);
+
+        //---add the marker---
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.x);            
+        canvas.drawBitmap(bmp, screenPts.x, screenPts.y-32, null);
 			return shadow;
            //...
         }
@@ -233,5 +270,58 @@ public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks
             .icon(BitmapDescriptorFactory
             .fromResource(R.drawable.ic_launcher)));
     }
+    
+    public GeoPoint searchAddress() throws IOException{
+    	Geocoder coder = new Geocoder(this);
+    	List<Address> address;
+
+    	try {
+    	    address = coder.getFromLocationName(searchText.getText().toString(),5);
+    	    if (address == null) {
+    	        return null;
+    	    }
+    	    Address location = address.get(0);
+    	    location.getLatitude();
+    	    location.getLongitude();
+
+    	   GeoPoint p1 = new GeoPoint((int) (location.getLatitude() * 1E6),
+    	                      (int) (location.getLongitude() * 1E6));
+
+    	     return p1;
+    	}
+    	finally{
+    		
+    	}           
+    }
+    
+    private  void getFromLocation(String address)
+    {
+
+        Geocoder geoCoder = new Geocoder(this, Locale.getDefault());    
+        try 
+        {
+            List<Address> addresses = geoCoder.getFromLocationName(address , 1);
+            if (addresses.size() > 0) 
+            {            
+                GeoPoint p = new GeoPoint(
+                        (int) (addresses.get(0).getLatitude() * 1E6), 
+                        (int) (addresses.get(0).getLongitude() * 1E6));
+
+                latitude=p.getLatitudeE6()/1E6;
+                longtitude=p.getLongitudeE6()/1E6;
+                
+                //locText = (TextView) findViewById(R.id.textFinalLocation);
+            	//locText.setText(searchText.toString());
+
+
+                }
+        }
+        catch(Exception ee)
+        {
+
+        }
+    }
+
+    
 		
 }

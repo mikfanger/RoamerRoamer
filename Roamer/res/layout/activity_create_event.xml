@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/textFinalLocation"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
@@ -93,6 +93,15 @@
         android:inputType="textMultiLine"
         android:maxLength="30"
         android:maxLines="2" />
+    
+    <TextView
+        android:id="@+id/textFinalLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/spinnerCreateNewType"
+        android:layout_below="@+id/buttonSelectFromMap"
+		android:text="Location"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <Button
         android:id="@+id/buttonSelectFromMap"

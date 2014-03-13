@@ -353,6 +353,11 @@ public class CreateAccountActivityPic extends Activity {
     
     public void enterTempInfo(){
     	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    	 
+    	 myDB.execSQL("INSERT INTO "
+			       + "MyCred "
+			       + "(Email) "
+			       + "VALUES ('"+"temp"+"');");
   		
 		 ContentValues args = new ContentValues();
 		 args.put("Job", job);
@@ -361,6 +366,15 @@ public class CreateAccountActivityPic extends Activity {
 		 args.put("Hotel", hotel);
 		 args.put("Pic", pictureUri);
 		 myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
+		
+		 ContentValues args1 = new ContentValues();
+		 args1.put("Job", job);
+		 args1.put("Industry", industry);
+		 args1.put("Air", airline);
+		 args1.put("Hotel", hotel);
+		 args1.put("Pic", pictureUri);
+		 args1.put("CurrentLocation", "NotSet");
+		 
 		 
 		 Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "TempRoamer", null);
  		 c.moveToFirst();
@@ -368,11 +382,18 @@ public class CreateAccountActivityPic extends Activity {
  		int index1 = c.getColumnIndex("Email");
  		int index2 = c.getColumnIndex("Password");
  		int index3 = c.getColumnIndex("Username");
- 		int index4 = c.getColumnIndex("Location");
+ 		int index4 = c.getColumnIndex("Loc");
  		
  		String email = c.getString(index1);
  		String password = c.getString(index2);
  		String username = c.getString(index3);
+ 		
+ 		args1.put("Email",email);
+ 		args1.put("Password",password);
+ 		args1.put("Username",username);
+ 		 myDB.update("MyCred", args1, "rowid" + "=" + 0, null);
+ 		 
+ 		
  		int location = c.getInt(index4);
  		myDB.close();	
  		
