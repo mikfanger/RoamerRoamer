@@ -17,6 +17,10 @@ public class IntroActivity extends Activity {
     @Override 
     protected void onCreate(Bundle savedInstanceState) {
     	
+
+		//Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+		//ParseUser.enableAutomaticUser();
+
     	
     	final String chatTable = "ChatTable";
     	final String myRoamersTable = "MyRoamers";
@@ -34,15 +38,15 @@ public class IntroActivity extends Activity {
         /* Create a chat Table in the Database. */
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
           + chatTable
-          + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Field1 VARCHAR,Field2 INT(1));");
+          + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Field1 VARCHAR, Field2 VARCHAR, Field3 VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + tempRoamer
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Sex INT(1), Travel VARCHAR, Industry INT(2), Job INT(2), Hotel INT(2), Air VARCHAR, Loc VARCHAR, Start VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Sex INT(1), Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc VARCHAR, Start VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myRoamersTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Sex INT(1), Travel VARCHAR, Industry INT(2), Job INT(2), Hotel INT(2), Air VARCHAR, Loc VARCHAR, Start VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Sex INT(1), Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc VARCHAR, Start VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myLocationTable
@@ -50,7 +54,7 @@ public class IntroActivity extends Activity {
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myCredTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Sex INT(1), Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Travel VARCHAR, Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Location INT(2), Start VARCHAR, CurrentLocation VARCHAR, Save INT(1), CountM INT(1), CountR INT(1));");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Sex INT(1), Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc INT(2), Start VARCHAR, CurrentLocation VARCHAR, Save INT(1), CountM INT(1), CountR INT(1), ChatCount INT(2));");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myEventsTable

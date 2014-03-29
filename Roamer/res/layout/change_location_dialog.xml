@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="200dp"
+    android:background="@color/DarkGrey" >
+
+    <Spinner
+        android:id="@+id/spinnerSelectRoamer"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/textCreateType"
+        android:layout_alignRight="@+id/textCreateType"
+        android:layout_below="@+id/textCreateType"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/black_greyh_9_patch"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <ImageButton
+        android:id="@+id/imageStartMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinnerSelectRoamer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="14dp"
+        android:background="@color/transparent"
+        android:padding="5dp"
+        android:src="@drawable/post" />
+
+    <TextView
+        android:id="@+id/textCreateType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp"
+        android:text="Select your Location!"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

@@ -3,7 +3,6 @@ package com.example.roamer.checkinbox;
 import com.example.roamer.R;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -18,9 +17,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 public class DiscussActivity extends Activity {
+	
 	private DiscussArrayAdapter adapter;
 	private ListView lv;
 	private EditText editText1;
+	private String chatName;
 	
 
      
@@ -32,7 +33,18 @@ public class DiscussActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.activity_discuss);
+		
+		//Set chat name from Temp Roamer
+		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		
+		Cursor c = myDB.rawQuery("SELECT * FROM TempRoamer", null);
+    	
+    	c.moveToFirst();
+    	int index;
+    	index = c.getColumnIndex("Username");
+    	chatName = c.getString(index);
 
+    	//Load list from saved chats with user (if any)
 		lv = (ListView) findViewById(R.id.listView1);
 
 		adapter = new DiscussArrayAdapter(getApplicationContext(), R.layout.listitem_discuss);
@@ -67,7 +79,7 @@ public class DiscussActivity extends Activity {
             @Override
             public void onClick(View v) {
             	
-            	Intent i=new Intent(DiscussActivity.this,InboxActivity.class);
+            	Intent i=new Intent(DiscussActivity.this,ChatsAndRequestsActivity.class);
                 startActivity(i);
             		  
             }
@@ -78,11 +90,10 @@ public class DiscussActivity extends Activity {
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		
 		myDB.execSQL("INSERT INTO "
-			       + "ChatTable "
-			       + "(Field1,Field2) "
+			       + chatName
+			       + " (Field1,Field2) "
 			       + "VALUES ('"+phrase+"',"+type+");");
-		
-		
+			
 		myDB.close();		
 	}
 
@@ -92,17 +103,16 @@ public class DiscussActivity extends Activity {
 		/*retrieve data from database */
 		
 		   SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-		   Cursor c = myDB.rawQuery("SELECT * FROM " + "ChatTable ", null);
+
+		   Cursor c = myDB.rawQuery("SELECT * FROM " + chatName+" ", null);
 
 		   int Column1 = c.getColumnIndex("Field1");
-		   System.out.println("column 1 is: " + Column1);
 		   
 		   int Column2 = c.getColumnIndex("Field2");
-		   System.out.println("column 2 is: " + Column2);
 
 		   // Check if our result was valid.
 		   c.moveToFirst();
-		   if (c != null && Column1 !=0) {
+		   if (c != null && Column1 !=0 && c.getCount()>1) {
 		    // Loop through all Results
 		    do {
 		     String Comment = c.getString(Column1);

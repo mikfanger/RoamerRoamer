@@ -1,9 +1,10 @@
 package com.example.roamer;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,10 +21,15 @@ public class SettingsActivity extends Activity {
 		String email;
 		String user;
 		
-		// Call user data from shared preferences
-		email = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("RoamerEmail","");
-		user = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("RoamerUsername","");
-		
+		// Call user data from database
+		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
+  	  	c.moveToFirst();
+  	  	int Column1 = c.getColumnIndex("Email");
+  	    int Column2 = c.getColumnIndex("Username");
+  	  	
+		email = c.getString(Column1);
+		user = c.getString(Column2);
 		// Set data on screen to match user preferences
 		TextView emailAddress = (TextView) findViewById(R.id.currentEmail);
 		emailAddress.setText(email);

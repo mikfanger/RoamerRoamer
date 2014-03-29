@@ -3,7 +3,7 @@ package com.example.roamer.events;
 public class ItemMyEvents {
 
 	public int Id;
-	public int RowId;
+	//public int RowId;
     public String IconFile;
     public String Date;
     public String EventType;
@@ -12,11 +12,11 @@ public class ItemMyEvents {
     public String Location;
     public String Description;
 
-    public ItemMyEvents(int id, int rowId, String iconFile, String date, 
+    public ItemMyEvents(int id, String iconFile, String date, 
     		String eventtype, String host, String attend, String desc, String location) {
 
         Id = id;
-        RowId = rowId;
+        //RowId = rowId;
         IconFile = iconFile;
         Host = host;
         Date = date;

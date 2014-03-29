@@ -1,39 +1,37 @@
 package com.example.roamer.checkinbox;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Model {
 
+	
     public static ArrayList<Item> Items;
+    public static ArrayList<Item> allItems;
+   // public static final String fields[] = {DatabaseSetup.colName};
+    
 
-    public static void LoadModel() throws NumberFormatException, IOException {
+    public static void LoadModel(ArrayList<Item> loadArray) {
 
         Items = new ArrayList<Item>();
+        allItems = new ArrayList<Item>();
         
-        File file = new File("messages.txt");
+        for(Item item : loadArray) {
+	           allItems.add(item);
+	        } 
         
-        if (file.exists())
-        {
-        	String wholeLine;
-        	BufferedReader in = new BufferedReader(new FileReader(file));
-            
-            while (in.ready())
-            {
-            	wholeLine = in.readLine();
-            	String[] lineArray  = wholeLine.split(",");
-            	Items.add(new Item(Integer.parseInt(lineArray[0]),lineArray[1],lineArray[2],lineArray[3]));
-            }
-            in.close();
+        for (Item item: allItems){        	
+
+        		int idTemp = item.Id;
+        		String iconTemp = item.IconFile;
+        		String nameTemp = item.Name;
+        		String dateTemp = item.Date;
+        		
+        		Items.add(new Item (idTemp,iconTemp,nameTemp,dateTemp));
         }
-        else
+        
+        if (Items.size()<1)
         {
-        	PrintWriter writer = new PrintWriter("messages.txt", "UTF-8");
-        	writer.close();
+        	Items.add(new Item (1,"none", "none", "none"));
         }
         
     }
@@ -47,5 +45,4 @@ public class Model {
         }
         return null;
     }
-
 }

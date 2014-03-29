@@ -45,6 +45,9 @@ public class MyEvents extends Activity {
         TextView textview = new TextView(this);
         textview.setText("This is the list of your events");
         setContentView(R.layout.my_events_list);
+        
+
+		
         listView = (ListView) findViewById(R.id.listView);
         
         loadArray();
@@ -76,8 +79,8 @@ public class MyEvents extends Activity {
     			dialog.setContentView(R.layout.activity_total_event);
     			dialog.setTitle("My Event");
     			
-    			ImageButton imageback = (ImageButton) dialog.findViewById(R.id.imageButtonJoin);
-    			imageback.setVisibility(View.INVISIBLE);
+    			ImageButton imageAttend = (ImageButton) dialog.findViewById(R.id.imageButtonJoin);
+    			imageAttend.setVisibility(View.INVISIBLE);
     			
             	//Populate dialog with allevent information
             	 imageView = (ImageView) dialog.findViewById(R.id.imageChildImage);
@@ -96,7 +99,7 @@ public class MyEvents extends Activity {
                  //imageView.setBackgroundResource(Model.GetbyId(position+1).IconFile);
                  textViewLocation.setText(ModelMyEvents.GetbyId(position+1).Location);
                  textViewEventType.setText(ModelMyEvents.GetbyId(position+1).EventType);
-            	 final int myId = ModelMyEvents.GetbyId(position+1).RowId;
+            	 final int myId = ModelMyEvents.GetbyId(position+1).Id;
 
     			dialog.show();
     			
@@ -109,7 +112,7 @@ public class MyEvents extends Activity {
     				}
     			});
     			
-    			ImageButton unButton = (ImageButton) dialog.findViewById(R.id.imageButtonUnattend);
+    			ImageButton unButton = (ImageButton) dialog.findViewById(R.id.imageButtonUnattendEvent);
     			// if button is clicked, close the custom dialog
     			unButton.setOnClickListener(new OnClickListener() {
     				@Override
@@ -191,7 +194,7 @@ public class MyEvents extends Activity {
 		 System.out.println("value is: " +c.getString(C1));
 
 		 
-		 loadArray.add(new ItemMyEvents(i,c.getInt(C8), c.getString(C5), c.getString(C4), c.getString(C3), c.getString(C1), c.getString(C7),c.getString(C2),c.getString(C6)));
+		 loadArray.add(new ItemMyEvents(i, c.getString(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),c.getString(C6),c.getString(C2)));
 		
 		while(c.moveToNext()){
 			i++;
@@ -205,7 +208,7 @@ public class MyEvents extends Activity {
 			  C7 = c.getColumnIndex("Attend");
 			  C8 = c.getColumnIndex("rowid");
 			 
-			 loadArray.add(new ItemMyEvents(i, c.getInt(C8), c.getString(C5), c.getString(C4), c.getString(C3), c.getString(C1), c.getString(C7),c.getString(C2),c.getString(C6)));			
+			 loadArray.add(new ItemMyEvents(i, c.getString(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),c.getString(C6),c.getString(C2)));			
 		}
 		
 		myDB.close();

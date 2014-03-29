@@ -70,6 +70,7 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="10.0sp"
         android:paddingLeft="30dp"
+        android:paddingTop="10dp"
         tools:listitem="@android:layout/simple_expandable_list_item_1" />
 
 </LinearLayout>

@@ -4,7 +4,7 @@ package com.example.roamer;
 import java.io.FileNotFoundException;
 
 import com.parse.Parse;
-import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import android.net.Uri;
@@ -40,6 +40,9 @@ public class CreateAccountActivityPic extends Activity {
 	public int hotel;
 	public int job;
 	public int industry;
+	public int travel;
+	public byte[] picFile;
+	
 	
 	
 	@Override
@@ -91,7 +94,10 @@ public class CreateAccountActivityPic extends Activity {
             	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("RoamerPicture", pictureUri).commit();
             	System.out.println("Uri location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("RoamerPicture",""));
             	
-            	enterTempInfo();
+            	Spinner position5 = (Spinner) findViewById(R.id.spinnerSetTravelStatus);
+            	travel = position5.getSelectedItemPosition();
+            	
+            	enterInfo();
             	//Move to Home Screen
             	Intent i=new Intent(CreateAccountActivityPic.this,HomeScreenActivity.class);
                 startActivity(i);
@@ -114,13 +120,15 @@ public class CreateAccountActivityPic extends Activity {
         Spinner position = (Spinner) findViewById(R.id.spinnerJob);
         //Prepare adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items[] = new MyData[6];
+        final MyData items[] = new MyData[8];
         items[0] = new MyData("Select Position", "value1");
         items[1] = new MyData("Accounting", "value2");
         items[2] = new MyData("Marketing", "value3");
         items[3] = new MyData("Consultant", "value4");
-        items[4] = new MyData("Garbage Man", "value5");
+        items[4] = new MyData("Lawyer", "value5");
         items[5] = new MyData("Sales", "value6");
+        items[6] = new MyData("Doctor", "value7");
+        items[7] = new MyData("Scientist", "value8");
         ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -143,13 +151,22 @@ public class CreateAccountActivityPic extends Activity {
         Spinner industry = (Spinner) findViewById(R.id.spinnerIndustry);
         //Prepar adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items2[] = new MyData[6];
+        final MyData items2[] = new MyData[14];
         items2[0] = new MyData("Select Industry", "value1");
-        items2[1] = new MyData("Medical", "value2");
-        items2[2] = new MyData("Finance", "value3");
-        items2[3] = new MyData("Software", "value4");
-        items2[4] = new MyData("Manufacturing", "value5");
-        items2[5] = new MyData("Biotech", "value6");
+        items2[1] = new MyData("Aerospace/Defense", "value2");
+        items2[2] = new MyData("Automotive", "value3");
+        items2[3] = new MyData("Banking", "value4");
+        items2[4] = new MyData("Consumer Products", "value5");
+        items2[5] = new MyData("Insurance", "value6");
+        items2[6] = new MyData("Media & Design", "value7");
+        items2[7] = new MyData("Oil & Gas", "value8");
+        items2[8] = new MyData("Power & Utilities", "value9");
+        items2[9] = new MyData("Real Estate", "value10");
+        items2[10] = new MyData("Government", "value11");
+        items2[11] = new MyData("Student", "value12");
+        items2[12] = new MyData("Travel/Hospitality", "value13");
+        items2[13] = new MyData("Information Technology", "value14");
+  
         ArrayAdapter<MyData> adapter2 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items2);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -172,13 +189,18 @@ public class CreateAccountActivityPic extends Activity {
         Spinner airline = (Spinner) findViewById(R.id.spinnerAirline);
         //Prepar adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items3[] = new MyData[6];
+        final MyData items3[] = new MyData[11];
         items3[0] = new MyData("Select Airline", "value1");
-        items3[1] = new MyData("Jet Blue", "value2");
-        items3[2] = new MyData("Southwest", "value3");
-        items3[3] = new MyData("Delta", "value2");
-        items3[4] = new MyData("United", "value3");
-        items3[5] = new MyData("American", "value3");
+        items3[1] = new MyData("Frontier", "value2");
+        items3[2] = new MyData("Virgin", "value3");
+        items3[3] = new MyData("JetBlue", "value2");
+        items3[4] = new MyData("Alaska", "value3");
+        items3[5] = new MyData("Southwest", "value3");
+        items3[6] = new MyData("Delta", "value3");
+        items3[7] = new MyData("Airtran", "value3");
+        items3[8] = new MyData("U.S. Airways", "value3");
+        items3[9] = new MyData("American Airlines", "value3");
+        items3[10] = new MyData("United", "value3");
         ArrayAdapter<MyData> adapter3 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items3);
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -201,13 +223,15 @@ public class CreateAccountActivityPic extends Activity {
         Spinner hotel = (Spinner) findViewById(R.id.spinnerHotel);
         //Prepar adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items4[] = new MyData[6];
+        final MyData items4[] = new MyData[8];
         items4[0] = new MyData("Select Hotel", "value1");
         items4[1] = new MyData("Hilton", "value2");
-        items4[2] = new MyData("Starwood", "value3");
-        items4[3] = new MyData("Marriott", "value2");
-        items4[4] = new MyData("Doubletree", "value3");
-        items4[5] = new MyData("Brothel", "value3");
+        items4[2] = new MyData("Marriott", "value3");
+        items4[3] = new MyData("Wyndham", "value4");
+        items4[4] = new MyData("Choice", "value5");
+        items4[5] = new MyData("Starwood", "value6");
+        items4[6] = new MyData("Hyatt", "value7");
+        items4[7] = new MyData("Intercontinental", "value8");
         ArrayAdapter<MyData> adapter4 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items4);
         adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -216,6 +240,35 @@ public class CreateAccountActivityPic extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
                 MyData d = items4[position];
+
+                //Get selected value of key 
+                String value = d.getValue();
+                String key = d.getSpinnerText();
+            }
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+        });
+        
+        Spinner travel = (Spinner) findViewById(R.id.spinnerSetTravelStatus);
+        //Prepar adapter 
+        //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
+        final MyData items5[] = new MyData[6];
+        items5[0] = new MyData("Select Status", "value1");
+        items5[1] = new MyData("0%-10%   Explorer", "value2");
+        items5[2] = new MyData("10%-30%  Excursionist", "value3");
+        items5[3] = new MyData("40%-60%  Wanderer", "value4");
+        items5[4] = new MyData("60%-80%  Nomad", "value5");
+        items5[5] = new MyData("80%-100% Globetrotter", "value6");
+        ArrayAdapter<MyData> adapter5 = new ArrayAdapter<MyData>(this,
+                android.R.layout.simple_spinner_item, items5);
+        adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        travel.setAdapter(adapter5);
+        travel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                    int position, long id) {
+                MyData d = items5[position];
 
                 //Get selected value of key 
                 String value = d.getValue();
@@ -268,7 +321,14 @@ public class CreateAccountActivityPic extends Activity {
 						e.printStackTrace();
 					}
 	                ivGalImg.setBackgroundResource(0);
-	                ivGalImg.setImageBitmap(bmp);              
+	                ivGalImg.setImageBitmap(bmp); 
+	                
+	                //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	                //bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+	                
+	                //picFile = pictureUri.getBytes();
+	                picFile = selectedImage.getPath().getBytes();
+	                
 	          }
 	          else 
 	          {
@@ -351,7 +411,7 @@ public class CreateAccountActivityPic extends Activity {
 
     }
     
-    public void enterTempInfo(){
+    public void enterInfo(){
     	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	 
     	 myDB.execSQL("INSERT INTO "
@@ -360,20 +420,12 @@ public class CreateAccountActivityPic extends Activity {
 			       + "VALUES ('"+"temp"+"');");
   		
 		 ContentValues args = new ContentValues();
-		 args.put("Job", job);
-		 args.put("Industry", industry);
-		 args.put("Air", airline);
-		 args.put("Hotel", hotel);
 		 args.put("Pic", pictureUri);
 		 myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
 		
 		 ContentValues args1 = new ContentValues();
-		 args1.put("Job", job);
-		 args1.put("Industry", industry);
-		 args1.put("Air", airline);
-		 args1.put("Hotel", hotel);
 		 args1.put("Pic", pictureUri);
-		 args1.put("CurrentLocation", "NotSet");
+		 args1.put("CurrentLocation", "Boston");
 		 
 		 
 		 Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "TempRoamer", null);
@@ -382,35 +434,61 @@ public class CreateAccountActivityPic extends Activity {
  		int index1 = c.getColumnIndex("Email");
  		int index2 = c.getColumnIndex("Password");
  		int index3 = c.getColumnIndex("Username");
- 		int index4 = c.getColumnIndex("Loc");
+ 		int index4 = c.getColumnIndex("Sex");
+ 		int index5 = c.getColumnIndex("Loc");
  		
  		String email = c.getString(index1);
  		String password = c.getString(index2);
  		String username = c.getString(index3);
+ 		int sex = c.getInt(index4);
+ 		String loc = c.getString(index5);
+ 		
+ 		boolean sexbool = true;
+ 		
+ 		if(sex == 0){
+ 			sexbool = false;
+ 		}
  		
  		args1.put("Email",email);
  		args1.put("Password",password);
  		args1.put("Username",username);
- 		 myDB.update("MyCred", args1, "rowid" + "=" + 0, null);
+ 		args1.put("Sex",sexbool);
+ 		args1.put("Loc",loc);
+ 		args1.put("Travel",travel);
+ 		args1.put("Industry",industry);
+ 		args1.put("Job",job);
+ 		args1.put("Hotel",hotel);
+ 		args1.put("Air",airline);
+ 		args1.put("ChatCount",00);
+ 		 myDB.update("MyCred", args1, "rowid" + "=" + 1, null);
  		 
  		
  		int location = c.getInt(index4);
  		myDB.close();	
  		
  		//Enter data into parse as new user
- 		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+ 		//Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+ 		
+ 		ParseFile imgFile = new ParseFile (username+".png", picFile);
+ 		imgFile.saveInBackground();
  		
  		ParseObject user1 = new ParseObject("Roamer");
 		user1.put("Username", username);
 		user1.put("Password", password);
 		user1.put("Email", email);
 		user1.put("Location", location);
+		user1.put("Travel", travel);
+		user1.put("Industry", industry);
+		user1.put("CurrentLocation", 0);
+		user1.put("Job", job);
+		user1.put("Hotel", hotel);
+		user1.put("Male", sexbool);
+		user1.put("Airline", airline);
+		user1.put("LoginCount", 1);
+		user1.put("Pic", imgFile);
+        
 		user1.saveInBackground();
  	     
     }
     
-    public void saveToDatabase(){
-    	
-    }
-
 }

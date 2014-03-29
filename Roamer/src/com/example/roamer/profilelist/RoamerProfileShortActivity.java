@@ -122,6 +122,7 @@ public class RoamerProfileShortActivity extends Activity {
 	   	Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
 	   	c.moveToFirst();
 	   	int index = c.getColumnIndex("CountR");
+	   	System.out.println("Current Count of my Roamers is: "+c.getInt(index));
 	   	args.put("CountR",c.getInt(index)+1);
 	   	myDB.update("MyCred", args, "rowid"+"="+1, null);
 	   	

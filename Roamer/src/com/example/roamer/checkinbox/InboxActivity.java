@@ -1,16 +1,15 @@
 package com.example.roamer.checkinbox;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
-import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
-import com.example.roamer.profilelist.Item;
-import com.example.roamer.profilelist.MyRoamerModel;
-
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -18,11 +17,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,6 +41,8 @@ public class InboxActivity extends Activity {
     private Spinner position;
     private Dialog dialog;
     private int count;
+    private String chatName;
+    private boolean noRoamers = false;
     ArrayList<Item> loadArray;
 
     @Override
@@ -50,10 +53,10 @@ public class InboxActivity extends Activity {
         setContentView(R.layout.inbox_list);
         loadArray();
 
-        MyRoamerModel.LoadModel(loadArray);
+        Model.LoadModel(loadArray);
         
         listView = (ListView) findViewById(R.id.listView);
-        String[] ids = new String[MyRoamerModel.Items.size()];
+        String[] ids = new String[Model.Items.size()];
         for (int i= 0; i < ids.length; i++){
 
             ids[i] = Integer.toString(i+1);
@@ -63,17 +66,6 @@ public class InboxActivity extends Activity {
         listView.setAdapter(adapter);
         
         listView.setLongClickable(true);
-        
-        ImageButton inboxButton = (ImageButton) findViewById(R.id.inboxBackButton);
-        inboxButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	
-            	Intent i=new Intent(InboxActivity.this,HomeScreenActivity.class);
-                startActivity(i);
-            		  
-            }
-        });
         
         listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -107,6 +99,20 @@ public class InboxActivity extends Activity {
             }
         }); 
         
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                int position, long id) {
+            	
+            	String chatName = Model.GetbyId(position+1).Name;
+            	
+        		addToTempRoamer(chatName);
+
+            	Intent i=new Intent(InboxActivity.this,DiscussActivity.class);
+                startActivity(i);
+            	
+            }
+        });
+        
         //Populate spinner with rows of MyRoamer database or just single row      
        
         
@@ -115,23 +121,23 @@ public class InboxActivity extends Activity {
             @Override
             public void onClick(View v) {
             	
-            	dialog = new Dialog(context);
+            	setDialog(new Dialog(context));
             	
-    			dialog.setContentView(R.layout.select_roamer_for_message);
-    			dialog.setTitle("Select Roamer");
+    			getDialog().setContentView(R.layout.select_roamer_for_message);
+    			getDialog().setTitle("Select Roamer");
 
-    			dialog.show();
+    			getDialog().show();
     			
-    			populateRoamers(dialog);
-    			ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageStartMessage);
+    			populateRoamers(getDialog());
+    			ImageButton dialogButton = (ImageButton) getDialog().findViewById(R.id.imageStartMessage);
     			// if button is clicked, close the custom dialog
     			dialogButton.setOnClickListener(new OnClickListener() {
     				@Override
     				public void onClick(View v) {
     					    	            	
-    					createTable(selectedName);
+    					createTable(getSelectedName());
     					    					
-    					dialog.dismiss();
+    					getDialog().dismiss();
     					Intent i=new Intent(InboxActivity.this,DiscussActivity.class);
     	                startActivity(i);
     	            		  
@@ -177,8 +183,49 @@ public class InboxActivity extends Activity {
     	
     	db.execSQL("CREATE TABLE IF NOT EXISTS "
 		          + tableName
-		          + " (Field1 VARCHAR,Field2 INT(1));");
-    	db.close();
+		          + " (Field1 VARCHAR,Field2 VARCHAR);");
+    	
+    	Cursor c = db.rawQuery("SELECT * FROM MyRoamers", null);
+    	
+    	c.moveToFirst();
+    	int index;
+    	index = c.getColumnIndex("Username");
+    	chatName = c.getString(index);
+
+    	while(!chatName.equals(tableName) && c.moveToNext()){
+    		index = c.getColumnIndex("Username");
+        	chatName = c.getString(index);
+    	}
+    	
+    	index = c.getColumnIndex("Pic");
+    	String picFile = c.getString(index);
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+    	String currentDateandTime = sdf.format(new Date());
+    	
+    	db.execSQL("INSERT INTO "
+			       + "ChatTable "
+			       + "(Field1,Field2,Field3) "
+			       + "VALUES ('"+tableName+"','"+picFile+"','"+currentDateandTime+"');");
+    	
+    	ContentValues args1 = new ContentValues();
+    	
+    	c = db.rawQuery("SELECT * FROM " + "MyCred ", null);
+		c.moveToFirst();
+		index = c.getColumnIndex("ChatCount");
+		int count = c.getInt(index);
+    	args1.put("ChatCount",count+1);
+		db.update("MyCred", args1, "rowid" + "=" + 1, null);
+		
+		//Update temp roamer to pass table name to discussion activity
+		db.delete("TempRoamer",null,null);
+		
+		db.execSQL("INSERT INTO "
+			       + "TempRoamer "
+			       + "(Username) "
+			       + "VALUES ('"+getSelectedName()+"');");
+		
+		db.close();
     }
     
     public int getRowCount(String tableName){
@@ -204,117 +251,140 @@ public class InboxActivity extends Activity {
     public void populateRoamers(Dialog dialog){
     	
     
-       position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
-        
-       /*
-        int rowCount = 1;
-        
-        System.out.println("MyRoamers RowCount: "+getRowCount("MyRoamers"));
-        if(getRowCount("MyRoamers") == 0)
-        {
-        	return;
-        }
-        else
-        {
-        	rowCount = getRowCount("MyRoamers");
-        }
-        final MyData items1[] = new MyData[rowCount];
-        
-        
-        if (getRowCount("MyRoamers") == 0)
-        {
-        	items1[0] = new MyData("name","value");
-        }
-        else
-        {
-        	for(int i = 0; i<getRowCount("MyRoamers");i++)
-            {
-            	String name =Integer.toString(i);
-            	items1[i] = new MyData(getRoamerName(name),"value");
-            }
-        }
-        */
-       
-       final MyData items1[] = new MyData[5];
-       items1[0] = new MyData("Midwest", "value1");
-       items1[1] = new MyData("West", "value2");
-       items1[2] = new MyData("Southwest", "value3");
-       items1[3] = new MyData("Southeast", "value2");
-       items1[4] = new MyData("Northeast", "value3");
-       ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
-               android.R.layout.simple_spinner_item, items1);
-       adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-       position.setAdapter(adapter1);
-       
-       position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-           public void onItemSelected(AdapterView<?> parent, View view,
-                   int position, long id) {
-        	   
-        	   ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-               MyData d = items1[position];
+    position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
+     
+    SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+   	
+   	Cursor cur = myDB.rawQuery("SELECT * FROM MyRoamers", null);
+   	
+   	cur.moveToFirst();
+   	int index;
+   	int i = 0;
+   	
+   	    if (cur != null && cur.getCount()>0) {
+   	    	
+   	        
+   	        
+   	    	final MyData items1[] = new MyData[cur.getCount()];
+  	    	cur.moveToFirst();
+   	    	index = cur.getColumnIndex("Username");
+   	    	items1[i] = new MyData(cur.getString(index),"Value1");
+   	 		
+   	    	while(cur.moveToNext()){
+   	    		i=i+1;
+   	    		index = cur.getColumnIndex("Username");
+   	    		items1[i] = new MyData(cur.getString(index),"Value1");
+   	    	}
+   	    	
+   	    		ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
+   	                 android.R.layout.simple_spinner_item, items1);
+   	    		adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+   	    		position.setAdapter(adapter1);
+   	         
+   	    		position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+   	             public void onItemSelected(AdapterView<?> parent, View view,
+   	                     int position, long id) {
+   	          	   
+   	          	   ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+   	                 MyData d = items1[position];
 
-               //Get selected value of key 
-               String value = d.getValue();
-               String key = d.getSpinnerText();
-               selectedName = key;
-           }
+   	                 //Get selected value of key 
+   	                 //String value = d.getValue();
+   	                 setSelectedName(d.getSpinnerText());
+   	                 
+   	             }
 
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-       });
-        
-        System.out.println("Items length is: "+items1.length);
-        
+   	  			@Override
+   	  			public void onNothingSelected(AdapterView<?> arg0) {
+   	  			}
+   	         });
+   	    	
+   	    }
+   	    else{
+   	    	final MyData items1[] = new MyData[1];
+   	    	items1[i] = new MyData("None","Value1");
+   	    	   	    	
+   	    	position.setVisibility(0);
+   	    }
+   	   
     }
     
     public void loadArray(){
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
+    	
     	cur.moveToFirst();
     	int index;
-    	index = cur.getColumnIndex("CountR");
+    	index = cur.getColumnIndex("ChatCount");
     	count = cur.getInt(index);
     	
-    	System.out.println("Checking Count of MyRoamers");
-    	System.out.println("Count of my roamers is: " + count);
+    	//If there are entries in MyRoamers, populate the list
+    	loadArray = new ArrayList<Item>();
     	
+    	System.out.println("Chat Count is: "+count);
     	if (count > 0) {
     		
-    		
-    	loadArray = new ArrayList<Item>();
     	int i = 1;
 
-		Cursor c = myDB.rawQuery("SELECT * FROM " + "MyRoamers ", null);
+		Cursor c = myDB.rawQuery("SELECT * FROM " + "ChatTable", null);
 		c.moveToFirst();
 		
-		 int C1 = c.getColumnIndex("Pic");
-		 int C2 = c.getColumnIndex("Name");
-		 int C3 = c.getColumnIndex("Loc");
-		 int C4 = c.getColumnIndex("Sex");
+		 int C1 = c.getColumnIndex("Field2");
+		 int C2 = c.getColumnIndex("Field1");
+		 int C3 = c.getColumnIndex("Field3");
 		 
 		 System.out.println("value is: " +c.getString(C1));
 
 		 
-		 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3),c.getInt(C4)));
+		 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));
 		
 		while(c.moveToNext()){
 			i++;
 			
-			  C1 = c.getColumnIndex("Pic");
-			  C2 = c.getColumnIndex("Name");
-			  C3 = c.getColumnIndex("Loc");
-			  C4 = c.getColumnIndex("Sex");
+			  C1 = c.getColumnIndex("Field2");
+			  C2 = c.getColumnIndex("Field1");
+			  C3 = c.getColumnIndex("Field3");
 
 			 
-			 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3),c.getInt(C4)));			
+			 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));			
 		}
 		
 		myDB.close();
     }
     	else{
     		 System.out.println("Row Count is: " + 0);
+    		 loadArray.add(new Item(1,"default_userpic.png", "none", "none"));
     	}
     }
+
+	public Dialog getDialog() {
+		return dialog;
+	}
+
+	public void setDialog(Dialog dialog) {
+		this.dialog = dialog;
+	}
+
+	public String getSelectedName() {
+		return selectedName;
+	}
+
+	public void setSelectedName(String selectedName) {
+		this.selectedName = selectedName;
+	}
+	
+	public void addToTempRoamer(String roamerName){
+
+	SQLiteDatabase db = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+	db.delete("TempRoamer",null,null);
+	
+	db.execSQL("INSERT INTO "
+		       + "TempRoamer "
+		       + "(Username) "
+		       + "VALUES ('"+roamerName+"');");
+	
+	db.close();
+	}
+    
 }

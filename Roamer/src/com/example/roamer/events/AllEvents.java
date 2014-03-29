@@ -1,17 +1,23 @@
 package com.example.roamer.events;
 
+import java.util.Calendar;
+
 import graphics.FlyOutContainer;
 
 import com.example.roamer.R;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -20,7 +26,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
  
+@SuppressLint("NewApi")
 public class AllEvents extends Activity {
 	
 	ListView listView;
@@ -84,9 +92,7 @@ public class AllEvents extends Activity {
     			dialog.setContentView(R.layout.activity_total_event);
     			dialog.setTitle("Event");
     			
-    			ImageButton imageback = (ImageButton) dialog.findViewById(R.id.imageBackFromMyEvent);
-    			ImageButton imageUnattend = (ImageButton) dialog.findViewById(R.id.imageButtonUnattend);
-    			imageback.setVisibility(View.INVISIBLE);
+    			ImageButton imageUnattend = (ImageButton) dialog.findViewById(R.id.imageButtonUnattendEvent);
     			imageUnattend.setVisibility(View.INVISIBLE);
     			
             	//Populate dialog with allevent information
@@ -97,24 +103,36 @@ public class AllEvents extends Activity {
                  textViewDate = (TextView) dialog.findViewById(R.id.textChildDate);
                  textViewAttend = (TextView) dialog.findViewById(R.id.textChildAttend);
                  textViewLocation = (TextView) dialog.findViewById(R.id.textChildLocation);
-                 textViewDesc = (TextView) dialog.findViewById(R.id.textChildDesc);                 
+                 textViewDesc = (TextView) dialog.findViewById(R.id.textChildDesc);        
+                 
+                 System.out.println("Location is: "+Model.GetbyId(position+1).Location);
+                 System.out.println("Desc is: "+Model.GetbyId(position+1).Description);
                  
                  textViewHost.setText(Model.GetbyId(position+1).Host);
                  textViewDesc.setText(Model.GetbyId(position+1).Description);
                  textViewAttend.setText(Model.GetbyId(position+1).Attend);
                  textViewDate.setText(Model.GetbyId(position+1).Date);
                  final String hostImage = Model.GetbyId(position+1).IconFile;
-                // imageView.setImageResource(assets/f);
                  textViewLocation.setText(Model.GetbyId(position+1).Location);
                  textViewEventType.setText(Model.GetbyId(position+1).EventType);
             	
 
     			dialog.show();
     			
+    			ImageButton backButton = (ImageButton) dialog.findViewById(R.id.imageBackFromMyEvent);
+    			// if button is clicked, close the custom dialog
+    			backButton.setOnClickListener(new OnClickListener() {
+    				@Override
+    				public void onClick(View v) {
+    					dialog.dismiss();
+    				}
+    			});
+    			
     			ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageButtonJoin);
     			// if button is clicked, close the custom dialog
     			dialogButton.setOnClickListener(new OnClickListener() {
-    				@Override
+    				@SuppressLint("InlinedApi")
+					@Override
     				public void onClick(View v) {
     					
     					//Get current data to be loaded into MyEvents
@@ -128,7 +146,28 @@ public class AllEvents extends Activity {
     					newImage = hostImage;
     					
     					addToMyEvents(newHost, newType, newDate, newAttend, newLocation, newDesc, newImage);
+    					
+    					//Add this event to Calendar
+    					Calendar beginTime = Calendar.getInstance();
+    				
+    					beginTime.set(2014, 5, 19, 7, 30);
+    					Calendar endTime = Calendar.getInstance();
+    					endTime.set(2014, 5, 19, 8, 30);
+    					Intent intent = new Intent(Intent.ACTION_INSERT)
+    					    .setData(Events.CONTENT_URI)
+    					    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+    					    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+    					    .putExtra(Events.TITLE, newType)
+    					    .putExtra(Events.DESCRIPTION, newDesc)
+    					    .putExtra(Events.EVENT_LOCATION, newLocation)
+    					    .putExtra(Events.AVAILABILITY, Events.AVAILABILITY_BUSY)
+    					    .putExtra(Intent.EXTRA_EMAIL, "michael@vdiagnostics.com");
+    					startActivity(intent);
+    					
     					dialog.dismiss();
+    					
+    					Toast.makeText(getApplicationContext(), "Event added to Calendar!",
+    							   Toast.LENGTH_LONG).show();
     				}
     			});
 

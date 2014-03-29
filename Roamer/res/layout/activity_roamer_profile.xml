@@ -162,7 +162,7 @@
         android:src="@drawable/field_entry" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textFinalLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageView6"
@@ -175,7 +175,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignLeft="@+id/textFinalLocation"
         android:layout_alignTop="@+id/imageView7"
         android:layout_marginTop="10dp"
         android:text="Location"

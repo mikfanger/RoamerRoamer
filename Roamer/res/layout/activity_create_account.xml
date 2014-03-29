@@ -112,7 +112,8 @@
         android:layout_alignRight="@+id/textWhereFrom"
         android:layout_below="@id/textUsername"
         android:background="@drawable/field_entry"
-        android:ems="10" />
+        android:ems="10"
+        android:textColor="@color/DarkWhite" />
 
     <EditText
         android:id="@+id/newEmail"
@@ -123,7 +124,8 @@
         android:layout_below="@id/textEmailAddress"
         android:background="@drawable/field_entry"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textColor="@color/DarkWhite" />
 
     <EditText
         android:id="@+id/newPassword"
@@ -134,7 +136,8 @@
         android:layout_below="@id/textPassword"
         android:background="@drawable/field_entry"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="@color/DarkWhite" />
 
     <TextView
         android:id="@+id/textConfirmPassword"
@@ -238,6 +241,7 @@
         android:layout_below="@id/textConfirmPassword"
         android:background="@drawable/field_entry"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="@color/DarkWhite" />
 
 </RelativeLayout>

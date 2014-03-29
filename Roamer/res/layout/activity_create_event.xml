@@ -78,44 +78,10 @@
         android:text="Select Location"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textFinalLocation"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:maxLength="30"
-        android:maxLines="2" />
-    
-    <TextView
-        android:id="@+id/textFinalLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:layout_alignLeft="@+id/spinnerCreateNewType"
-        android:layout_below="@+id/buttonSelectFromMap"
-		android:text="Location"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-    <Button
-        android:id="@+id/buttonSelectFromMap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/editText2"
-        android:layout_alignLeft="@+id/spinnerCreateTime"
-        android:layout_below="@+id/spinnerCreateTime"
-        android:text="Select From Map" />
-
     <DatePicker
         android:id="@+id/datePicker1"
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="140dp"
         android:layout_alignLeft="@+id/spinnerCreateNewType"
         android:layout_alignTop="@+id/textCreateDate" />
 
@@ -129,14 +95,47 @@
         android:text="Select Type"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <Button
+        android:id="@+id/buttonSelectFromMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignLeft="@+id/spinnerCreateTime"
+        android:layout_alignParentRight="true"
+        android:text="Select From Map" />
+
     <ImageButton
         android:id="@+id/imageButtonPostEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/editText2"
-        android:layout_marginTop="20dp"
         android:background="@color/transparent"
+        android:paddingBottom="10dp"
         android:src="@drawable/post" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageButtonPostEvent"
+        android:layout_alignLeft="@+id/imageBackFromCreate"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:maxLength="30"
+        android:maxLines="2" />
+
+    <TextView
+        android:id="@+id/textFinalLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_below="@+id/buttonSelectFromMap"
+        android:text="Final Location"
+        android:textColor="@color/DarkWhite" />
 
 </RelativeLayout>

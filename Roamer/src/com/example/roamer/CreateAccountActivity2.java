@@ -1,8 +1,5 @@
 package com.example.roamer;
 
-
-import com.google.appengine.api.datastore.Cursor;
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
@@ -89,7 +86,7 @@ public class CreateAccountActivity2 extends Activity {
 		 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
  		
 		 ContentValues args = new ContentValues();
-		 args.put("Location", spinnerPos);
+		 args.put("Loc", spinnerPos);
 		 myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
  			
  	     myDB.close();	

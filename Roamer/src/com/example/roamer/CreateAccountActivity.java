@@ -35,6 +35,7 @@ public class CreateAccountActivity extends Activity {
 	private String mPassword;
 	private String mConfirmPassword;
 	private String error;
+	private int sex;
 	
 	private static final String passNotEqual = "Passwords must match!";
 	private static final String noTerms = "You must agree to Terms and Conditions!";
@@ -134,6 +135,14 @@ public class CreateAccountActivity extends Activity {
     		 cancel = true;
     		 error = noTerms;
     	 }
+    	 if (female.isChecked())
+    	 {
+    		 sex = 0;
+    	 }
+    	 if (male.isChecked())
+    	 {
+    		 sex = 1;
+    	 }
 		
     	//Check that all fields are filled out
     	if (cancel == false)
@@ -148,8 +157,8 @@ public class CreateAccountActivity extends Activity {
     		myDB.delete("TempRoamer",null,null);
     	    myDB.execSQL("INSERT INTO "
     				       + "TempRoamer "
-    				       + "(Email,Password,Username) "
-    				       + "VALUES ('"+mEmailAddress+"','"+mPassword+"','"+mUsername+"');");
+    				       + "(Email,Password,Username,Sex) "
+    				       + "VALUES ('"+mEmailAddress+"','"+mPassword+"','"+mUsername+"',"+sex+");");
     			
     			myDB.close();	
     			

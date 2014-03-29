@@ -4,8 +4,6 @@ import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -16,11 +14,10 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 public class ProfileListActivity extends Activity {
 
@@ -35,7 +32,7 @@ public class ProfileListActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.profile_list);
+        setContentView(R.layout.roamers_list);
 
         /*
         Model.LoadModel();
@@ -61,73 +58,23 @@ public class ProfileListActivity extends Activity {
             		  
             }
         });
+              
+        TextView currentText = (TextView) findViewById(R.id.currentLocation);
         
-        //Region
-        final Spinner position = (Spinner) findViewById(R.id.locationSpinner);
-        //Prepare adapter 
-        //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData locations[] = new MyData[5];
-        locations[0] = new MyData("Boston", "value1");
-        locations[1] = new MyData("Chicago", "value2");
-        locations[2] = new MyData("Cleveland", "value3");
-        locations[3] = new MyData("Oakland", "value2");
-        locations[4] = new MyData("Detroit", "value3");
-        ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
-                android.R.layout.simple_spinner_item, locations);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        position.setAdapter(adapter1);
-        position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,
-                    int position, long id) {
-                MyData d = locations[position];
-
-                //Get selected value of key 
-                String value = d.getValue();
-                String key = d.getSpinnerText();
-            }
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
-        });
+        SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
+    	cur.moveToFirst();
+    	int index;
+    	index = cur.getColumnIndex("CurrentLocation");
+    	currentText.setText(cur.getString(index));
+    	
+    	myDB.close();
         
-        position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-    			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
-    				
-    				
-    				Object item = parent.getItemAtPosition(pos);
-    				String currentLocation = item.toString();
-    				createListView(currentLocation);
-    			}
-    			public void onNothingSelected(AdapterView<?> parent){
-    			}
-		});
-        
-       
-
+    	String currentLocation = currentText.getText().toString();
+    	createListView(currentLocation);
+      
     }
     
-    public class MyData {
-        public MyData(String spinnerText, String value) {
-            this.spinnerText = spinnerText;
-            this.value = value;
-        }
-
-        public String getSpinnerText() {
-            return spinnerText;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public String toString() {
-            return spinnerText;
-        }
-
-        String spinnerText;
-        String value;
-    }
     
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -172,9 +119,11 @@ public class ProfileListActivity extends Activity {
 		
     }
     
+    //Enter Roamer data in to temp table for retrieval by short profile page
     public void addTempRoamer(String icon, String name, String sex){
-   	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+   	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
    	 
+   	myDB.delete("TempRoamer", null, null);
    	myDB.execSQL("INSERT INTO "
 			       + "TempRoamer "
 			       + "(rowid,Pic,Username,Loc) "

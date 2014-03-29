@@ -11,8 +11,8 @@ public class Item {
     public String Location;
     public String Description;
 
-    public Item(int id, String iconFile, String date, 
-    		String eventtype, String host, String attend, String desc, String location) {
+    public Item(int id, String iconFile, String host, 
+    		String date, String eventtype, String attend, String location, String desc) {
 
         Id = id;
         IconFile = iconFile;

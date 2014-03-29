@@ -186,4 +186,22 @@
         android:text="Preferred Hotel (opt)"
         android:textColor="@color/DarkWhite" />
 
+    <Spinner
+        android:id="@+id/spinnerSetTravelStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:background="@drawable/field_entry" />
+
+    <android.widget.TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinnerHotel"
+        android:layout_below="@+id/findPicture"
+        android:layout_marginTop="20dp"
+        android:text="Travel Status (opt)"
+        android:textColor="@color/DarkWhite" />
+
 </RelativeLayout>

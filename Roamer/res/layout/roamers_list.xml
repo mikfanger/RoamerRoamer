@@ -70,6 +70,7 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="10.0sp"
         android:paddingLeft="30dp"
+        android:paddingTop="10dp"
         tools:listitem="@android:layout/simple_expandable_list_item_1" />
 
     <RelativeLayout
@@ -82,12 +83,13 @@
             android:id="@+id/currentLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/locationName"
-            android:layout_alignBottom="@+id/locationName"
-            android:layout_marginLeft="18dp"
-            android:layout_toRightOf="@+id/locationName"
+            android:layout_alignBottom="@+id/createAccountBottom"
+            android:layout_alignLeft="@+id/locationName"
+            android:layout_marginLeft="0dp"
             android:text="location"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/DarkWhite"
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/locationName"
@@ -100,20 +102,6 @@
             android:text="Roamers located in: "
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/DarkWhite" />
-
-        <Spinner
-            android:id="@+id/locationSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/locationName"
-            android:layout_alignRight="@+id/locationName"
-            android:layout_below="@+id/locationName"
-            android:background="@drawable/field_entry"
-            android:gravity="center"
-            android:text="Chicago Area"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/DarkWhite"
-            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
 
         <ImageView
             android:id="@+id/backFromEvents"

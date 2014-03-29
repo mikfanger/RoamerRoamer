@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/Grey"
+    android:layout_width="300dp"
+    android:layout_height="500dp"
+    android:background="@color/DarkGrey"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -16,27 +16,7 @@
         android:layout_alignBottom="@+id/textView3"
         android:layout_alignLeft="@+id/textChildDate"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/DarkWhite" />
-
-    <TextView
-        android:id="@+id/textChildLocation"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_toRightOf="@+id/textView4"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/DarkWhite" />
-
-    <TextView
-        android:id="@+id/textChildDesc"
-        android:layout_width="200dp"
-        android:layout_height="65dp"
-        android:layout_above="@+id/imageButtonJoin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="italic" />
+        android:textColor="@color/Red" />
 
     <TextView
         android:id="@+id/textView4"
@@ -66,17 +46,8 @@
         android:layout_width="50dp"
         android:layout_height="80dp"
         android:layout_above="@+id/textCreateType"
-        android:layout_alignLeft="@+id/textCreateType"
+        android:layout_alignLeft="@+id/textChildDesc"
         android:src="@drawable/chicago_cartoon" />
-
-    <TextView
-        android:id="@+id/textChildDate"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textChildType"
-        android:layout_marginBottom="16dp"
-        android:layout_toRightOf="@+id/textView4"
-        android:textColor="@color/DarkWhite" />
 
     <TextView
         android:id="@+id/textRecentDate"
@@ -86,18 +57,6 @@
         android:layout_alignBottom="@+id/textChildDate"
         android:layout_alignLeft="@+id/textCreateType"
         android:text="Date: "
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textCreateType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textChildHost"
-        android:layout_alignBottom="@+id/textChildHost"
-        android:layout_toLeftOf="@+id/textChildHost"
-        android:text="Host By: "
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/black"
         android:textStyle="bold" />
@@ -124,12 +83,73 @@
         android:textColor="@color/black"
         android:textStyle="bold" />
 
+    <ImageButton
+        android:id="@+id/imageBackFromMyEvent"
+        android:layout_width="55dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/x" />
+
+    <TextView
+        android:id="@+id/textCreateType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textChildHost"
+        android:layout_alignBottom="@+id/textChildHost"
+        android:layout_alignLeft="@+id/imageChildImage"
+        android:text="Host By: "
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textChildDesc"
+        android:layout_width="200dp"
+        android:layout_height="65dp"
+        android:layout_below="@+id/textChildLocation"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/DarkWhite"
+        android:textStyle="normal" />
+
+    <ImageButton
+        android:id="@+id/imageButtonUnattendEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageButtonJoin"
+        android:layout_toLeftOf="@+id/textChildHost"
+        android:background="@color/transparent"
+        android:src="@drawable/unattend" />
+
+    <TextView
+        android:id="@+id/textChildDate"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textChildType"
+        android:layout_alignLeft="@+id/textChildHost"
+        android:layout_marginBottom="18dp"
+        android:textColor="@color/Red" />
+
+    <TextView
+        android:id="@+id/textChildLocation"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textChildType"
+        android:layout_below="@+id/textView3"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/Red" />
+
     <TextView
         android:id="@+id/textChildAttend"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_alignRight="@+id/textView5"
         android:layout_below="@+id/textView5"
-        android:layout_toRightOf="@+id/textView4"
+        android:layout_marginTop="5dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/DarkWhite"
         android:textStyle="italic" />
@@ -138,31 +158,10 @@
         android:id="@+id/imageButtonJoin"
         android:layout_width="120dp"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/textChildLocation"
-        android:layout_marginBottom="72dp"
+        android:layout_below="@+id/textChildDesc"
+        android:layout_toLeftOf="@+id/imageBackFromMyEvent"
         android:background="@color/transparent"
         android:scaleType="fitCenter"
-        android:src="@drawable/join" />
-
-    <ImageButton
-        android:id="@+id/imageBackFromMyEvent"
-        android:layout_width="55dp"
-        android:layout_height="30dp"
-        android:layout_alignLeft="@+id/textChildDesc"
-        android:layout_alignTop="@+id/imageButtonJoin"
-        android:layout_marginLeft="16dp"
-        android:background="@color/transparent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back" />
-
-    <ImageButton
-        android:id="@+id/imageButtonUnattend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageBackFromMyEvent"
-        android:layout_toRightOf="@+id/textView4"
-        android:background="@color/transparent"
-        android:src="@drawable/unattend" />
+        android:src="@drawable/join_red" />
 
 </RelativeLayout>

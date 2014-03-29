@@ -2,14 +2,17 @@ package com.example.roamer;
 
 import com.parse.GetCallback;
 import com.parse.Parse;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -18,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -25,12 +29,15 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 public class LoginActivity extends Activity {
+	
+	
 	/**
 	 * The default email to populate the email field with.
 	 */
@@ -56,8 +63,7 @@ public class LoginActivity extends Activity {
 	//private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
-	private int countRoamers;
-	private int countEvents;
+
 	
 	//Set detault user preferences
 
@@ -65,8 +71,21 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+		
 		setContentView(R.layout.activity_login);
+		
+				// Add your initialization code here
+				Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+
+				ParseUser.enableAutomaticUser();
+				ParseACL defaultACL = new ParseACL();
+			    
+				// If you would like all objects to be private by default, remove this line.
+				defaultACL.setPublicReadAccess(true);
+				
+				ParseACL.setDefaultACL(defaultACL, true);
+		
+		
 		
 		cred = (CheckBox)findViewById(R.id.checkSaveLogin);
 		
@@ -105,7 +124,30 @@ public class LoginActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						attemptLogin();
+						
+						final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+						query.whereEqualTo("Email", "jon@roamer.com");
+						
+						query.getFirstInBackground(new GetCallback<ParseObject>() {
+
+						@Override
+						public void done(ParseObject object, ParseException e) {
+							 if (e == null) {
+								 							 
+								//Start roamer creation
+							    	attemptLogin();
+								 
+							    } else {
+							    	
+									 //Show toast of lacking network connection
+									 Toast.makeText(getApplicationContext(), "No network connection!",
+			    							   Toast.LENGTH_LONG).show();
+									 
+									 System.out.println("Network error is: "+e);
+							    }		
+						}
+						});
+						//attemptLogin();
 					}
 				});
 		
@@ -113,8 +155,33 @@ public class LoginActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						Intent i=new Intent(LoginActivity.this,ExplainationActivity.class);
-		                startActivity(i);
+						
+						//Check for network connection
+						final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+						query.whereEqualTo("Email", "jon@roamer.com");
+						
+						query.getFirstInBackground(new GetCallback<ParseObject>() {
+
+						@Override
+						public void done(ParseObject object, ParseException e) {
+							 if (e == null) {
+								 							 
+								//Start roamer creation
+							    	Intent i=new Intent(LoginActivity.this,ExplainationActivity.class);
+					                startActivity(i);
+								 
+							    } else {
+							    	
+									 //Show toast of lacking network connection
+									 Toast.makeText(getApplicationContext(), "No network connection!",
+			    							   Toast.LENGTH_LONG).show();
+									 
+									 System.out.println("Network error is: "+e);
+							    }		
+						}
+						});
+						
+						
 					}
 				});
 	}
@@ -278,6 +345,10 @@ public class LoginActivity extends Activity {
 				saveCredIfChecked();
 				
 				saveFromDatabaseToCred();
+				
+				//Update Roamer profile to increase login count
+				updateLoginCount();
+				
 				finish();
 				Intent i=new Intent(LoginActivity.this,HomeScreenActivity.class);
                 startActivity(i);
@@ -310,21 +381,52 @@ public class LoginActivity extends Activity {
 
 		if(cred.isChecked()){
 			
-	        myDB.execSQL("INSERT INTO "
-				       + "MyCred "
-				       + "(Email,Password,CurrentLocation,Save) "
-				       + "VALUES ('"+userName+"','"+passWord+"','Boston',"+1+");");
+			Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "MyCred", null); 
 			
-			myDB.close();		
+			if(c.getCount() > 1){
+				
+				ContentValues args = new ContentValues();
+				args.put("Email", userName);
+				args.put("Password", passWord);
+				args.put("CurrentLocation", "Boston");
+				args.put("Save", 1);
+				myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
+			}
+					
+			else{
+				
+				myDB.execSQL("INSERT INTO "
+					       + "MyCred "
+					       + "(Email,Password,CurrentLocation,Save) "
+					       + "VALUES ('"+userName+"','"+passWord+"','Boston',"+1+");");
+				
+				myDB.close();	
+			}
+	        	
 		}
 		else{
 			
-	        myDB.execSQL("INSERT INTO "
-				       + "MyCred "
-				       + "(Email,Password,CurrentLocation,Save) "
-				       + "VALUES ('"+userName+"','"+passWord+"','Boston',"+0+");");
+			Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "MyCred", null); 
 			
-			myDB.close();
+			if(c.getCount() > 1){
+				
+				ContentValues args = new ContentValues();
+				args.put("Email", userName);
+				args.put("Password", passWord);
+				args.put("CurrentLocation", "Boston");
+				args.put("Save", 0);
+				myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
+			}
+					
+			else{
+				
+				myDB.execSQL("INSERT INTO "
+					       + "MyCred "
+					       + "(Email,Password,CurrentLocation,Save) "
+					       + "VALUES ('"+userName+"','"+passWord+"','Boston',"+0+");");
+				
+				myDB.close();	
+			}
 		}
 	}
 	
@@ -346,11 +448,13 @@ public class LoginActivity extends Activity {
 				  cred = c.getInt(Column1);
 		      }
 		  }
+		  myDB.close();
+		  
 		return cred;
 	}
 	
 	public void getCredLocally(){
-		 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		  SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		  Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
 		  c.moveToFirst();
 		  
@@ -359,11 +463,13 @@ public class LoginActivity extends Activity {
 		  
 		  userName = c.getString(user);
 		  passWord = c.getString(pass);
+		  
+		  myDB.close();
 	}
 	
 	public void saveFromDatabaseToCred(){
 		
-		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+		
 		
 		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 		query.whereEqualTo("Email", mEmail);
@@ -382,13 +488,10 @@ public class LoginActivity extends Activity {
 	}
 	
 public void checkEmail(){
-		
-		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
-		
+
 		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 		query.whereEqualTo("Email", mEmail);
 		
-		System.out.println("Email before check is: "+ userName);
 
 		try {
 			query.getFirst();
@@ -402,19 +505,42 @@ public void checkEmail(){
 
 public void checkPassword(){
 	
-	Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
-	
 	final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 	query.whereEqualTo("Password", mPassword);
 	
-	System.out.println("Password before check is: "+ passWord);
 	try {
 		query.getFirst();
 		passWord = mPassword;
+		
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 
 }
+
+public void updateLoginCount(){
+	
+	System.out.println("Cannont find the roamer");
+	
+	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+	query.whereEqualTo("Email", mEmail);
+	
+	query.getFirstInBackground(new GetCallback<ParseObject>() {
+	  public void done(ParseObject roamer, ParseException e) {
+	    if (roamer == null) {
+	    	System.out.println("Cannont find the roamer");
+	    	Log.d("score", "Error: " + e.getMessage()); 
+
+	    } else {
+	    	 int i = roamer.getInt("LoginCount");
+	    	 System.out.println("Login count is: "+i);
+	    	 roamer.put("LoginCount",i+1);
+		     roamer.saveInBackground();
+	    }
+	  }
+	});
+	
+	}
+	
 }

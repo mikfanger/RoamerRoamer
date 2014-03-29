@@ -1,12 +1,22 @@
 package graphics;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
+
+import org.json.*;
+
 
 import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,6 +31,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,7 +39,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.roamer.R;
@@ -51,7 +61,9 @@ public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks
 	private EditText searchText;
 	private double latitude= 0.0, longtitude= 0.0;
 	private LatLng curLocation;
-	private TextView locText;
+	private double cityLat;
+	private double cityLong;
+	private String credLocation;
 	
 	private LocationManager locationManager;
 
@@ -64,12 +76,20 @@ public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks
 	    
 	    setUpMapIfNeeded();
 	    
+	    //Get lat long for current set location
+	    getCredLocation();
+	    getCurrentLocationLatLong();
+	    
 	    //Set my location
 	    Mmap.setMyLocationEnabled(true);
 	    
-	    // Zoom in, animating the camera.
-	    Mmap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+	    // Zoom in, animating the camera to current Cred Location
+	    //Mmap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 	    
+	    Mmap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(cityLat,cityLong) , 14.0f) );
+	    curLocation = new LatLng(cityLat,cityLong);
+    	Marker locMarker = Mmap.addMarker(new MarkerOptions().position(curLocation)
+    			.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));  
 	    
 	    //Set up map options
 	    GoogleMapOptions options = new GoogleMapOptions();
@@ -310,10 +330,6 @@ public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks
                 latitude=p.getLatitudeE6()/1E6;
                 longtitude=p.getLongitudeE6()/1E6;
                 
-                //locText = (TextView) findViewById(R.id.textFinalLocation);
-            	//locText.setText(searchText.toString());
-
-
                 }
         }
         catch(Exception ee)
@@ -322,6 +338,167 @@ public class HelloGoogleMaps extends FragmentActivity implements LoaderCallbacks
         }
     }
 
+    public void getCurrentLocationLatLong() {
+    	
+    	switch(credLocation){
+    	case "Dallas":
+    		cityLong = -96.7967;
+            cityLat = 32.7758;
+            break;
+    	case "Boston":
+    		cityLong = -71.059773;
+            cityLat = 42.358431;
+    		break;
+    	case "Chicago":
+    		cityLong = -87.629798;
+            cityLat = 41.878114;
+    		break;
+    	case "New York":
+    		cityLong = -74.005973;
+            cityLat = 40.714353;
+    		break;
+    	case "San Francisco":
+    		cityLong = -122.419416;
+            cityLat = 37.774929;
+    		break;
+    	case "Los Angeles":
+    		cityLong = -118.243685;
+            cityLat = 34.052234;
+    		break;
+    	case "Los Vegas":
+    		cityLong = -115.238349;
+            cityLat = 36.255123;
+    		break;
+    	case "Houston":
+    		cityLong = -95.369390;
+            cityLat = 29.760193;
+    		break;
+    	case "Philadelphia":
+    		cityLong = -75.163789;
+            cityLat = 39.952335;
+    		break;
+    	case "Phoenix":
+    		cityLong = -112.074037;
+            cityLat = 33.448377;
+    		break;
+    	case "San Antonio":
+    		cityLong = -98.493628;
+            cityLat = 29.424122;
+    		break;
+    	case "San Jose":
+    		cityLong = -121.894955;
+            cityLat = 37.339386;
+    		break;
+    	case "San Diego":
+    		cityLong = -117.157255;
+            cityLat = 32.715329;
+    		break;
+    	case "Austin":
+    		cityLong = -97.743061;
+            cityLat = 30.267153;
+    		break;
+    	case "Jacksonville":
+    		cityLong = -81.655651;
+            cityLat = 30.332184;
+    		break;
+    	case "Indianapolis":
+    		cityLong = -86.158068;
+            cityLat = 39.768403;
+    		break;
+    	case "Seattle":
+    		cityLong = -122.332071;
+            cityLat = 47.606209;
+    		break;
+    	case "Denver":
+    		cityLong = -104.984718;
+            cityLat = 39.737567;
+    		break;
+    	case "Washington DC":
+    		cityLong = -77.036464;
+            cityLat = 38.907231;
+    		break;
+    	}
+
+
+    }
     
+    private String getCredLocation(){
+    	
+    	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
+    	cur.moveToFirst();
+    	int index;
+    	index = cur.getColumnIndex("CurrentLocation");
+    	credLocation = cur.getString(index);
+    	
+    	myDB.close();
+    	
+    	return credLocation;
+    }
+    
+    private void GetDistance(GeoPoint src, GeoPoint dest) throws IOException, JSONException {
+
+        StringBuilder urlString = new StringBuilder();
+        urlString.append("http://maps.googleapis.com/maps/api/directions/json?");
+        urlString.append("origin=");//from
+        urlString.append( Double.toString((double)src.getLatitudeE6() / 1E6));
+        urlString.append(",");
+        urlString.append( Double.toString((double)src.getLongitudeE6() / 1E6));
+        urlString.append("&destination=");//to
+        urlString.append( Double.toString((double)dest.getLatitudeE6() / 1E6));
+        urlString.append(",");
+        urlString.append( Double.toString((double)dest.getLongitudeE6() / 1E6));
+        urlString.append("&mode=walking&sensor=true");
+        Log.d("xxx","URL="+urlString.toString());
+
+        // get the JSON And parse it to get the directions data.
+        HttpURLConnection urlConnection= null;
+        URL url = null;
+
+        url = new URL(urlString.toString());
+        urlConnection=(HttpURLConnection)url.openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setDoOutput(true);
+        urlConnection.setDoInput(true);
+        urlConnection.connect();
+
+        InputStream inStream = urlConnection.getInputStream();
+        BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
+
+        String temp, response = "";
+        while((temp = bReader.readLine()) != null){
+            //Parse data
+            response += temp;
+        }
+        //Close the reader, stream & connection
+        bReader.close();
+        inStream.close();
+        urlConnection.disconnect();
+
+        //Sortout JSONresponse 
+        JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
+        JSONArray array = object.getJSONArray("routes");
+            //Log.d("JSON","array: "+array.toString());
+
+        //Routes is a combination of objects and arrays
+        JSONObject routes = array.getJSONObject(0);
+            //Log.d("JSON","routes: "+routes.toString());
+
+        String summary = routes.getString("summary");
+            //Log.d("JSON","summary: "+summary);
+
+        JSONArray legs = routes.getJSONArray("legs");
+            //Log.d("JSON","legs: "+legs.toString());
+
+        JSONObject steps = legs.getJSONObject(0);
+                //Log.d("JSON","steps: "+steps.toString());
+
+        JSONObject distance = steps.getJSONObject("distance");
+            //Log.d("JSON","distance: "+distance.toString());
+
+                String sDistance = distance.getString("text");
+                int iDistance = distance.getInt("value");
+
+    }
 		
 }
