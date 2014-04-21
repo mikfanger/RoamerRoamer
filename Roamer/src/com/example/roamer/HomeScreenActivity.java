@@ -6,6 +6,11 @@ import com.example.roamer.events.CreateEventActivity;
 import com.example.roamer.events.EventsActivity;
 import com.example.roamer.profilelist.MyRoamersListActivity;
 import com.example.roamer.profilelist.ProfileListActivity;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
@@ -17,6 +22,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,9 +37,10 @@ public class HomeScreenActivity extends Activity {
 	
 	Point p;
 	private String curLocation;
+	private String email;
 	private Dialog dialog;
 	private Context context = this;
-    private String selectedName;
+    private int selectedName;
     private Spinner position;
     private TextView location;
 
@@ -149,14 +156,85 @@ public class HomeScreenActivity extends Activity {
     
     public void getCurrentLocation(){
     	
-    	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
-    	cur.moveToFirst();
-    	int index;
-    	index = cur.getColumnIndex("CurrentLocation");
-    	curLocation = cur.getString(index);
     	
+    	
+    	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
+    	cur.moveToFirst();
+
+    	int index, indexEmail;
+    	index = cur.getColumnIndex("CurrentLocation");
+    	indexEmail = cur.getColumnIndex("Email");
+    	
+    	email = cur.getString(indexEmail);
+    	int locNum = cur.getInt(index);
+    	
+    	System.out.println("Current Location is: "+locNum);
     	myDB.close();
+    	
+    	switch(locNum){
+    	case 0:
+    		curLocation ="Not Selected";
+    		break;
+    	case 1:
+    		curLocation ="Boston";
+            break;
+    	case 2:
+    		curLocation ="San Francisco";
+    		break;
+    	case 3:
+    		curLocation ="Las Vegas";
+    		break;
+    	case 4:
+    		curLocation ="New York";
+    		break;
+    	case 5:
+    		curLocation ="Los Angeles";
+    		break;
+    	case 6:
+    		curLocation ="Houston";
+    		break;
+    	case 7:
+    		curLocation ="Philadelphia";
+    		break;
+    	case 8:
+    		curLocation ="Phoenix";
+    		break;
+    	case 9:
+    		curLocation ="San Antonio";
+    		break;
+    	case 10:
+    		curLocation ="San Diego";
+    		break;
+    	case 11:
+    		curLocation ="Dallas";
+    		break;
+    	case 12:
+    		curLocation ="San Jose";
+    		break;
+    	case 13:
+    		curLocation ="Austin";
+    		break;
+    	case 14:
+    		curLocation ="Jacksonville";
+    		break;
+    	case 15:
+    		curLocation ="Indianapolis";
+    		break;
+    	case 16:
+    		curLocation ="Seattle";
+    		break;
+    	case 17:
+    		curLocation ="Dever";
+    		break;
+    	case 18:
+    		curLocation ="Washington DC";
+    		break;
+    	case 19:
+    		curLocation ="Chicago";
+    		break;
+    	}
+
     }
      
     @Override
@@ -210,7 +288,7 @@ public class HomeScreenActivity extends Activity {
                    //Get selected value of key 
                    String value = d.getValue();
                    String key = d.getSpinnerText();
-                   selectedName = key;
+                   selectedName = position;
                }
 
     			@Override
@@ -219,14 +297,32 @@ public class HomeScreenActivity extends Activity {
            });
             
         }
-    public void setCity(String name){
+    public void setCity(int name){
     	
+    	final int name1 = name;
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	ContentValues args = new ContentValues();
     	args.put("CurrentLocation",name);
     	
     	myDB.update("MyCred", args, "rowid" + "=" + 1, null);
+    	
+    	//Update database with current location
+    	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+    	query.whereEqualTo("Email", email);
+    	
+    	query.getFirstInBackground(new GetCallback<ParseObject>() {
+    	  public void done(ParseObject roamer, ParseException e) {
+    	    if (roamer == null) {
+    	    	Log.d("score", "Error: " + e.getMessage()); 
+
+    	    } else {
+
+    	    	 roamer.put("CurrentLocation",name1);
+    		     roamer.saveInBackground();
+    	    }
+    	  }
+    	});
     	
     	
     }

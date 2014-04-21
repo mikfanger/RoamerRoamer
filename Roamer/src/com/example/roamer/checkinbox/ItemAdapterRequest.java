@@ -16,13 +16,13 @@ import java.io.InputStream;
 
 import com.example.roamer.R;
 
-public class ItemAdapter extends ArrayAdapter<String> {
+public class ItemAdapterRequest extends ArrayAdapter<String> {
 
     private final Context context;
     private final String[] Ids;
     private final int rowResourceId;
 
-    public ItemAdapter(Context context, int textViewResourceId, String[] objects) {
+    public ItemAdapterRequest(Context context, int textViewResourceId, String[] objects) {
 
         super(context, textViewResourceId, objects);
 
@@ -44,10 +44,10 @@ public class ItemAdapter extends ArrayAdapter<String> {
         TextView textDate= (TextView) rowView.findViewById(R.id.textRecentDate);
 
         int id = Integer.parseInt(Ids[position]);
-        byte[] imageFile = Model.GetbyId(id).IconFile;
+        byte[] imageFile = ModelRequest.GetbyId(id).IconFile;
 
-        textView.setText(Model.GetbyId(id).Name);
-        textDate.setText(Model.GetbyId(id).Date);
+        textView.setText(ModelRequest.GetbyId(id).Name);
+        //textDate.setText(ModelRequest.GetbyId(id).StartDate);
         // get input stream
         if(imageFile != null){
         	Bitmap bmp = BitmapFactory.decodeByteArray(imageFile, 0, imageFile.length);

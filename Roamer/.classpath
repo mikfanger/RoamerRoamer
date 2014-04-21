@@ -7,5 +7,8 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="libs/gwt-maps.jar"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER/GWT (1)"/>
+	<classpathentry kind="lib" path="C:/Users/Mike/Desktop/Eclipse/plugins/javamail-1.4.5/mail.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Mike/Desktop/Eclipse/plugins/javamail-1.4.5/additionnal.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Mike/Desktop/Eclipse/plugins/javamail-1.4.5/activation.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

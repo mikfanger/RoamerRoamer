@@ -1,6 +1,8 @@
 package com.example.roamer.events;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,10 +47,10 @@ public class ItemAdapterMyEvents extends ArrayAdapter<String> {
         TextView textViewEventType = (TextView) rowView.findViewById(R.id.textEventType);
         TextView textViewDate = (TextView) rowView.findViewById(R.id.textEventDate);
         TextView textViewAttend = (TextView) rowView.findViewById(R.id.textAttendNumber);
-        TextView textViewLocation = (TextView) rowView.findViewById(R.id.textViewLocation);
+        TextView textViewLocation = (TextView) rowView.findViewById(R.id.textProfileLocation);
 
         int id = Integer.parseInt(Ids[position]);
-        String imageFile = ModelMyEvents.GetbyId(id).IconFile;
+        byte[] imageFile = ModelMyEvents.GetbyId(id).IconFile;
 
         textView.setText(ModelMyEvents.GetbyId(id).Host);
         textViewEventType.setText(ModelMyEvents.GetbyId(id).EventType);
@@ -56,17 +58,27 @@ public class ItemAdapterMyEvents extends ArrayAdapter<String> {
         textViewAttend.setText(ModelMyEvents.GetbyId(id).Attend);
         textViewLocation.setText(ModelMyEvents.GetbyId(id).Location);
         
-        // get input stream
-        InputStream ims = null;
-        try {
-            ims = context.getAssets().open(imageFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+      //Set images either from database or default user.
+        
+        
+        if(imageFile != null){
+        	Bitmap bmp = BitmapFactory.decodeByteArray(imageFile, 0, imageFile.length);
+    	    imageView.setBackgroundResource(0);
+    	    imageView.setImageBitmap(bmp);
         }
-        // load image as Drawable
-        Drawable d = Drawable.createFromStream(ims, null);
-        // set image to ImageView
-        imageView.setImageDrawable(d);
+        
+        if(imageFile == null){
+        	InputStream ims = null;
+            try {
+                ims = context.getAssets().open("default_userpic.png");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            imageView.setImageDrawable(d);
+        }
         return rowView;
 
     }

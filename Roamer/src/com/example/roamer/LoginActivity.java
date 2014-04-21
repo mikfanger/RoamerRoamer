@@ -74,16 +74,16 @@ public class LoginActivity extends Activity {
 		
 		setContentView(R.layout.activity_login);
 		
-				// Add your initialization code here
-				Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+		// Add your initialization code here
+		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
 
-				ParseUser.enableAutomaticUser();
-				ParseACL defaultACL = new ParseACL();
+		ParseUser.enableAutomaticUser();
+		ParseACL defaultACL = new ParseACL();
 			    
-				// If you would like all objects to be private by default, remove this line.
-				defaultACL.setPublicReadAccess(true);
+		// If you would like all objects to be private by default, remove this line.
+		defaultACL.setPublicReadAccess(true);
 				
-				ParseACL.setDefaultACL(defaultACL, true);
+		ParseACL.setDefaultACL(defaultACL, true);
 		
 		
 		
@@ -116,6 +116,8 @@ public class LoginActivity extends Activity {
 			getCredLocally();
 			mEmailView.setText(userName);
 			mPasswordView.setText(passWord);
+			cred.setChecked(true);
+			
 		}
 		mLoginStatusView = findViewById(R.id.progressBar1);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
@@ -369,7 +371,7 @@ public class LoginActivity extends Activity {
 	public void saveCredIfChecked(){
 		
 		
-		//Check to see if cred is saved
+		//Check to see if 'cred saved' box is checked
 		int credSave = 0;
 		
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
@@ -386,22 +388,21 @@ public class LoginActivity extends Activity {
 			if(c.getCount() > 1){
 				
 				ContentValues args = new ContentValues();
-				args.put("Email", userName);
-				args.put("Password", passWord);
-				args.put("CurrentLocation", "Boston");
 				args.put("Save", 1);
-				myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
+				myDB.update("MyCred", args, "rowid" + "=" + 1, null);
 			}
-					
+			
+			
 			else{
 				
 				myDB.execSQL("INSERT INTO "
 					       + "MyCred "
-					       + "(Email,Password,CurrentLocation,Save) "
-					       + "VALUES ('"+userName+"','"+passWord+"','Boston',"+1+");");
+					       + "(Email,Password,Save) "
+					       + "VALUES ('"+userName+"','"+passWord+"',"+1+");");
 				
 				myDB.close();	
 			}
+			
 	        	
 		}
 		else{
@@ -411,19 +412,16 @@ public class LoginActivity extends Activity {
 			if(c.getCount() > 1){
 				
 				ContentValues args = new ContentValues();
-				args.put("Email", userName);
-				args.put("Password", passWord);
-				args.put("CurrentLocation", "Boston");
 				args.put("Save", 0);
-				myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
+				myDB.update("MyCred", args, "rowid" + "=" + 1, null);
 			}
 					
 			else{
 				
 				myDB.execSQL("INSERT INTO "
 					       + "MyCred "
-					       + "(Email,Password,CurrentLocation,Save) "
-					       + "VALUES ('"+userName+"','"+passWord+"','Boston',"+0+");");
+					       + "(Email,Password,Save) "
+					       + "VALUES ('"+userName+"','"+passWord+"',"+0+");");
 				
 				myDB.close();	
 			}
@@ -434,20 +432,14 @@ public class LoginActivity extends Activity {
 		  int cred = 0;
 		
 		  SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-		  Cursor c = myDB.rawQuery("SELECT  COUNT (*) FROM " + "MyCred ", null);
+
+		  Cursor c = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
 		  
-		  if(c!=null){
-		      c.moveToFirst();
-		      if(c.getInt(0) ==0){
-		    	  cred = 0;
-		      }
-		      else{
-		    	  c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
-		    	  c.moveToFirst();
-		    	  int Column1 = c.getColumnIndex("Save");
-				  cred = c.getInt(Column1);
-		      }
-		  }
+		  c.moveToFirst();
+		  int Column1 = c.getColumnIndex("Save");
+		  
+		  cred = c.getInt(Column1);
+		      
 		  myDB.close();
 		  
 		return cred;
@@ -470,7 +462,7 @@ public class LoginActivity extends Activity {
 	public void saveFromDatabaseToCred(){
 		
 		
-		
+		final SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 		query.whereEqualTo("Email", mEmail);
 		
@@ -479,6 +471,43 @@ public class LoginActivity extends Activity {
 		@Override
 		public void done(ParseObject object, ParseException e) {
 			 if (e == null) {
+				 
+				 //Get Data from Parse
+				 String pEmail = object.getString("Email");
+				 String pUsername = object.getString("Username");
+				 String pPassword = object.getString("Password");
+				 int pIndustry = object.getInt("Industry");
+				 int pJob = object.getInt("Job");
+				 int pAirline = object.getInt("Airline");
+				 int pHotel = object.getInt("Hotel");
+				 int pTravel = object.getInt("Travel");
+				 int pLocation = object.getInt("Location");
+				 int pCurrentLocation = object.getInt("CurrentLocation");
+				 boolean pSex = object.getBoolean("Sex");
+				 
+				 int pSex1 = 1;
+				 
+				 if (!pSex){
+					 pSex1 = 0;
+				 }
+				 
+				 
+				 ContentValues args = new ContentValues();
+					args.put("Email", pEmail);
+					args.put("Username", pUsername);
+					args.put("Password", pPassword);
+					args.put("Industry", pIndustry);
+					args.put("Sex", pSex1);
+					args.put("Job", pJob);
+					args.put("Travel", pTravel);
+					args.put("Hotel", pHotel);
+					args.put("Air", pAirline);
+					args.put("Loc", pLocation);
+					args.put("CurrentLocation", pCurrentLocation);
+					
+					myDB.update("MyCred", args, "rowid" + "=" + 1, null);
+					
+				 myDB.close();
 				 
 			    } else {
 			    	//Do nothing
@@ -521,7 +550,6 @@ public void checkPassword(){
 
 public void updateLoginCount(){
 	
-	System.out.println("Cannont find the roamer");
 	
 	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 	query.whereEqualTo("Email", mEmail);
@@ -529,12 +557,10 @@ public void updateLoginCount(){
 	query.getFirstInBackground(new GetCallback<ParseObject>() {
 	  public void done(ParseObject roamer, ParseException e) {
 	    if (roamer == null) {
-	    	System.out.println("Cannont find the roamer");
 	    	Log.d("score", "Error: " + e.getMessage()); 
 
 	    } else {
 	    	 int i = roamer.getInt("LoginCount");
-	    	 System.out.println("Login count is: "+i);
 	    	 roamer.put("LoginCount",i+1);
 		     roamer.saveInBackground();
 	    }

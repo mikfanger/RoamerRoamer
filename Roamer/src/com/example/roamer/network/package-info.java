@@ -5,4 +5,4 @@
  * @author Mike
  *
  */
-package com.example.roamer.appengine;
+package com.example.roamer.network;

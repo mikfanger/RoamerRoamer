@@ -21,10 +21,9 @@ public class DiscussActivity extends Activity {
 	private DiscussArrayAdapter adapter;
 	private ListView lv;
 	private EditText editText1;
-	private String chatName;
+	private String chatName = "none";
 	
 
-     
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,13 +36,17 @@ public class DiscussActivity extends Activity {
 		//Set chat name from Temp Roamer
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		
-		Cursor c = myDB.rawQuery("SELECT * FROM TempRoamer", null);
+		Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "TempRoamer", null);
     	
     	c.moveToFirst();
     	int index;
     	index = c.getColumnIndex("Username");
+    	
     	chatName = c.getString(index);
-
+    	System.out.println("Chat name is: "+chatName);
+    	
+		addItems();
+    	
     	//Load list from saved chats with user (if any)
 		lv = (ListView) findViewById(R.id.listView1);
 
@@ -71,14 +74,15 @@ public class DiscussActivity extends Activity {
 			}
 			
 		});
-
-		addItems();
+		
+		
 		
 		ImageButton inboxButton = (ImageButton) findViewById(R.id.imageBackFromMessages);
         inboxButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
             	
+            	finish();
             	Intent i=new Intent(DiscussActivity.this,ChatsAndRequestsActivity.class);
                 startActivity(i);
             		  
@@ -104,7 +108,7 @@ public class DiscussActivity extends Activity {
 		
 		   SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 
-		   Cursor c = myDB.rawQuery("SELECT * FROM " + chatName+" ", null);
+		   Cursor c = myDB.rawQuery("SELECT * FROM " + chatName, null);
 
 		   int Column1 = c.getColumnIndex("Field1");
 		   
@@ -116,6 +120,7 @@ public class DiscussActivity extends Activity {
 		    // Loop through all Results
 		    do {
 		     String Comment = c.getString(Column1);
+		     System.out.println("Chat is: "+Comment);
 		     int Side = c.getInt(Column2);
 		     if(Side == 1){
 		    	 side = true;

@@ -5,41 +5,43 @@ import java.util.ArrayList;
 public class MyRoamerModel {
 
 	
-    public static ArrayList<Item> Items;
-    public static ArrayList<Item> allItems;
+    public static ArrayList<MyRoamerItem> Items;
+    public static ArrayList<MyRoamerItem> allItems;
    // public static final String fields[] = {DatabaseSetup.colName};
     
 
-    public static void LoadModel(ArrayList<Item> loadArray) {
+    public static void LoadModel(ArrayList<MyRoamerItem> loadArray) {
 
-        Items = new ArrayList<Item>();
-        allItems = new ArrayList<Item>();
+        Items = new ArrayList<MyRoamerItem>();
+        allItems = new ArrayList<MyRoamerItem>();
         
-        for(Item item : loadArray) {
+        for(MyRoamerItem item : loadArray) {
 	           allItems.add(item);
 	        } 
         
-        for (Item item: allItems){        	
+        for (MyRoamerItem item: allItems){        	
 
         		int idTemp = item.Id;
-        		String iconTemp = item.IconFile;
+        		byte[] iconTemp = item.IconFile;
         		String nameTemp = item.Name;
         		String locTemp = item.Location;
-        		int sexTemp = item.Sex;
+        		String sexTemp = item.Sex;
+        		String dateTemp = item.StartDate;
+        		String jobTemp = item.Job;
+        		String industryTemp = item.Industry;
+        		String travelTemp = item.Travel;
+        		String airTemp = item.Air;
+        		String startTemp = item.StartDate;
         		
-        		Items.add(new Item (idTemp,iconTemp,nameTemp,locTemp,sexTemp));
-        }
-        
-        if (Items.size()<1)
-        {
-        	Items.add(new Item (1,"none", "none", "none",1));
+        		Items.add(new MyRoamerItem (idTemp,iconTemp,
+        				nameTemp,locTemp,sexTemp,dateTemp,airTemp,jobTemp,travelTemp,industryTemp,startTemp));
         }
         
     }
 
-    public static Item GetbyId(int id){
+    public static MyRoamerItem GetbyId(int id){
 
-        for(Item item : Items) {
+        for(MyRoamerItem item : Items) {
             if (item.Id == id) {
                 return item;
             }

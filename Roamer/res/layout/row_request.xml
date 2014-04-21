@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="2dp"
+    android:gravity="center_vertical"
+    android:minHeight="64dp" >
+
+    <ImageView
+        android:id="@+id/imageViewRowBackground"
+        android:layout_width="300dp"
+        android:layout_height="86dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/btn_black" />
+        
+    <ImageView
+        android:id="@+id/imageInboxPicture"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/textInboxName"
+        android:layout_width="97dp"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/imageInboxPicture"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/imageViewRowBackground"
+        android:layout_marginLeft="66dp"
+        android:gravity="center_vertical" />
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_alignLeft="@+id/textInboxName"
+        android:layout_below="@+id/textInboxName"
+        android:layout_marginTop="5dp"
+        android:background="@color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/selector_accept" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/imageButton1"
+        android:layout_marginLeft="18dp"
+        android:layout_toRightOf="@+id/imageButton1"
+        android:background="@color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/selector_decline" />
+
+</RelativeLayout>

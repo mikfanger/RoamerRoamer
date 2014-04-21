@@ -120,7 +120,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textProfileTravel"
         android:layout_width="250dp"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/settingsButton"
@@ -134,8 +134,8 @@
         android:id="@+id/textCurLocation"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignBaseline="@+id/textProfileTravel"
+        android:layout_alignBottom="@+id/textProfileTravel"
         android:layout_toLeftOf="@+id/imageButtonPost"
         android:gravity="left"
         android:text="CurLocation"
@@ -148,7 +148,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="14dp"
         android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_toRightOf="@+id/textProfileTravel"
         android:background="@color/transparent"
         android:src="@drawable/selector_edit_location" />
 

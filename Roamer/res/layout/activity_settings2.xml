@@ -90,7 +90,8 @@
         android:layout_alignLeft="@+id/locationSpinner"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/locationSpinner"
-        android:background="@drawable/field_entry" />
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <Spinner
         android:id="@+id/spinnerJobProf"
@@ -98,7 +99,8 @@
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textRecentDate"
         android:layout_below="@+id/textRecentDate"
-        android:background="@drawable/field_entry" />
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <Spinner
         android:id="@+id/spinnerAirlineProf"
@@ -106,7 +108,8 @@
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textView3"
         android:layout_below="@+id/textView3"
-        android:background="@drawable/field_entry" />
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <TextView
         android:id="@+id/textEventDate"

@@ -1,9 +1,12 @@
 package com.example.roamer;
 
+import com.parse.ParseAnalytics;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
@@ -18,9 +21,7 @@ public class IntroActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
     	
 
-		//Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
-		//ParseUser.enableAutomaticUser();
-
+    	ParseAnalytics.trackAppOpened(getIntent());
     	
     	final String chatTable = "ChatTable";
     	final String myRoamersTable = "MyRoamers";
@@ -37,16 +38,16 @@ public class IntroActivity extends Activity {
         
         /* Create a chat Table in the Database. */
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
-          + chatTable
-          + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Field1 VARCHAR, Field2 VARCHAR, Field3 VARCHAR);");
+        		+ chatTable
+        		+ " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Field1 VARCHAR, Field2 BLOB, Field3 VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + tempRoamer
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Sex INT(1), Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc VARCHAR, Start VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic BLOB, Sex INT(1), Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc VARCHAR, Start VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myRoamersTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Sex INT(1), Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc VARCHAR, Start VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic BLOB, Sex INT(1), Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc VARCHAR, Start VARCHAR, StartDate VARCHAR);");
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myLocationTable
@@ -54,20 +55,39 @@ public class IntroActivity extends Activity {
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myCredTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Sex INT(1), Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc INT(2), Start VARCHAR, CurrentLocation VARCHAR, Save INT(1), CountM INT(1), CountR INT(1), ChatCount INT(2));");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Sex INT(1), Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc INT(2), Start VARCHAR, CurrentLocation INT(2), Save INT(1), CountM INT(1), CountR INT(1), ChatCount INT(2));");
         
+        //Add rows if MyCred is a new table
+        
+        Cursor c = myDB.rawQuery("SELECT  *  FROM " + "MyCred", null);
+        
+        
+        if (c.getCount() < 2){
+        	
+        	myDB.execSQL("INSERT INTO "
+ 			       + "MyCred "
+ 			       + "(Save) "
+ 			       + "VALUES ("+0+");");
+        	
+        	myDB.execSQL("INSERT INTO "
+  			       + "MyCred "
+  			       + "(Save) "
+  			       + "VALUES ("+0+");");
+        	
+        }
+        else{
+        	//do nothing
+        }
+                
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myEventsTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Type VARCHAR, Location VARCHAR, Time VARCHAR, Date VARCHAR, Host VARCHAR, HostPic VARCHAR, Blurb VARCHAR, Attend VARCHAR);");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Type VARCHAR, Location VARCHAR, Time VARCHAR, Date VARCHAR, Host VARCHAR, HostPic BLOB, Blurb VARCHAR, Attend VARCHAR, EventId VARCHAR);");
         
-        myDB.delete(myCredTable, null, null);
+        //myDB.delete(myCredTable, null, null);
         myDB.delete(tempRoamer, null, null);
         
         
        myDB.close();
-        
-        
-       //registerWithEngine();
         
         ImageButton introButton = (ImageButton) findViewById(R.id.StartRoamerButton);
         introButton.setOnClickListener(new OnClickListener() {

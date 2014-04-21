@@ -98,6 +98,8 @@ public class EventsActivity extends TabActivity implements
 			FragmentTransaction fragmentTransaction) {
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
+		
+
 		mViewPager.setCurrentItem(tab.getPosition());
 		
 		Resources ressources = getResources(); 
@@ -108,14 +110,14 @@ public class EventsActivity extends TabActivity implements
 		TabSpec tabSpecAndroid = tabHost
 		  .newTabSpec("My Events")
 		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_dark))
-		  .setContent(intentAndroid);
+		  .setContent(intentAndroid.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
  
 		// All Events tab
 		Intent intentApple = new Intent().setClass(this, AllEvents.class);
 		TabSpec tabSpecApple = tabHost
 		  .newTabSpec("All Events")
 		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_dark))
-		  .setContent(intentApple);
+		  .setContent(intentApple.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
  
  
 		// add all tabs 
@@ -124,6 +126,7 @@ public class EventsActivity extends TabActivity implements
  
 		//set Windows tab as default (zero based)
 		tabHost.setCurrentTab(2);
+		onResume();
 	}
 
 	@Override

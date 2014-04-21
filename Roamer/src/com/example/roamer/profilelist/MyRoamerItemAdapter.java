@@ -1,6 +1,8 @@
 package com.example.roamer.profilelist;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,23 +50,30 @@ public class MyRoamerItemAdapter extends ArrayAdapter<String> {
         
         
   
-        String imageFile = MyRoamerModel.GetbyId(id).IconFile;
+        byte[] imageFile = MyRoamerModel.GetbyId(id).IconFile;
         
         textView.setText(MyRoamerModel.GetbyId(id).Name);
         
         textViewLocation.setText(MyRoamerModel.GetbyId(id).Location);
         
-        // get input stream
-        InputStream ims = null;
-        try {
-            ims = context.getAssets().open(imageFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+      //Set images either from database or default user.
+        if(imageFile != null){
+        	Bitmap bmp = BitmapFactory.decodeByteArray(imageFile, 0, imageFile.length);
+    	    imageView.setBackgroundResource(0);
+    	    imageView.setImageBitmap(bmp);
         }
-        // load image as Drawable
-        Drawable d = Drawable.createFromStream(ims, null);
-        // set image to ImageView
-        imageView.setImageDrawable(d);
+        if(imageFile == null){
+        	InputStream ims = null;
+            try {
+                ims = context.getAssets().open("default_userpic.png");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            imageView.setImageDrawable(d);
+        }
         return rowView;
 
     }

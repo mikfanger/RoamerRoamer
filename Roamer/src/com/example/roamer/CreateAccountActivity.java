@@ -1,5 +1,9 @@
 package com.example.roamer;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +47,7 @@ public class CreateAccountActivity extends Activity {
 	private static final String noSex = "Must select a sex!";
 	private static final String fieldEmpty = "All fields must be filled!";
     private static final String invalidEmail = "Email addresses much contain @ symbol!";
+    private static final String emailExists = "Email address already exists!";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,11 +115,25 @@ public class CreateAccountActivity extends Activity {
     		cancel = true;
     		error = passNotEqual;
     	}
-    	 if (!mEmailAddress.contains("@"))
-    	 {
+    	if (!mEmailAddress.contains("@"))
+    	{
     		 cancel = true;
     		 error = invalidEmail;
-    	 }
+    	}
+    	
+    	//Check that email address does not yet exist
+    	final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+		query.whereEqualTo("Email", mEmailAddress);
+		
+		try {
+			query.getFirst();
+			cancel = true;
+			error = emailExists;
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	
     	 
     	 CheckBox female = (CheckBox)findViewById(R.id.checkFemale);
     	 CheckBox male = (CheckBox)findViewById(R.id.checkMale);
@@ -148,10 +167,6 @@ public class CreateAccountActivity extends Activity {
     	if (cancel == false)
     	{
     		//Commit user preferences to database
-    		PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("RoamerEmail", mEmailAddress).commit();
-    		PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("RoamerPassword", mPassword).commit();
-    		PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("RoamerUsername", mUsername).commit();
-    		
     		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     		
     		myDB.delete("TempRoamer",null,null);

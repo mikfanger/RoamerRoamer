@@ -63,16 +63,24 @@ public class CreateEventActivity extends Activity {
 	    	        
 	    	        day = datePicker.getDayOfMonth();
 	    	        month = datePicker.getMonth();
-	            	date = Integer.toString(day) +"/"+ Integer.toString(month)+"/"+formattedDate;
-	            	blurb = blurbText.getText().toString();
-	            	addToEvents(host, type, time, date, location, blurb, pic);
-	            	
-	            	//set  on screen message
-	            	Toast.makeText(getApplicationContext(), "Event Posted!", Toast.LENGTH_LONG).show();
-	            	
-	            	finish();
-	            	Intent i=new Intent(CreateEventActivity.this,HomeScreenActivity.class);
-	                startActivity(i);
+	    	        Calendar c = Calendar.getInstance();
+	    	        
+	    	        if (month - c.get(Calendar.MONTH) < 6){
+	    	        	
+	    	        	date = Integer.toString(day) +"/"+ Integer.toString(month)+"/"+formattedDate;
+		            	blurb = blurbText.getText().toString();
+		            	addToEvents(host, type, time, date, location, blurb, pic);
+		            	
+		            	//set  on screen message
+		            	Toast.makeText(getApplicationContext(), "Event Posted!", Toast.LENGTH_LONG).show();
+		            	
+		            	finish();
+		            	Intent i=new Intent(CreateEventActivity.this,HomeScreenActivity.class);
+		                startActivity(i);
+	    	        }
+	    	        else{
+	    	        	Toast.makeText(getApplicationContext(), "Cannot post more than 6 months out!", Toast.LENGTH_LONG).show();
+	    	        }
 	            		  
 	            }
 	        });

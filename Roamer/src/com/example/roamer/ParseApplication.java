@@ -1,9 +1,8 @@
 package com.example.roamer;
 
 import com.parse.Parse;
-import com.parse.ParseACL;
+import com.parse.PushService;
 
-import com.parse.ParseUser;
 
 import android.app.Application;
 
@@ -11,18 +10,14 @@ public class ParseApplication extends Application {
 
 	@Override
 	public void onCreate() {
-		super.onCreate();
+	super.onCreate();
 
-		// Add your initialization code here
-		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+	// Initialize the Parse SDK.
+	Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp"); 
+	PushService.setDefaultPushCallback(this, IntroActivity.class);
 
-		ParseUser.enableAutomaticUser();
-		ParseACL defaultACL = new ParseACL();
-	    
-		// If you would like all objects to be private by default, remove this line.
-		defaultACL.setPublicReadAccess(true);
-		
-		ParseACL.setDefaultACL(defaultACL, true);
-	}
+	// Specify an Activity to handle all pushes by default.
+	PushService.setDefaultPushCallback(this, IntroActivity.class);
+  }
 
 }

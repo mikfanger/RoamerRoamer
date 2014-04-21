@@ -1,9 +1,12 @@
 package com.example.roamer;
 
 
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
@@ -11,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -28,6 +32,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+@SuppressLint("NewApi")
 public class CreateAccountActivityPic extends Activity {
 
 	
@@ -49,6 +54,8 @@ public class CreateAccountActivityPic extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		
+		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
 		setContentView(R.layout.activity_create_account_pic);
 		
 		ivGalImg     =     (ImageView)findViewById(R.id.mapImage);
@@ -303,8 +310,7 @@ public class CreateAccountActivityPic extends Activity {
 	                String[] filePathColumn = {MediaStore.Images.Media.DATA};
 	                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 	                cursor.moveToFirst();
-	                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	                //pictureUri = cursor.getString(columnIndex);
+
 	                pictureUri = selectedImage.toString();
 	                
 	                cursor.close();
@@ -323,11 +329,13 @@ public class CreateAccountActivityPic extends Activity {
 	                ivGalImg.setBackgroundResource(0);
 	                ivGalImg.setImageBitmap(bmp); 
 	                
-	                //ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	                //bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
 	                
-	                //picFile = pictureUri.getBytes();
-	                picFile = selectedImage.getPath().getBytes();
+	                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	                bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+	                // get byte array here
+	                picFile= stream.toByteArray();
+
+	                //picFile = buffer.array(); //Get the underlying array containing the data.
 	                
 	          }
 	          else 
@@ -355,6 +363,7 @@ public class CreateAccountActivityPic extends Activity {
         else return null;
     }
     
+    
     class MyData {
         public MyData(String spinnerText, String value) {
             this.spinnerText = spinnerText;
@@ -377,9 +386,6 @@ public class CreateAccountActivityPic extends Activity {
         String value;
     }
     
-    public void importPicture(){
-    	
-    }
     
     private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
 
@@ -460,17 +466,23 @@ public class CreateAccountActivityPic extends Activity {
  		args1.put("Hotel",hotel);
  		args1.put("Air",airline);
  		args1.put("ChatCount",00);
- 		 myDB.update("MyCred", args1, "rowid" + "=" + 1, null);
+ 		args1.put("CurrentLocation",00);
+ 		args1.put("Start","today");
+ 		myDB.update("MyCred", args1, "rowid" + "=" + 1, null);
  		 
  		
  		int location = c.getInt(index4);
  		myDB.close();	
  		
  		//Enter data into parse as new user
- 		//Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
  		
  		ParseFile imgFile = new ParseFile (username+".png", picFile);
- 		imgFile.saveInBackground();
+ 		try {
+			imgFile.save();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
  		
  		ParseObject user1 = new ParseObject("Roamer");
 		user1.put("Username", username);

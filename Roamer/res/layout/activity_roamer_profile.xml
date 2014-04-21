@@ -172,7 +172,7 @@
         android:textColor="@color/DarkWhite" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textProfileLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textFinalLocation"
@@ -182,7 +182,7 @@
         android:textColor="@color/DarkWhite" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textProfileHotel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageView9"
@@ -192,10 +192,10 @@
         android:textColor="@color/DarkWhite" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textProfileAir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignLeft="@+id/textProfileHotel"
         android:layout_alignTop="@+id/imageView10"
         android:layout_marginTop="10dp"
         android:text="Airline Preference"
@@ -222,10 +222,10 @@
         android:src="@drawable/field_entry" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textProfileTravel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignLeft="@+id/textProfileHotel"
         android:layout_alignTop="@+id/imageView9"
         android:layout_marginTop="92dp"
         android:text="Travel Status"

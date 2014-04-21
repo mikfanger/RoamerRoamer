@@ -4,19 +4,19 @@ public class ItemMyEvents {
 
 	public int Id;
 	//public int RowId;
-    public String IconFile;
+    public byte[] IconFile;
     public String Date;
     public String EventType;
     public String Host;
     public String Attend;
     public String Location;
     public String Description;
+    public String EventId;
 
-    public ItemMyEvents(int id, String iconFile, String date, 
-    		String eventtype, String host, String attend, String desc, String location) {
+    public ItemMyEvents(int id, byte[] iconFile, String date, 
+    		String eventtype, String host, String attend, String desc, String location, String eventId) {
 
         Id = id;
-        //RowId = rowId;
         IconFile = iconFile;
         Host = host;
         Date = date;
@@ -24,6 +24,7 @@ public class ItemMyEvents {
         Attend = attend;
         Location = location;
         Description = desc;
+        EventId = eventId;
 
     }
 

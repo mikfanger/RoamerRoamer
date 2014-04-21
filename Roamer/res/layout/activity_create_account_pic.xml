@@ -112,7 +112,8 @@
         android:layout_alignLeft="@+id/locationSpinner"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/locationSpinner"
-        android:background="@drawable/field_entry" />
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <Spinner
         android:id="@+id/spinnerJob"
@@ -120,7 +121,8 @@
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textRecentDate"
         android:layout_below="@+id/textRecentDate"
-        android:background="@drawable/field_entry" />
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <Spinner
         android:id="@+id/spinnerAirline"
@@ -128,7 +130,8 @@
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textView3"
         android:layout_below="@+id/textView3"
-        android:background="@drawable/field_entry" />
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <ImageButton
         android:id="@+id/finishProfile"
@@ -155,7 +158,8 @@
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textEventDate"
         android:layout_below="@+id/textEventDate"
-        android:background="@drawable/field_entry" />
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <TextView
         android:id="@+id/textView3"
@@ -190,12 +194,13 @@
         android:id="@+id/spinnerSetTravelStatus"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:background="@drawable/field_entry" />
+        android:layout_alignLeft="@+id/textProfileTravel"
+        android:layout_below="@+id/textProfileTravel"
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <android.widget.TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textProfileTravel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/spinnerHotel"

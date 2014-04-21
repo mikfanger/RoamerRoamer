@@ -91,7 +91,8 @@
         android:layout_alignRight="@+id/textWhereFrom"
         android:layout_below="@+id/imageView5"
         android:layout_marginTop="36dp"
-        android:background="@drawable/field_entry" />
+        android:background="@drawable/field_entry" 
+        android:textColor="@color/Grey"/>
 
     <TextView
         android:id="@+id/textWhereFrom"

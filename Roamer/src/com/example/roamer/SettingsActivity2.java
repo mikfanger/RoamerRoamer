@@ -1,16 +1,24 @@
 package com.example.roamer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,32 +35,48 @@ public class SettingsActivity2 extends Activity {
 	
 	public int spinnerPos;
 	public String pictureUri = "";
+	public String emailAddress = "";
+	public String userName = "";
+	public byte[] picBytes;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings2);
 		
+		emailAddress = getEmailAddress();
 		//Recall profile picture
 		ivGalImg     =     (ImageView)findViewById(R.id.mapImage);
 		
-		String temp = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("RoamerPicture","");
-		if (temp != "" && temp != null);
-		{
-			pictureUri = temp;
-		}
-		System.out.println(pictureUri);
+		//Get image from database
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+		query.whereEqualTo("Email", emailAddress);
+		query.getFirstInBackground(new GetCallback<ParseObject>() {
+		  public void done(ParseObject roamer, ParseException e) {
+		    if (roamer == null) {
+		    	Log.d("roamer", "Error: " + e.getMessage()); 
 
-		Uri selectedImage = Uri.parse(pictureUri);
-		 try {
-				bmp = decodeUri(selectedImage);
-			} catch (FileNotFoundException e) { 
-				// TODO Auto-generated catch block
-				System.out.println("This URI does not work");
-				e.printStackTrace();
-			}
-	    ivGalImg.setBackgroundResource(0);
-	    ivGalImg.setImageBitmap(bmp);
+		    } else {
+		    	 
+		    	 roamer.getParseFile("Pic");
+		    	 try {
+					picBytes = roamer.getParseFile("Pic").getData();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		    	 
+		    	 System.out.println("Byte array is: " + picBytes);
+		    	 
+		    	 bmp = BitmapFactory.decodeByteArray(picBytes, 0, picBytes.length);
+		 	     ivGalImg.setBackgroundResource(0);
+		 	     ivGalImg.setImageBitmap(bmp);
+		    }
+		  }
+		});
+
+		
 		
 		ImageButton introButton = (ImageButton) findViewById(R.id.findPicturePros);
         introButton.setOnClickListener(new OnClickListener() {
@@ -71,24 +95,61 @@ public class SettingsActivity2 extends Activity {
             @Override
             public void onClick(View v) {
             	
+            	final int industry;
+				final int job;
+				final int airline;
+				final int hotel;
+				final int travel;
+            	
             	//commit selections
             	Spinner position = (Spinner) findViewById(R.id.spinnerIndustryProf);
             	spinnerPos = position.getSelectedItemPosition();
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerIndustry", spinnerPos).commit();
+            	industry = spinnerPos;
             	
             	Spinner position2 = (Spinner) findViewById(R.id.spinnerJobProf);
             	spinnerPos = position2.getSelectedItemPosition();
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerJob", spinnerPos).commit();
+            	job = spinnerPos;
             	
             	Spinner position3 = (Spinner) findViewById(R.id.spinnerAirlineProf);
             	spinnerPos = position3.getSelectedItemPosition();
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerAirline", spinnerPos).commit();
+            	airline = spinnerPos;
             	
             	Spinner position4 = (Spinner) findViewById(R.id.spinnerHotelProf);
             	spinnerPos = position4.getSelectedItemPosition();
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putInt("RoamerHotel", spinnerPos).commit();
+            	hotel = spinnerPos;
             	
-            	PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("RoamerPicture", pictureUri).commit();
+            	//Save updated data to DB
+            	ParseObject Roamer = new ParseObject("Roamer");
+            	
+            	final ParseFile imgFile = new ParseFile (userName+".png", picBytes);
+         		try {
+        			imgFile.save();
+        		} catch (ParseException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+
+         		
+         		ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+         		query.whereEqualTo("Email", emailAddress);
+         		
+         		query.getFirstInBackground(new GetCallback<ParseObject>() {
+         		  public void done(ParseObject Roamer, ParseException e) {
+         		    if (Roamer == null) {
+         		    	Log.d("score", "Error: " + e.getMessage()); 
+
+         		    } else {
+         		    	//Roamer.put("Travel",travel);
+                  		Roamer.put("Industry",industry);
+                  		Roamer.put("Job",job);
+                  		Roamer.put("Hotel",hotel);
+                  		Roamer.put("Air",airline);
+                  		Roamer.put("Pic",imgFile);
+                  		
+         			    Roamer.saveInBackground();
+         		    }
+         		  }
+         		});
             	
             	//Move to Home Screen
             	Intent i=new Intent(SettingsActivity2.this,HomeScreenActivity.class);
@@ -112,13 +173,15 @@ public class SettingsActivity2 extends Activity {
         Spinner job = (Spinner) findViewById(R.id.spinnerJobProf);
         //Prepare adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData itemss[] = new MyData[6];
+        final MyData itemss[] = new MyData[8];
         itemss[0] = new MyData("Select Position", "value1");
         itemss[1] = new MyData("Accounting", "value2");
         itemss[2] = new MyData("Marketing", "value3");
         itemss[3] = new MyData("Consultant", "value4");
-        itemss[4] = new MyData("Garbage Man", "value5");
+        itemss[4] = new MyData("Lawyer", "value5");
         itemss[5] = new MyData("Sales", "value6");
+        itemss[6] = new MyData("Doctor", "value7");
+        itemss[7] = new MyData("Scientist", "value8");
         ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, itemss);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -141,13 +204,21 @@ public class SettingsActivity2 extends Activity {
         Spinner industry = (Spinner) findViewById(R.id.spinnerIndustryProf);
         //Prepar adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items2[] = new MyData[6];
+        final MyData items2[] = new MyData[14];
         items2[0] = new MyData("Select Industry", "value1");
-        items2[1] = new MyData("Medical", "value2");
-        items2[2] = new MyData("Finance", "value3");
-        items2[3] = new MyData("Software", "value4");
-        items2[4] = new MyData("Manufacturing", "value5");
-        items2[5] = new MyData("Biotech", "value6");
+        items2[1] = new MyData("Aerospace/Defense", "value2");
+        items2[2] = new MyData("Automotive", "value3");
+        items2[3] = new MyData("Banking", "value4");
+        items2[4] = new MyData("Consumer Products", "value5");
+        items2[5] = new MyData("Insurance", "value6");
+        items2[6] = new MyData("Media & Design", "value7");
+        items2[7] = new MyData("Oil & Gas", "value8");
+        items2[8] = new MyData("Power & Utilities", "value9");
+        items2[9] = new MyData("Real Estate", "value10");
+        items2[10] = new MyData("Government", "value11");
+        items2[11] = new MyData("Student", "value12");
+        items2[12] = new MyData("Travel/Hospitality", "value13");
+        items2[13] = new MyData("Information Technology", "value14");
         ArrayAdapter<MyData> adapter2 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items2);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -170,13 +241,18 @@ public class SettingsActivity2 extends Activity {
         Spinner airline = (Spinner) findViewById(R.id.spinnerAirlineProf);
         //Prepar adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items3[] = new MyData[6];
+        final MyData items3[] = new MyData[11];
         items3[0] = new MyData("Select Airline", "value1");
-        items3[1] = new MyData("Jet Blue", "value2");
-        items3[2] = new MyData("Southwest", "value3");
-        items3[3] = new MyData("Delta", "value2");
-        items3[4] = new MyData("United", "value3");
-        items3[5] = new MyData("American", "value3");
+        items3[1] = new MyData("Frontier", "value2");
+        items3[2] = new MyData("Virgin", "value3");
+        items3[3] = new MyData("JetBlue", "value2");
+        items3[4] = new MyData("Alaska", "value3");
+        items3[5] = new MyData("Southwest", "value3");
+        items3[6] = new MyData("Delta", "value3");
+        items3[7] = new MyData("Airtran", "value3");
+        items3[8] = new MyData("U.S. Airways", "value3");
+        items3[9] = new MyData("American Airlines", "value3");
+        items3[10] = new MyData("United", "value3");
         ArrayAdapter<MyData> adapter3 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items3);
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -199,13 +275,15 @@ public class SettingsActivity2 extends Activity {
         Spinner hotel = (Spinner) findViewById(R.id.spinnerHotelProf);
         //Prepar adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items4[] = new MyData[6];
+        final MyData items4[] = new MyData[8];
         items4[0] = new MyData("Select Hotel", "value1");
         items4[1] = new MyData("Hilton", "value2");
-        items4[2] = new MyData("Starwood", "value3");
-        items4[3] = new MyData("Marriott", "value2");
-        items4[4] = new MyData("Doubletree", "value3");
-        items4[5] = new MyData("Brothel", "value3");
+        items4[2] = new MyData("Marriott", "value3");
+        items4[3] = new MyData("Wyndham", "value4");
+        items4[4] = new MyData("Choice", "value5");
+        items4[5] = new MyData("Starwood", "value6");
+        items4[6] = new MyData("Hyatt", "value7");
+        items4[7] = new MyData("Intercontinental", "value8");
         ArrayAdapter<MyData> adapter4 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items4);
         adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -227,30 +305,36 @@ public class SettingsActivity2 extends Activity {
         
         
 		//Recall spinner data
-        System.out.println("Getting spinner position");
+        
+        SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+
+		Cursor c = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
+		  
+		c.moveToFirst();
+		int Column1 = c.getColumnIndex("Industry");
+		int Column2 = c.getColumnIndex("Job");
+		int Column3 = c.getColumnIndex("Air");
+		int Column4 = c.getColumnIndex("Hotel");
+		int Column5 = c.getColumnIndex("Travel");
+		  
+		int jobPos = c.getInt(Column2);
+		int industryPos = c.getInt(Column1);
+		int hotelPos = c.getInt(Column4);
+		int airPos = c.getInt(Column3);
+		int travelPos = c.getInt(Column5);
+		      
+		myDB.close();
     	Spinner position = (Spinner) findViewById(R.id.spinnerIndustryProf);
-    	System.out.println("Industry spinner location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerIndustry",1));
-    	spinnerPos = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerIndustry",1);
-    	System.out.println ("Industry Selection is" + position.getItemAtPosition(spinnerPos).toString());
-    	position.setSelection(spinnerPos);
+    	position.setSelection(industryPos);
     	
-    	System.out.println("Getting spinner position");
     	Spinner position2 = (Spinner) findViewById(R.id.spinnerJobProf);
-    	spinnerPos = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerJob",1);
-    	position2.setSelection(spinnerPos);
-    	System.out.println("Spinner location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerJob",1));
+    	position2.setSelection(jobPos);
     	
-    	System.out.println("Getting spinner position");
     	Spinner position3 = (Spinner) findViewById(R.id.spinnerAirlineProf);
-    	spinnerPos = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerAirline",1);
-    	position3.setSelection(spinnerPos);
-    	System.out.println("Spinner location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerAirline",1));
+    	position3.setSelection(airPos);
     	
-    	System.out.println("Getting spinner position");
     	Spinner position4 = (Spinner) findViewById(R.id.spinnerHotelProf);
-    	spinnerPos = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerHotel",1);
-    	position4.setSelection(spinnerPos);
-    	System.out.println("Spinner location is:   " +PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getInt("RoamerHotel",1));
+    	position4.setSelection(hotelPos);
 	}
 	
 	
@@ -303,7 +387,59 @@ public class SettingsActivity2 extends Activity {
 		return true;
 	}
 	
-	 private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
+	//Meant for processing the photo
+		@Override
+	    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+			super.onActivityResult(requestCode, resultCode, data);
+		      
+		      if (requestCode == 1) 
+		      {
+		          if (data != null && resultCode == RESULT_OK) 
+		          {              
+		              
+		                Uri selectedImage = data.getData();
+		                
+		                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+		                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+		                cursor.moveToFirst();
+
+		                pictureUri = selectedImage.toString();
+		                
+		                cursor.close();
+		              
+		                if(bmp != null && !bmp.isRecycled())
+		                {
+		                    bmp = null;                
+		                }
+		                                
+		                try {
+							bmp = decodeUri(selectedImage);
+						} catch (FileNotFoundException e) { 
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		                ivGalImg.setBackgroundResource(0);
+		                ivGalImg.setImageBitmap(bmp); 
+		                
+		                
+		                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		                bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		                // get byte array here
+		                picBytes= stream.toByteArray();
+
+		                //picFile = buffer.array(); //Get the underlying array containing the data.
+		                
+		          }
+		          else 
+		          {
+		              Log.d("Status:", "Photopicker canceled");            
+		          }
+		      }
+	     
+	     
+	    }
+		
+		private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
 
 	        // Decode image size
 	        BitmapFactory.Options o = new BitmapFactory.Options();
@@ -332,5 +468,22 @@ public class SettingsActivity2 extends Activity {
 	        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
 
 	    }
+	 public String getEmailAddress(){
+		 String email = "";
+		 
+		 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+	     Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
+	     cur.moveToFirst();
+
+	     int indexEmail;
+	     int indexName;
+	     indexEmail = cur.getColumnIndex("Email");
+	     indexName = cur.getColumnIndex("Username");
+	    	
+	     email = cur.getString(indexEmail);
+	     userName = cur.getString(indexName);
+		 
+		 return email;
+	 }
 
 }

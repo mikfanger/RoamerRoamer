@@ -21,7 +21,7 @@
         android:textColor="@color/DarkWhite" />
 
     <TextView
-        android:id="@+id/textViewLocation"
+        android:id="@+id/textProfileLocation"
         android:layout_width="100dp"
         android:layout_height="32dp"
         android:layout_alignBottom="@+id/textViewAttend"
@@ -37,7 +37,7 @@
         android:layout_alignTop="@+id/imageHostPicture"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="37dp"
-        android:layout_toLeftOf="@+id/textView4"
+        android:layout_toLeftOf="@+id/textProfileHotel"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/Red"
         android:textColorHint="@color/DarkWhite" />
@@ -46,16 +46,16 @@
         android:id="@+id/imageHostPicture"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_above="@+id/textView4"
+        android:layout_above="@+id/textProfileHotel"
         android:layout_toLeftOf="@+id/textViewHost"
         android:contentDescription="@string/app_name" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textProfileHotel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textViewLocation"
-        android:layout_alignLeft="@+id/textViewLocation"
+        android:layout_above="@+id/textProfileLocation"
+        android:layout_alignLeft="@+id/textProfileLocation"
         android:text="at"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/DarkGrey"
@@ -67,7 +67,7 @@
         android:layout_height="20dp"
         android:layout_alignBaseline="@+id/textViewHost"
         android:layout_alignBottom="@+id/textViewHost"
-        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignLeft="@+id/textProfileHotel"
         android:textColor="@color/Red" />
 
     <TextView

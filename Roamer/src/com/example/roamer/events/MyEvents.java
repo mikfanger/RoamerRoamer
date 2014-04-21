@@ -1,5 +1,7 @@
 package com.example.roamer.events;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import com.example.roamer.R;
@@ -11,6 +13,9 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -73,7 +78,7 @@ public class MyEvents extends Activity {
             public void onItemClick(AdapterView<?> parent, View view,
                 int position, long id) {
             	
-              // When clicked, show a dialog with event information
+                // When clicked, show a dialog with event information
             	final Dialog dialog = new Dialog(context);
             	
     			dialog.setContentView(R.layout.activity_total_event);
@@ -100,7 +105,28 @@ public class MyEvents extends Activity {
                  textViewLocation.setText(ModelMyEvents.GetbyId(position+1).Location);
                  textViewEventType.setText(ModelMyEvents.GetbyId(position+1).EventType);
             	 final int myId = ModelMyEvents.GetbyId(position+1).Id;
-
+            	 byte[] picByte = ModelMyEvents.GetbyId(position+1).IconFile;
+            	 
+            	 if(picByte != null){
+                 	Bitmap bmp = BitmapFactory.decodeByteArray(picByte, 0, picByte.length);
+             	    imageView.setBackgroundResource(0);
+             	    imageView.setImageBitmap(bmp);
+                 }
+                 
+                 if(picByte == null){
+                 	InputStream ims = null;
+                     try {
+                         ims = context.getAssets().open("default_userpic.png");
+                     } catch (IOException e) {
+                         e.printStackTrace();
+                     }
+                     // load image as Drawable
+                     Drawable d = Drawable.createFromStream(ims, null);
+                     // set image to ImageView
+                     imageView.setImageDrawable(d);
+                 }
+                 
+           
     			dialog.show();
     			
     			ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageBackFromMyEvent);
@@ -190,11 +216,12 @@ public class MyEvents extends Activity {
 		 int C6 = c.getColumnIndex("Blurb");
 		 int C7 = c.getColumnIndex("Attend");
 		 int C8 = c.getColumnIndex("rowid");
+		 int C9 = c.getColumnIndex("EventId");
 		 
 		 System.out.println("value is: " +c.getString(C1));
 
 		 
-		 loadArray.add(new ItemMyEvents(i, c.getString(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),c.getString(C6),c.getString(C2)));
+		 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),c.getString(C6),c.getString(C2),c.getString(C9)));
 		
 		while(c.moveToNext()){
 			i++;
@@ -207,8 +234,9 @@ public class MyEvents extends Activity {
 			  C6 = c.getColumnIndex("Blurb");
 			  C7 = c.getColumnIndex("Attend");
 			  C8 = c.getColumnIndex("rowid");
+			  C9 = c.getColumnIndex("EventId");
 			 
-			 loadArray.add(new ItemMyEvents(i, c.getString(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),c.getString(C6),c.getString(C2)));			
+			 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),c.getString(C6),c.getString(C2),c.getString(C9)));			
 		}
 		
 		myDB.close();

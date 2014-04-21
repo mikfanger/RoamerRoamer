@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 public class ModelMyEvents {
 
     public static ArrayList<ItemMyEvents> ItemsMyEvents;
-    public static SQLiteDatabase myDB;
 
     public static void LoadModel(ArrayList<ItemMyEvents> loadArray) {
     	ItemsMyEvents = new ArrayList<ItemMyEvents>();
@@ -29,12 +28,5 @@ public class ModelMyEvents {
         return null;
     }
     
-    public void openDataBase(){
-    	
-    }
-
-	public void closeDataBase(){
-    	
-    }
 
 }

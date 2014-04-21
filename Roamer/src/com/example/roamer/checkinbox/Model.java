@@ -15,23 +15,21 @@ public class Model {
         Items = new ArrayList<Item>();
         allItems = new ArrayList<Item>();
         
-        for(Item item : loadArray) {
-	           allItems.add(item);
-	        } 
+        if(loadArray.size()>0){
+        	for(Item item : loadArray) {
+ 	           allItems.add(item);
+ 	        } 
+        }
+        
         
         for (Item item: allItems){        	
 
         		int idTemp = item.Id;
-        		String iconTemp = item.IconFile;
+        		byte[] iconTemp = item.IconFile;
         		String nameTemp = item.Name;
         		String dateTemp = item.Date;
-        		
+        		        		
         		Items.add(new Item (idTemp,iconTemp,nameTemp,dateTemp));
-        }
-        
-        if (Items.size()<1)
-        {
-        	Items.add(new Item (1,"none", "none", "none"));
         }
         
     }

@@ -15,9 +15,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -42,7 +42,6 @@ public class InboxActivity extends Activity {
     private Dialog dialog;
     private int count;
     private String chatName;
-    private boolean noRoamers = false;
     ArrayList<Item> loadArray;
 
     @Override
@@ -51,6 +50,7 @@ public class InboxActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.inbox_list);
+        
         loadArray();
 
         Model.LoadModel(loadArray);
@@ -104,8 +104,11 @@ public class InboxActivity extends Activity {
                 int position, long id) {
             	
             	String chatName = Model.GetbyId(position+1).Name;
-            	
+            	System.out.println("Date is: "+Model.GetbyId(position+1).Date);
+            	System.out.println("table name will be: "+chatName);
         		addToTempRoamer(chatName);
+        		
+        		createTable(chatName);
 
             	Intent i=new Intent(InboxActivity.this,DiscussActivity.class);
                 startActivity(i);
@@ -116,7 +119,7 @@ public class InboxActivity extends Activity {
         //Populate spinner with rows of MyRoamer database or just single row      
        
         
-        Button messageButton = (Button) findViewById(R.id.newMessageButton);
+        ImageButton messageButton = (ImageButton) findViewById(R.id.newMessageButton);
         messageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,12 +178,19 @@ public class InboxActivity extends Activity {
     	
     	SQLiteDatabase db = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		db.delete("ChatTable", null, null);
+		
+		ContentValues args = new ContentValues();
+    	args.put("ChatCount",0);
+		db.update("MyCred", args, "rowid" + "=" + 1, null);
+		
 		db.close();
+		finish();
     }
     
     public void createTable(String tableName){
     	SQLiteDatabase db = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
+    	System.out.println("table name will be: "+tableName);
     	db.execSQL("CREATE TABLE IF NOT EXISTS "
 		          + tableName
 		          + " (Field1 VARCHAR,Field2 VARCHAR);");
@@ -198,15 +208,42 @@ public class InboxActivity extends Activity {
     	}
     	
     	index = c.getColumnIndex("Pic");
-    	String picFile = c.getString(index);
+    	byte[] picFile = c.getBlob(index);
     	
     	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
     	String currentDateandTime = sdf.format(new Date());
     	
-    	db.execSQL("INSERT INTO "
-			       + "ChatTable "
-			       + "(Field1,Field2,Field3) "
-			       + "VALUES ('"+tableName+"','"+picFile+"','"+currentDateandTime+"');");
+    	//check if there is an open chat with this user
+    	
+    	c = db.rawQuery("SELECT * FROM " + "ChatTable ", null);
+    	c.moveToFirst();
+    	String tempName = "";
+    	boolean nameExists = false;
+    	if (c!= null && c.getCount() > 1){
+    		int i = c.getColumnIndex("Field1");
+    		tempName = c.getString(i);
+    		
+    		
+    		while(c.moveToNext() && !tempName.equals(tableName)){
+        		i = c.getColumnIndex("Field1");
+        		tempName = c.getString(i);
+        		if(tempName.equals(tableName)){
+        			nameExists = true;
+        		}
+        	}
+    	}
+    	
+    	if (!nameExists){
+    		
+    		String sql                      =   "INSERT INTO ChatTable (Field1,Field2,Field3) VALUES(?,?,?)";
+    	    SQLiteStatement insertStmt      =   db.compileStatement(sql);
+    	    insertStmt.clearBindings();
+    	    insertStmt.bindString(1,tableName);
+    	    insertStmt.bindBlob(2,picFile);
+    	    insertStmt.bindString(3,currentDateandTime);
+
+    	    insertStmt.executeInsert();
+    	}
     	
     	ContentValues args1 = new ContentValues();
     	
@@ -218,7 +255,8 @@ public class InboxActivity extends Activity {
 		db.update("MyCred", args1, "rowid" + "=" + 1, null);
 		
 		//Update temp roamer to pass table name to discussion activity
-		db.delete("TempRoamer",null,null);
+		
+		//db.delete("TempRoamer",null,null);
 		
 		db.execSQL("INSERT INTO "
 			       + "TempRoamer "
@@ -233,7 +271,10 @@ public class InboxActivity extends Activity {
     	int count = 0;
     	Cursor c = db.rawQuery("select * from "+tableName,null);
     	count = c.getCount();
-    			return count;
+    	db.close();
+    	
+    	return count;
+    	
     }
     
     public String getRoamerName(String row){
@@ -306,7 +347,7 @@ public class InboxActivity extends Activity {
    	    	   	    	
    	    	position.setVisibility(0);
    	    }
-   	   
+   	   myDB.close();
     }
     
     public void loadArray(){
@@ -333,11 +374,8 @@ public class InboxActivity extends Activity {
 		 int C1 = c.getColumnIndex("Field2");
 		 int C2 = c.getColumnIndex("Field1");
 		 int C3 = c.getColumnIndex("Field3");
-		 
-		 System.out.println("value is: " +c.getString(C1));
-
-		 
-		 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));
+		 		 
+		 loadArray.add(new Item(i,c.getBlob(C1), c.getString(C2), c.getString(C3)));
 		
 		while(c.moveToNext()){
 			i++;
@@ -347,14 +385,14 @@ public class InboxActivity extends Activity {
 			  C3 = c.getColumnIndex("Field3");
 
 			 
-			 loadArray.add(new Item(i,c.getString(C1), c.getString(C2), c.getString(C3)));			
+			 loadArray.add(new Item(i,c.getBlob(C1), c.getString(C2), c.getString(C3)));			
 		}
 		
 		myDB.close();
     }
     	else{
-    		 System.out.println("Row Count is: " + 0);
-    		 loadArray.add(new Item(1,"default_userpic.png", "none", "none"));
+    		// System.out.println("Row Count is: " + 0);
+    		// loadArray.add(new Item(1,"default_userpic.png", "none", "none"));
     	}
     }
 
@@ -384,6 +422,11 @@ public class InboxActivity extends Activity {
 		       + "(Username) "
 		       + "VALUES ('"+roamerName+"');");
 	
+	Cursor c = db.rawQuery("SELECT  *  FROM " + "" + "TempRoamer", null);
+	c.moveToFirst();
+	int i = c.getColumnIndex("Username");
+	System.out.println("Username in temp roamer is: "+c.getString(i));
+
 	db.close();
 	}
     
