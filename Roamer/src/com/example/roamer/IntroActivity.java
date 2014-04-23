@@ -1,6 +1,12 @@
 package com.example.roamer;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+
 import com.parse.ParseAnalytics;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -55,7 +61,7 @@ public class IntroActivity extends Activity {
         
         myDB.execSQL("CREATE TABLE IF NOT EXISTS "
                 + myCredTable
-                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Sex INT(1), Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic VARCHAR, Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc INT(2), Start VARCHAR, CurrentLocation INT(2), Save INT(1), CountM INT(1), CountR INT(1), ChatCount INT(2));");
+                + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Sex INT(1), Email VARCHAR, Password VARCHAR, Username VARCHAR, Pic BLOB, Travel INT(2), Industry INT(2), Job INT(2), Hotel INT(2), Air INT(2), Loc INT(2), Start VARCHAR, CurrentLocation INT(2), Save INT(1), CountM INT(1), CountR INT(1), ChatCount INT(2), SentRequests VARCHAR);");
         
         //Add rows if MyCred is a new table
         
@@ -107,7 +113,7 @@ public class IntroActivity extends Activity {
         return true;
     }
     
-
+    
 
     
 }

@@ -36,7 +36,7 @@
         android:gravity="center_vertical" />
 
     <ImageButton
-        android:id="@+id/imageButton1"
+        android:id="@+id/imageButtonAccept"
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:layout_alignLeft="@+id/textInboxName"
@@ -47,12 +47,12 @@
         android:src="@drawable/selector_accept" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/imageButtonDecline"
         android:layout_width="100dp"
         android:layout_height="30dp"
-        android:layout_alignTop="@+id/imageButton1"
-        android:layout_marginLeft="18dp"
-        android:layout_toRightOf="@+id/imageButton1"
+        android:layout_alignTop="@+id/imageButtonAccept"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/imageButtonAccept"
         android:background="@color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/selector_decline" />

@@ -108,7 +108,8 @@ public class InboxActivity extends Activity {
             	System.out.println("table name will be: "+chatName);
         		addToTempRoamer(chatName);
         		
-        		createTable(chatName);
+        		//createTable(chatName);
+        		getChatFromTable(chatName);
 
             	Intent i=new Intent(InboxActivity.this,DiscussActivity.class);
                 startActivity(i);
@@ -185,6 +186,17 @@ public class InboxActivity extends Activity {
 		
 		db.close();
 		finish();
+    }
+    
+    public void getChatFromTable(String name){
+    	SQLiteDatabase db = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+
+    	db.delete("TempRoamer",null,null);
+    	//insert name into temp roamer
+    	db.execSQL("INSERT INTO "
+			       + "TempRoamer "
+			       + "(Username) "
+			       + "VALUES ('"+name+"');");
     }
     
     public void createTable(String tableName){

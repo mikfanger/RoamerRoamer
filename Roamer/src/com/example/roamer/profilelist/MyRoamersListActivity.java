@@ -145,13 +145,18 @@ public class MyRoamersListActivity extends Activity {
     	index = cur.getColumnIndex("CountR");
     	count = cur.getInt(index);
     	
+    	
+    	Cursor c = myDB.rawQuery("SELECT * FROM " + "MyRoamers ", null);
+    	
+    	count = c.getCount();
+    	System.out.println("MyRoamer count is: "+count);
     	if (count > 0) {
     		
     		
     	loadArray = new ArrayList<MyRoamerItem>();
     	int i = 1;
 
-		Cursor c = myDB.rawQuery("SELECT * FROM " + "MyRoamers ", null);
+		
 		c.moveToFirst();
 		
 		 int C1 = c.getColumnIndex("Pic");

@@ -33,6 +33,7 @@ public class ProfileListActivity extends Activity {
 	String newName;
 	String newDate;
 	String newLocation;
+	int newIndustry;
     ListView listView;
     final Context context = this;
     private ArrayList<Item> roamersArray;
@@ -102,6 +103,7 @@ public class ProfileListActivity extends Activity {
 	                int position, long id) {
 	            	
 	              // When clicked, show a dialog with event information
+	            	finish();
 	            	Intent i=new Intent(ProfileListActivity.this,RoamerProfileShortActivity.class);
 	                startActivity(i);
 	            	
@@ -109,9 +111,10 @@ public class ProfileListActivity extends Activity {
   	                newName = Model.GetbyId(position+1).Name;
   	                newLocation = Model.GetbyId(position+1).Location;
   	                newDate = Model.GetbyId(position+1).StartDate;
+  	                newIndustry = Model.GetbyId(position+1).Industry;
   	                
   	                System.out.println("Date from profile is: "+newDate);
-  	                addTempRoamer(newIcon,newName,newLocation,newDate);
+  	                addTempRoamer(newIcon,newName,newLocation,newDate,newIndustry);
   	                
 	            }
 		
@@ -122,13 +125,13 @@ public class ProfileListActivity extends Activity {
     }
     
     //Enter Roamer data in to temp table for retrieval by short profile page
-    public void addTempRoamer(byte[] icon, String name, String sex, String date){
+    public void addTempRoamer(byte[] icon, String name, String sex, String date, int industry){
    	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
    	
    	
    	myDB.delete("TempRoamer", null, null);
 
-   	String sql                      =   "INSERT INTO TempRoamer (rowid,Pic,Username,Loc,Start) VALUES(?,?,?,?,?)";
+   	String sql                      =   "INSERT INTO TempRoamer (rowid,Pic,Username,Sex,Start,Industry) VALUES(?,?,?,?,?,?)";
     SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
     insertStmt.clearBindings();
     insertStmt.bindLong(1,01);
@@ -136,6 +139,7 @@ public class ProfileListActivity extends Activity {
     insertStmt.bindString(3, name);
     insertStmt.bindString(4, sex);
     insertStmt.bindString(5, date);
+    insertStmt.bindLong(6, industry);
     insertStmt.executeInsert();
    	
    	myDB.close();
@@ -234,6 +238,7 @@ public class ProfileListActivity extends Activity {
        	String location;
        	String eventId;
        	Date date;
+       	int industry;
        	
 			if(roamerList.size()>0){
 				
@@ -242,7 +247,8 @@ public class ProfileListActivity extends Activity {
 	        	sex = roamerList.get(i).getBoolean("Sex");
 	        	location = getLocationText(roamerList.get(i).getInt("Location"));
 	        	eventId = roamerList.get(i).getString("objectId");
-	        	date = roamerList.get(i).getDate("CreatedDate");
+	        	date = roamerList.get(i).getCreatedAt();
+	        	industry = roamerList.get(i).getInt("Industry");
 	        	
 	        	int day = date.getDay();
 	        	int month = date.getMonth();
@@ -259,7 +265,7 @@ public class ProfileListActivity extends Activity {
 	        	
 	        	
 	        	
-	    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate));
+	    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
 	    		i++;
 			}
            
@@ -270,7 +276,8 @@ public class ProfileListActivity extends Activity {
         	sex = roamerList.get(i).getBoolean("Sex");
         	location = getLocationText(roamerList.get(i).getInt("Location"));
         	eventId = roamerList.get(i).getString("objectId");
-        	date = roamerList.get(i).getDate("CreatedDate");
+        	date = roamerList.get(i).getCreatedAt();
+        	industry = roamerList.get(i).getInt("Industry");
         	
         	int day = date.getDay();
         	int month = date.getMonth();
@@ -286,7 +293,7 @@ public class ProfileListActivity extends Activity {
 				e1.printStackTrace();
 			}
         	
-    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate));
+    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
     		i++;
    		}
 		} catch (ParseException e2) {

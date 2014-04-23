@@ -15,7 +15,7 @@
         android:layout_marginBottom="34dp"
         android:background="@color/transparent"
         android:contentDescription="@string/action_settings"
-        android:src="@drawable/login" />
+        android:src="@drawable/selector_login" />
 
     <ImageButton
         android:id="@+id/newUser"
@@ -26,7 +26,7 @@
         android:layout_marginBottom="28dp"
         android:background="@color/transparent"
         android:contentDescription="@string/check_inbox_button"
-        android:src="@drawable/create_account" />
+        android:src="@drawable/selector_create_account" />
 
     <EditText
         android:id="@+id/passwordLogin"

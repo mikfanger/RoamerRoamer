@@ -9,7 +9,6 @@ import org.json.JSONException;
 
 import com.example.roamer.ConvertCode;
 import com.example.roamer.R;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -72,7 +71,7 @@ public class RoamerProfileShortActivity extends Activity {
 	   	final String locString = c.getString(locDex);
 	   	final String dateString = c.getString(dateDex);
 	   	final int hotelString = c.getInt(hotelDex);
-	   	final int industryString = c.getInt(industryDex);
+	   	final String industryString = ConvertCode.convertIndustry(c.getInt(industryDex));
 	   	final int airString = c.getInt(airDex);
 	   	final int travelString = c.getInt(travelDex);
 	   	final int jobString = c.getInt(jobDex);
@@ -82,11 +81,11 @@ public class RoamerProfileShortActivity extends Activity {
 	   	TextView nameView = (TextView) findViewById(R.id.textProfileName);
 	   	TextView sexView = (TextView) findViewById(R.id.textProfileSex);
 	   	ImageView picView = (ImageView) findViewById(R.id.imageProfilePicture);
-	   	TextView dateView = (TextView) findViewById(R.id.textRoamerDate);
+	   	TextView industryView = (TextView) findViewById(R.id.textRoamerDate);
 	   	
 	   	nameView.setText(nameString);
 	   	sexView.setText(sex);
-	   	dateView.setText(dateString);
+	   	industryView.setText(industryString);
 	   	
 
 	   	// get image
@@ -128,9 +127,11 @@ public class RoamerProfileShortActivity extends Activity {
 	            	
 	            	if (checkIfAlreadyFriends(nameString)){
 	            		//Add Roamer to myroamers
+	            		
+	            		/*
 		            	addRoamer(picByte,nameString,sexInt,locString,dateString,
 		            			hotelString,travelString,jobString,industryString,airString);
-		            	
+		            	*/
 		            	System.out.println("Roamer to be added is: "+nameString);
 		            	//Send request to roamer
 		            	try {
@@ -144,8 +145,6 @@ public class RoamerProfileShortActivity extends Activity {
 						}
 		            	
 		            	//Move back to global roamers list
-		            	Toast.makeText(getApplicationContext(), "Request sent to Roamer!",
-		            			   Toast.LENGTH_LONG).show();
 		            	finish();
 		            	Intent i=new Intent(RoamerProfileShortActivity.this,ProfileListActivity.class);
 		                startActivity(i);
@@ -171,7 +170,7 @@ public class RoamerProfileShortActivity extends Activity {
 			int hotel, int travel, int job, int industry, int air){
 	   	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 	   	 
-	   	String sql                      =   "INSERT INTO MyRoamers (Pic,Username,Sex,Loc,Start,Hotel,Travel,Job,Industry,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
+	   	String sql   =   "INSERT INTO MyRoamers (Pic,Username,Sex,Loc,Start,Hotel,Travel,Job,Industry,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
 	    SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
 	    insertStmt.clearBindings();
 	    insertStmt.bindBlob(1,icon);
@@ -203,32 +202,63 @@ public class RoamerProfileShortActivity extends Activity {
 	
 	public void sendRequest(String name) throws ParseException, JSONException{
 		
+		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
+		c.moveToFirst();
+		boolean requestSent = false;
 		
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
-       	query.whereEqualTo("Username", name);
-       	
-       	final ParseObject Roamer = query.getFirst();
-       	
-       	JSONArray roamerList = Roamer.getJSONArray("Requests");
-       	ArrayList<String> newList = new ArrayList();
-       	
-       	System.out.println("Array before is: " + roamerList);
-       	if (roamerList != null){
-       		
-       		int i = 0;
-       		while (i < roamerList.length()){
-       			newList.add(roamerList.getString(i));
-       		}
-       		//roamerList.put(name);
-       		newList.add(myName);
-       	}
-       	else{
-       		newList.add(myName);
-       	}
-       	System.out.println("Array after is: " + newList);
-       	Roamer.put("Requests", newList);
-       	Roamer.save();
-				
+		int index = c.getColumnIndex("SentRequests");
+		String requests = c.getString(index);
+		System.out.println("Requests sent are+ "+requests);
+		String[] roamerList1 = requests.split(",");
+		System.out.println("Request list length is+ "+roamerList1.length);
+		int i1 = 0;
+		while(i1 < roamerList1.length){
+			if(roamerList1[i1].equals(name)){
+				System.out.println("Request is: "+roamerList1[i1]);
+				requestSent = true;
+			}
+			i1++;
+		}
+		System.out.println("Request has or has not been sent");
+		if(requestSent == false){
+			System.out.println("Request has not been sent");
+			ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+	       	query.whereEqualTo("Username", name);
+	       	
+	       	final ParseObject Roamer = query.getFirst();
+	       	
+	       	JSONArray roamerList = Roamer.getJSONArray("Requests");
+	       	ArrayList<String> newList = new ArrayList();
+	       	
+	       	if (roamerList != null){
+	       		
+	       		int i = 0;
+	       		while (i < roamerList.length()){
+	       			System.out.println("Roamer is: "+roamerList.get(i).toString());
+	       			roamerList.get(i).toString();
+	       			newList.add(roamerList.get(i).toString());
+	       			i++;
+	       		}
+	       		newList.add(myName);
+	       	}
+	       	else{
+	       		newList.add(myName);
+	       	}
+	        ContentValues args = new ContentValues();
+			args.put("SentRequests", requests+","+name);
+			myDB.update("MyCred", args, "rowid" + "=" + 1, null);
+			myDB.close();
+	       	Roamer.put("Requests", newList);
+	       	Roamer.save();
+	       	
+	       	Toast.makeText(getApplicationContext(), "Request sent to Roamer!",
+     			   Toast.LENGTH_LONG).show();
+		}
+		if(requestSent == true){
+    		Toast.makeText(getApplicationContext(), "Request has already been sent, can't send twice!",
+     			   Toast.LENGTH_LONG).show();
+		}		
 	}
 	
 	public boolean checkIfAlreadyFriends(String name){

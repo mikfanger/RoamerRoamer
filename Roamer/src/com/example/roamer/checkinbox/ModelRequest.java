@@ -35,10 +35,11 @@ public class ModelRequest {
         		String industryTemp = item.Industry;
         		String jobTemp = item.Job;
         		String sexTemp = item.Sex;
+        		String credTemp = item.CredName;
         		        		
         		Items.add(new ItemRequest (idTemp,iconTemp,nameTemp,dateTemp,
         				sexTemp,travelTemp,industryTemp,hotelTemp,
-        				jobTemp,locationTemp,airTemp));
+        				jobTemp,locationTemp,airTemp, credTemp));
         }
         
 

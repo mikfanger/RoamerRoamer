@@ -13,10 +13,11 @@ public class ItemRequest {
     public String Job;
     public String Airline;
     public String Location;
+    public String CredName;
 
     public ItemRequest(int id, byte[] iconFile, String name,
     		String date, String sex, String travel, String industry,
-    		String hotel, String job, String location, String airline ) {
+    		String hotel, String job, String location, String airline, String credName ) {
 
         Id = id;
         IconFile = iconFile;
@@ -29,6 +30,7 @@ public class ItemRequest {
         Job = job;
         Location = location;
         Airline = airline;
+        CredName = credName;
         
 
     }

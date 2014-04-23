@@ -71,7 +71,7 @@
         android:layout_alignBottom="@+id/imageProfilePicture"
         android:layout_alignLeft="@+id/imageAddRoamer"
         android:layout_marginBottom="14dp"
-        android:text="Roaming Since"
+        android:text="Industry"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView

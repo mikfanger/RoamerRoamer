@@ -23,10 +23,11 @@ public class Model {
         		String locTemp = item.Location;
         		boolean sexTemp = item.Sex;
         		String dateTemp = item.StartDate;
+        		int industryTemp = item.Industry;
         		
         		System.out.println("Date during model load is: "+dateTemp);
         		
-        		Items.add(new Item (idTemp,iconTemp,nameTemp,locTemp, sexTemp,dateTemp));
+        		Items.add(new Item (idTemp,iconTemp,nameTemp,locTemp, sexTemp,dateTemp, industryTemp));
         	}
         }       
     }

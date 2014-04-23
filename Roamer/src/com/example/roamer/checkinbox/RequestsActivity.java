@@ -1,22 +1,18 @@
 package com.example.roamer.checkinbox;
 
-
 import java.util.ArrayList;
 import java.util.Date;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.example.roamer.ConvertCode;
-import com.example.roamer.IntroActivity;
-import com.example.roamer.LoginActivity;
 import com.example.roamer.R;
 import com.example.roamer.profilelist.ProfileListActivity;
+import com.example.roamer.profilelist.RoamerProfileShortActivity;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,20 +20,23 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 
 public class RequestsActivity extends Activity {
 
     ListView listView;
+    private byte[] newIcon;
+	String newName;
+	String newDate;
+	String newLocation;
     final Context context = this;
-    private int count;
     ArrayList<ItemRequest> loadArray;
 
     @Override
@@ -66,37 +65,30 @@ public class RequestsActivity extends Activity {
         ItemAdapterRequest adapter = new ItemAdapterRequest(this,R.layout.row_request, ids);
         listView.setAdapter(adapter);
         
-        /*
-        ImageButton acceptButton = (ImageButton) findViewById(R.id.StartRoamerButton);
-        acceptButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	           	
+  
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                int position, long id) {
             	
-            	//deleteFromArray(ModelRequest.GetbyId(position+1).Na);
+            	//Add to temp roamer
+            	newIcon = ModelRequest.GetbyId(position+1).IconFile;
+	            newName = ModelRequest.GetbyId(position+1).Name;
+	            newLocation = ModelRequest.GetbyId(position+1).Location;
+	            newDate = ModelRequest.GetbyId(position+1).StartDate;
+            	
+	            addTempRoamer(newIcon,newName,newLocation,newDate);
+	            
+            	String chatName = ModelRequest.GetbyId(position+1).Name;
+            	System.out.println("Request is from: "+chatName);
+            	
+            	//Show profile of roamer
+            	finish();
+            	Intent i=new Intent(RequestsActivity.this,RoamerProfileShortActivity.class);
+                startActivity(i);
+            	
             }
-         
         });
-        */
-        /*
-        ImageButton rejectButton = (ImageButton) findViewById(R.id.StartRoamerButton);
-        rejectButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	           	
-            	deleteFromArray(ModelRequest.GetbyId(id).name);
-            }
-        });
-         */   
         
-    }
-    
-    
-    public void clearChat(String name){
-    	
-    	SQLiteDatabase db = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-		db.delete("ChatTable", null, null);
-		db.close();
     }
     
     public int getRowCount(String tableName){
@@ -120,7 +112,8 @@ public class RequestsActivity extends Activity {
     }
     
     
-    public void loadArray() throws JSONException, ParseException{
+    @SuppressWarnings("deprecation")
+	public void loadArray() throws JSONException, ParseException{
     	
     	
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
@@ -130,7 +123,7 @@ public class RequestsActivity extends Activity {
     	int index;
     	index = cur.getColumnIndex("Username");
     	String userName = cur.getString(index);
-    	
+    	String credName = userName;
     	
     	loadArray = new ArrayList<ItemRequest>();
     	
@@ -157,10 +150,10 @@ public class RequestsActivity extends Activity {
     			String hotel;
     			String travel;
            	
-    			if( roamerList!=null ){
+    			if( roamerList!=null && roamerList.length()!=0){
     			
     				System.out.println("Requests are: "+roamerList);
-    	        	name = (String) roamerList.get(i);
+    	        	name = roamerList.get(i).toString();
     	        	System.out.println("First roamer name is: "+name);
     	        	
     	        	
@@ -178,9 +171,9 @@ public class RequestsActivity extends Activity {
     	        	location = ProfileListActivity.getLocationText(newRoamer.getInt("Location"));
     	        	
     	        	
-    	        	int day = date.getDay();
-    	        	int month = date.getMonth();
-    	        	int year = date.getYear();
+					int day = date.getDay();
+					int month = date.getMonth();
+					int year = date.getYear();
     	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
     	        	System.out.println("Full date is: "+fullDate);
     	        	
@@ -205,7 +198,7 @@ public class RequestsActivity extends Activity {
     	        	
     	        	
     	        	
-    	    		loadArray.add(new ItemRequest(i+1,pic,name,fullDate,sexString,travel,industry,hotel,job,location,airline));
+    	    		loadArray.add(new ItemRequest(i+1,pic,name,fullDate,sexString,travel,industry,hotel,job,location,airline, credName));
     	    		i++;
     			
                
@@ -252,7 +245,7 @@ public class RequestsActivity extends Activity {
 				}
 	        	
 
-	    		loadArray.add(new ItemRequest(i+1,pic,name,fullDate,sexString,travel,industry,hotel,job,location,airline));
+	    		loadArray.add(new ItemRequest(i+1,pic,name,fullDate,sexString,travel,industry,hotel,job,location,airline,credName));
 	    		i++;
        		}
     	}
@@ -263,7 +256,22 @@ public class RequestsActivity extends Activity {
        
     }
     
-    public void deleteFromArray(String name){
-    	
-    }
+    public void addTempRoamer(byte[] icon, String name, String sex, String date){
+       	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+       	
+       	
+       	myDB.delete("TempRoamer", null, null);
+
+       	String sql                      =   "INSERT INTO TempRoamer (rowid,Pic,Username,Loc,Start) VALUES(?,?,?,?,?)";
+        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
+        insertStmt.clearBindings();
+        insertStmt.bindLong(1,01);
+        insertStmt.bindBlob(2,icon);
+        insertStmt.bindString(3, name);
+        insertStmt.bindString(4, sex);
+        insertStmt.bindString(5, date);
+        insertStmt.executeInsert();
+       	
+       	myDB.close();
+       }
 }

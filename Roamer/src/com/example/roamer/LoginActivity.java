@@ -1,5 +1,10 @@
 package com.example.roamer;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseACL;
@@ -17,6 +22,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -290,11 +296,11 @@ public class LoginActivity extends Activity {
 		// for very easy animations. If available, use these APIs to fade-in
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-			int shortAnimTime = getResources().getInteger(
-					android.R.integer.config_shortAnimTime);
+			int mediumAnimTime = getResources().getInteger(
+					android.R.integer.config_mediumAnimTime);
 
 			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime)
+			mLoginStatusView.animate().setDuration(mediumAnimTime)
 					.alpha(show ? 1 : 0)
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
@@ -322,7 +328,7 @@ public class LoginActivity extends Activity {
 
 			try {
 				// Simulate network access.
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) { 
 				return false;
 			}
@@ -473,6 +479,24 @@ public class LoginActivity extends Activity {
 			 if (e == null) {
 				 
 				 //Get Data from Parse
+				 JSONArray  roamerList = object.getJSONArray("MyRoamers");
+				 JSONArray  requestList = object.getJSONArray("SentRequests");
+				 
+			    	String sentList = "none,none";
+			    	int newIndex = 0;
+			    	if(requestList != null){
+			    		while (newIndex < requestList.length()){
+				    		try {
+								sentList = sentList+","+requestList.get(newIndex).toString();
+							} catch (JSONException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+				    		newIndex++;
+				    	}
+			    	}
+			    	
+			    	
 				 String pEmail = object.getString("Email");
 				 String pUsername = object.getString("Username");
 				 String pPassword = object.getString("Password");
@@ -484,6 +508,7 @@ public class LoginActivity extends Activity {
 				 int pLocation = object.getInt("Location");
 				 int pCurrentLocation = object.getInt("CurrentLocation");
 				 boolean pSex = object.getBoolean("Sex");
+
 				 
 				 int pSex1 = 1;
 				 
@@ -504,16 +529,79 @@ public class LoginActivity extends Activity {
 					args.put("Air", pAirline);
 					args.put("Loc", pLocation);
 					args.put("CurrentLocation", pCurrentLocation);
+					args.put("SentRequests", sentList);
 					
 					myDB.update("MyCred", args, "rowid" + "=" + 1, null);
 					
-				 myDB.close();
+				    //Load MyRoamers
+					ArrayList<String> newList = new ArrayList();
+					myDB.delete("MyRoamers", null, null);  
+					
+					System.out.println("The count of myroamers is: "+roamerList.length());
+					if( roamerList!=null ){
+						int i = 0;			
+						while(i < roamerList.length()){
+							//Get roamer, noted as 'MyRoamer'
+							final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
+							try {
+								System.out.println("Roamer is: "+roamerList.get(i).toString());
+								query1.whereEqualTo("Username", roamerList.get(i).toString());
+							} catch (JSONException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							query1.getFirstInBackground(new GetCallback<ParseObject>() {
+
+								@Override
+								public void done(ParseObject object, ParseException e) {
+									 if (e == null) {
+										 
+										 
+										 
+										 int sex = 0;
+										 if(object.getBoolean("Sex") == true){
+											 sex = 1;
+										 }
+										 byte[] picFile = null;
+										try {
+											picFile = object.getParseFile("Pic").getData();
+										} catch (ParseException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+										 
+										 myDB.delete("TempRoamer", null, null);
+
+									       	String sql =   "INSERT INTO MyRoamers(Pic,Username,Loc,Start,Industry,Sex,Job,Travel,Hotel,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
+									        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
+									        insertStmt.clearBindings();
+									        insertStmt.bindBlob(1,picFile);
+									        insertStmt.bindString(2,object.getString("Username"));
+									        insertStmt.bindLong(3, object.getInt("CurrentLocation"));
+									        insertStmt.bindString(4, object.getCreatedAt().toString());
+									        insertStmt.bindLong(5, object.getInt("Industry"));
+									        insertStmt.bindLong(6, sex);
+									        insertStmt.bindLong(7, object.getInt("Job"));
+									        insertStmt.bindLong(8, object.getInt("Travel"));
+									        insertStmt.bindLong(9, object.getInt("Hotel"));
+									        insertStmt.bindLong(10, object.getInt("Air"));
+									        insertStmt.executeInsert();
+									        
+										 myDB.close();
+									 }
+									 
+								}
+							});
+							i++;
+						}
+					}
 				 
 			    } else {
 			    	//Do nothing
 			    }		
 		}
 		});
+		
 	}
 	
 public void checkEmail(){

@@ -1,6 +1,11 @@
 package com.example.roamer;
 
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
 import com.example.roamer.events.CreateEventActivity;
 import com.example.roamer.events.EventsActivity;
@@ -20,6 +25,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
@@ -117,6 +123,18 @@ public class HomeScreenActivity extends Activity {
             public void onClick(View v) {
             	
             	Intent i=new Intent(HomeScreenActivity.this,CreateEventActivity.class);
+                startActivity(i);
+            		  
+            }
+        });
+        
+        ImageButton exitButton = (ImageButton) findViewById(R.id.imageLogOut);
+        exitButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	
+            	finish();
+            	Intent i=new Intent(HomeScreenActivity.this,LoginActivity.class);
                 startActivity(i);
             		  
             }
@@ -348,7 +366,5 @@ public class HomeScreenActivity extends Activity {
         String spinnerText;
         String value;
     }
-    
-    
-   
+      
 }
