@@ -291,4 +291,63 @@ public static String convertHotel(int hotel){
 
 }
 
+public static String convertType(int type){
+	
+	String stringHotel = "";
+	
+	switch(type){
+
+   	case 1:
+   		stringHotel ="At Airport";
+           break;
+   	case 2:
+   		stringHotel ="Concert/Festival";
+   		break;
+   	case 3:
+   		stringHotel ="Dinner/Meal";
+   		break;
+   	case 4:
+   		stringHotel ="Drinks";
+   		break;
+   	case 5:
+   		stringHotel ="Professional/Seminarl";
+   		break;
+   	case 6:
+   		stringHotel ="Sporting Event";
+   		break;
+	}
+	
+	
+	return stringHotel;
+
+}
+
+public static String convertTime(int time){
+	
+	String stringHotel = "";
+	
+	switch(time){
+
+	case 1:
+		stringHotel = "Morning";
+		break;
+   	case 2:
+   		stringHotel ="Mid-day";
+        break;
+   	case 3:
+   		stringHotel ="Evening";
+   		break;
+   	case 4:
+   		stringHotel ="Night";
+   		break;
+   	case 5:
+   		stringHotel = "Late Night";
+   		break;
+	}
+	
+	
+	return stringHotel;
+
+}
+
 }

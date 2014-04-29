@@ -97,12 +97,14 @@ public class MyEvents extends Activity {
                  textViewLocation = (TextView) dialog.findViewById(R.id.textChildLocation);
                  textViewDesc = (TextView) dialog.findViewById(R.id.textChildDesc);                 
                  
+                 String correctString = ModelMyEvents.GetbyId(position+1).Description.replaceAll("&amp&", "'");
+                 String correctStringPlace = ModelMyEvents.GetbyId(position+1).Location.replaceAll("&amp&", "'");
                  textViewHost.setText(ModelMyEvents.GetbyId(position+1).Host);
-                 textViewDesc.setText(ModelMyEvents.GetbyId(position+1).Description);
+                 textViewDesc.setText(correctString);
                  textViewAttend.setText(ModelMyEvents.GetbyId(position+1).Attend);
                  textViewDate.setText(ModelMyEvents.GetbyId(position+1).Date);
                  //imageView.setBackgroundResource(Model.GetbyId(position+1).IconFile);
-                 textViewLocation.setText(ModelMyEvents.GetbyId(position+1).Location);
+                 textViewLocation.setText(correctStringPlace);
                  textViewEventType.setText(ModelMyEvents.GetbyId(position+1).EventType);
             	 final int myId = ModelMyEvents.GetbyId(position+1).Id;
             	 byte[] picByte = ModelMyEvents.GetbyId(position+1).IconFile;
@@ -220,8 +222,9 @@ public class MyEvents extends Activity {
 		 
 		 System.out.println("value is: " +c.getString(C1));
 
-		 
-		 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),c.getString(C6),c.getString(C2),c.getString(C9)));
+		 String correctLocation = c.getString(C2).replace("&amp&", "'");
+		 String correctDesc = c.getString(C6).replace("&amp&", "'");
+		 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9)));
 		
 		while(c.moveToNext()){
 			i++;
@@ -235,8 +238,11 @@ public class MyEvents extends Activity {
 			  C7 = c.getColumnIndex("Attend");
 			  C8 = c.getColumnIndex("rowid");
 			  C9 = c.getColumnIndex("EventId");
+			  
+				 correctLocation = c.getString(C2).replace("&amp&", "'");
+				 correctDesc = c.getString(C6).replace("&amp&", "'");
 			 
-			 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),c.getString(C6),c.getString(C2),c.getString(C9)));			
+			 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9)));			
 		}
 		
 		myDB.close();

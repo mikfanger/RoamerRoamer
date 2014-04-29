@@ -6,8 +6,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+
 import graphics.FlyOutContainer;
 
+import com.example.roamer.ConvertCode;
 import com.example.roamer.R;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -23,6 +26,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -53,6 +57,7 @@ public class AllEvents extends Activity {
      TextView textViewDesc;
      TextView textViewTime;
      ArrayList<Item> eventsArray;
+     ArrayList<String> usernameArray;
      
      String newHost;
      String newType;
@@ -67,7 +72,7 @@ public class AllEvents extends Activity {
      private int day;
      private int month;
      private int year;
-     private int parseEventId;
+     private String parseEventId;
      
      FlyOutContainer root;
      
@@ -138,6 +143,7 @@ public class AllEvents extends Activity {
                  textViewLocation.setText(Model.GetbyId(position+1).Location);
                  textViewEventType.setText(Model.GetbyId(position+1).EventType);
                  textViewTime.setText(Model.GetbyId(position+1).Time);
+                 parseEventId = Model.GetbyId(position+1).ObjectId;
             	
                  Bitmap bmp = BitmapFactory.decodeByteArray(hostImage, 0, hostImage.length);
          	     imageView.setBackgroundResource(0);
@@ -171,9 +177,7 @@ public class AllEvents extends Activity {
     					newLocation = (String) textViewLocation.getText();
     					newDesc = (String) textViewDesc.getText();
     					newTime = (String) textViewTime.getText();
-    					
-    					
-    					
+			
     					addToMyEvents(newHost, newType, newDate, newAttend, newLocation, newDesc, hostImage, newEventId, newTime);
     					
     					updateEventInParse();
@@ -192,24 +196,37 @@ public class AllEvents extends Activity {
     					int startMinute = 0;
     					int finishMinute = 0;
     					int finishHour = 0;
-    					if (newTime.equals("Mid-Day")){
-    						startHour = 11;
-    						startMinute = 30;	
-    						finishHour = 13;
-    						finishMinute = 30;
-    					}
-    					if (newTime.equals("Evening")){
-    						startHour = 17;
-    						startMinute = 30;	
-    						finishHour = 19;
-    						finishMinute = 30;
-    					}
-    					if (newTime.equals("Night")){
-    						startHour = 20;
-    						startMinute = 30;	
-    						finishHour = 22;
-    						finishMinute = 30;
-    					}
+    					if (newTime.equals("Mid-day")){
+							startHour = 11;
+							startMinute = 30;	
+							finishHour = 13;
+							finishMinute = 30;
+						}
+						if (newTime.equals("Evening")){
+							startHour = 17;
+							startMinute = 30;	
+							finishHour = 19;
+							finishMinute = 30;
+						}
+						if (newTime.equals("Night")){
+							startHour = 20;
+							startMinute = 30;	
+							finishHour = 22;
+							finishMinute = 30;
+						}
+						if (newTime.equals("Morning")){
+							startHour = 6;
+							startMinute = 30;	
+							finishHour = 11;
+							finishMinute = 30;
+						}
+						if (newTime.equals("Late Night")){
+							startHour = 20;
+							startMinute = 30;	
+							finishHour = 23;
+							finishMinute = 59;
+						}
+    					
     				
     					beginTime.set(year, month, day, startHour, startMinute);
     					Calendar endTime = Calendar.getInstance();
@@ -248,10 +265,22 @@ public class AllEvents extends Activity {
     public void addToMyEvents(String host, String type, String date, String attend, String location, String desc, byte[] image, String eventId, String time){
     	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	 
-    	myDB.execSQL("INSERT INTO "
-			       + "MyEvents "
-			       + "(Type,Location,Date,Host,HostPic,Blurb,Attend,EventId,Time) "
-			       + "VALUES ('"+type+"','"+location+"','"+date+"','"+host+"','"+image+"','"+desc+"','"+attend+"','"+eventId+"','"+time+"');");
+    	 String my_new_str = desc.replaceAll("'", "&amp&");
+    	 String my_new_str_place = location.replaceAll("'", "&amp&");
+    	 
+    	String sql =   "INSERT INTO MyEvents(Type,Location,Date,Host,HostPic,Blurb,Attend,EventId,Time) VALUES(?,?,?,?,?,?,?,?,?)";
+        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
+        insertStmt.clearBindings();
+        insertStmt.bindString(1,type);
+        insertStmt.bindString(2,my_new_str_place);
+        insertStmt.bindString(3, date);
+        insertStmt.bindString(4, host);
+        insertStmt.bindBlob(5, image);
+        insertStmt.bindString(6, my_new_str);
+        insertStmt.bindString(7, attend);
+        insertStmt.bindString(8, parseEventId);
+        insertStmt.bindString(9, time);
+        insertStmt.executeInsert();
     	
     	//Update count of events in Credentials
     	ContentValues args = new ContentValues();
@@ -271,7 +300,10 @@ public class AllEvents extends Activity {
     	cur.moveToFirst();
     	int index;
     	index = cur.getColumnIndex("CurrentLocation");
+    	int indexName = cur.getColumnIndex("Username");
+    	usernameArray = new ArrayList<String>();
     	
+    	usernameArray.add(cur.getString(indexName));
     	int locationInt = cur.getInt(index);
     	eventsArray = new ArrayList<Item>();
     	
@@ -298,12 +330,12 @@ public class AllEvents extends Activity {
 	        	type = eventList.get(i).getInt("Type");
 	        	host = eventList.get(i).getString("Host");
 	        	location = eventList.get(i).getInt("Location");
-	        	date = eventList.get(i).getCreatedAt();
 	        	time = eventList.get(i).getInt("Time");
 	        	desc = eventList.get(i).getString("Desc");
 	        	attend = eventList.get(i).getInt("Attend");
 	        	place = eventList.get(i).getString("Place");
-	        	eventId = eventList.get(i).getString("objectId");
+	        	date = eventList.get(i).getDate("Date");
+	        	eventId = eventList.get(i).getObjectId();
 	        	
 	        	try {
 					pic = eventList.get(i).getParseFile("Pic").getData();
@@ -334,7 +366,7 @@ public class AllEvents extends Activity {
 	    				pic, 
 	    				host, 
 	    				fullDate, 
-	    				getType(type), 
+	    				ConvertCode.convertType(type), 
 	    				Integer.toString(attend),
 	    				place,
 	    				desc,
@@ -349,12 +381,12 @@ public class AllEvents extends Activity {
     			type = eventList.get(i).getInt("Type");
 	        	host = eventList.get(i).getString("Host");
 	        	location = eventList.get(i).getInt("Location");
-	        	date = eventList.get(i).getCreatedAt();
+	        	date = eventList.get(i).getDate("Date");
 	        	time = eventList.get(i).getInt("Time");
 	        	desc = eventList.get(i).getString("Desc");
 	        	attend = eventList.get(i).getInt("Attend");
 	        	place = eventList.get(i).getString("Place");
-	        	eventId = eventList.get(i).getString("objectId");
+	        	eventId = eventList.get(i).getObjectId();
 	        	
 	        	try {
 					pic = eventList.get(i).getParseFile("Pic").getData();
@@ -363,16 +395,7 @@ public class AllEvents extends Activity {
 					e1.printStackTrace();
 				}
 	        	
-	        	String timeString = "";
-	        	if (time == 1){
-	        		timeString = "Mid-Day";
-	        	}
-	        	if (time == 2){
-	        		timeString = "Evening";
-	        	}
-	        	if (time == 3){
-	        		timeString = "Night";
-	        	}
+	        	String timeString = ConvertCode.convertTime(time);
 	        	
 	        	day = date.getDay();
 	        	month = date.getMonth();
@@ -382,8 +405,8 @@ public class AllEvents extends Activity {
 	        	eventsArray.add(new Item(i+1, 
 	    				pic, 
 	    				host, 
-	    				date.toGMTString(), 
-	    				getType(type), 
+	    				fullDate, 
+	    				ConvertCode.convertType(type), 
 	    				Integer.toString(attend),
 	    				place,
 	    				desc,
@@ -397,52 +420,10 @@ public class AllEvents extends Activity {
 		}	
     }
     
-    public String getTime(int time){
-    	
-    	String timeDay ="";
-    	if (time == 1){
-    		timeDay = "Mid-day";
-    	}
-    	if (time == 2){
-    		timeDay = "Evening";
-    	}
-    	if (time == 3){
-    		timeDay = "Night";
-    	}
-    	
-    	return timeDay;
-    }
-    
-    public String getType(int type){
-    	
-    	String timeDay = "";
-    	
-    	if (type == 1){
-    		timeDay = "At Airport";
-    	}
-    	if (type == 2){
-    		timeDay = "Concert/Festival";
-    	}
-    	if (type == 3){
-    		timeDay = "Dinner/Meal";
-    	}
-    	if (type == 4){
-    		timeDay = "Drinks";
-    	}
-    	if (type == 5){
-    		timeDay = "Professional/Seminar";
-    	}
-    	if (type == 6){
-    		timeDay = "Sporting Event";
-    	}
-    	
-    	return timeDay;
-    }
-    
     public void updateEventInParse(){
     	
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
-    	query.whereEqualTo("Email", parseEventId);
+    	query.whereEqualTo("objectId", parseEventId);
     	
     	query.getFirstInBackground(new GetCallback<ParseObject>() {
     	  public void done(ParseObject event, ParseException e) {
@@ -451,7 +432,27 @@ public class AllEvents extends Activity {
 
     	    } else {
     	    	 int i = event.getInt("Attend");
+    	    	 JSONArray newJSON = event.getJSONArray("Attendees");
+    	    	 
     	    	 event.put("LoginCount",i+1);
+    	    	 event.addAllUnique("Attendees", usernameArray);
+    		     event.saveInBackground();
+    	    }
+    	  }
+    	});
+    	
+    	ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
+    	query1.whereEqualTo("Username", usernameArray.get(1));
+    	final ArrayList eventList = new ArrayList<String>();
+    	eventList.add(parseEventId);
+    	
+    	query1.getFirstInBackground(new GetCallback<ParseObject>() {
+    	  public void done(ParseObject event, ParseException e) {
+    	    if (event == null) {
+    	    	 
+
+    	    } else {
+    	    	 event.addAllUnique("MyEvents", eventList);
     		     event.saveInBackground();
     	    }
     	  }

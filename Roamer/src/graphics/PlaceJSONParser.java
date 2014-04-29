@@ -60,6 +60,7 @@ public class PlaceJSONParser {
             // Extracting Place name, if available
             if(!jPlace.isNull("name")){
                 placeName = jPlace.getString("name");
+                System.out.println("Place name is: "+placeName);
             }
  
             // Extracting Place Vicinity, if available

@@ -129,12 +129,13 @@
         android:maxLines="2" />
 
     <TextView
-        android:id="@+id/textFinalLocation"
+        android:id="@+id/textProfileJob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textProfileTravel"
         android:layout_alignRight="@+id/textProfileTravel"
         android:layout_below="@+id/buttonSelectFromMap"
+        android:layout_marginTop="10dp"
         android:text="Final Location"
         android:textColor="@color/DarkWhite" />
 

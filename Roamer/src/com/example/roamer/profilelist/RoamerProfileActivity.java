@@ -61,9 +61,9 @@ public class RoamerProfileActivity extends Activity {
 	   	//TextView industryView = (TextView) findViewById(R.id.textProfileIndustry);
 	   	TextView travelView = (TextView) findViewById(R.id.textProfileTravel);
 	   	TextView hotelView = (TextView) findViewById(R.id.textProfileHotel);
-	   	//TextView jobView = (TextView) findViewById(R.id.textProfileJob);
+	   	TextView jobView = (TextView) findViewById(R.id.textProfileJob);
 	   	TextView airView = (TextView) findViewById(R.id.textProfileAir);
-	   	TextView locView = (TextView) findViewById(R.id.textFinalLocation);
+	   	TextView locView = (TextView) findViewById(R.id.textProfileJob);
 	   	
 	   	
 	   	nameView.setText(tempName);
@@ -73,6 +73,7 @@ public class RoamerProfileActivity extends Activity {
 	   	hotelView.setText(tempHotel);
 	   	airView.setText(tempAir);
 	   	locView.setText(tempLoc);
+	   	jobView.setText(tempJob);
 	   	
 	   	
 

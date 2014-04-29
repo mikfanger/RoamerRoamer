@@ -11,8 +11,11 @@ import java.util.List;
 
 import org.json.*;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Criteria;
@@ -21,15 +24,16 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.roamer.R;
 import com.example.roamer.events.CreateEventActivity;
@@ -37,17 +41,21 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class HelloGoogleMaps extends FragmentActivity implements LocationListener{
+public class HelloGoogleMaps extends FragmentActivity implements LocationListener,
+OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClickListener{
 
 	private GoogleMap Mmap;
-	//private EditText searchText;
-	private double latitude= 0.0, longtitude= 0.0;
-	private LatLng curLocation;
 	private double cityLat;
 	private double cityLong;
 	private int credLocation;
@@ -157,7 +165,6 @@ public class HelloGoogleMaps extends FragmentActivity implements LocationListene
             	System.out.println(sb.toString());
             	//placesTask.doInBackground(sb.toString());
             	
-            	//searchText.setText("");
             }
         });
 
@@ -174,6 +181,19 @@ public class HelloGoogleMaps extends FragmentActivity implements LocationListene
         });
         
         }
+      
+        
+        Mmap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+            @Override
+            public void onInfoWindowClick(Marker point) {
+
+            	showAlert(point);
+            	
+            }       
+    });
+        
+        setUpMapIfNeeded();
 	}
 	
     @Override
@@ -181,6 +201,22 @@ public class HelloGoogleMaps extends FragmentActivity implements LocationListene
         // Inflate the menu
         getMenuInflater().inflate(R.menu.hello_google_maps, menu);
         return true;
+    }
+    
+    private void setUpMapIfNeeded() {
+        if (Mmap == null) {
+            Mmap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mymap))
+                    .getMap();
+            if (Mmap != null) {
+                setUpMap();
+            }
+        }
+    }
+    
+    private void setUpMap() {
+        Mmap.setOnMapClickListener(this);
+        Mmap.setOnMapLongClickListener(this);
+        Mmap.setOnCameraChangeListener(this);
     }
  
     
@@ -445,4 +481,72 @@ public class HelloGoogleMaps extends FragmentActivity implements LocationListene
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
     }
+    
+    @Override
+    public void onMapClick(LatLng point) {
+        System.out.println("Point is: "+ point.toString());
+        double lat = point.latitude;
+        double longt = point.longitude;
+    }
+
+	@Override
+	public void onCameraChange(CameraPosition position) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMapLongClick(LatLng point) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onMarkerClick(Marker arg0) {
+		 Toast.makeText(getApplicationContext(), arg0.getTitle(), Toast.LENGTH_LONG).show();
+		return false;
+	}
+	
+	 public void onInfoWindowClick(Marker marker) {
+		 showAlert(marker);
+	        Toast.makeText(this, "Click Info Window", Toast.LENGTH_SHORT).show();
+	    }
+
+	 public void showAlert(final Marker marker){
+		 
+		 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+         builder1.setMessage("Are you sure you want: "+marker.getTitle()+"?");
+         builder1.setCancelable(true);
+         builder1.setPositiveButton("Yes",
+                 new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int id) {
+                 dialog.cancel();
+                 
+                saveLocation(marker.getTitle());
+                 
+                 finish();
+             	 Intent i=new Intent(HelloGoogleMaps.this,CreateEventActivity.class);
+                 startActivity(i);
+                 
+             }
+         });
+         builder1.setNegativeButton("No",
+                 new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int id) {
+                 dialog.cancel();
+             }
+         });
+
+         AlertDialog alert11 = builder1.create();
+         alert11.show();
+	 }
+	 
+	 public void saveLocation(String location){
+		 //Move back to create event activity and save the location
+         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+         SharedPreferences.Editor editor = preferences.edit();
+         editor.putString("location",location);
+         editor.commit();
+	 }
+    
 }

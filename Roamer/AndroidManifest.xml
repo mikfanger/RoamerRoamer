@@ -11,7 +11,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
-	<uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
     </uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" >
@@ -24,20 +24,21 @@
     </uses-permission>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" >
     </uses-permission>
+
     <permission
         android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.example.roamer.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-    
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -50,8 +51,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <uses-library android:name="com.google.android.maps" />
-        
-      
+
         <activity
             android:name="com.example.roamer.IntroActivity"
             android:allowBackup="true"
@@ -94,7 +94,7 @@
         <activity
             android:name="com.example.roamer.PersonDetailActivity"
             android:label="@string/title_person_detail"
-            android:parentActivityName=".PersonListActivity"
+            android:parentActivityName="com.example.roamer.PersonListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
             <meta-data
@@ -134,7 +134,7 @@
             android:name="com.example.roamer.CreateAccountActivityPic"
             android:label="@string/title_activity_create_account_activity_pic"
             android:screenOrientation="portrait"
-			android:theme="@style/Theme.NoTitleBar.WithColoredSpinners" >
+            android:theme="@style/Theme.NoTitleBar.WithColoredSpinners" >
         </activity>
         <activity
             android:name="com.example.roamer.profilelist.ProfileListActivity"
@@ -204,45 +204,52 @@
         </activity>
 
         <service android:name="com.parse.PushService" />
-		<receiver android:name="com.parse.ParseBroadcastReceiver">
-  			<intent-filter>
-    		<action android:name="android.intent.action.BOOT_COMPLETED" />
-    		<action android:name="android.intent.action.USER_PRESENT" />
-  			</intent-filter>
-		</receiver>
-		
-		<receiver android:name="com.parse.GcmBroadcastReceiver"
-    		android:permission="com.google.android.c2dm.permission.SEND">
-  		<intent-filter>
-    		<action android:name="com.google.android.c2dm.intent.RECEIVE" />
-    		<action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-    		<category android:name="com.example.roamer" />
-  		</intent-filter>
-		</receiver>
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.example.roamer" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="com.example.roamer.profilelist.RoamerProfileShortActivity"
             android:label="@string/title_activity_roamer_profile_short"
-            android:theme="@android:style/Theme.NoTitleBar"  >
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
             android:name="com.example.roamer.checkinbox.RequestsActivity"
             android:label="@string/title_activity_roamer_profile_short"
-            android:theme="@android:style/Theme.NoTitleBar"  >
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
             android:name="graphics.HelloGoogleMaps"
             android:label="@string/title_profile_list_activity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@android:style/Theme.Dialog" >
         </activity>
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCMO_9EWAfU83za9plSDNxBaUSd_o0R0og" />
         <meta-data
-    		android:name="com.google.android.gms.version"
-    		android:value="@integer/google_play_services_version" />
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="com.example.roamer.ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password" >
+        </activity>
     </application>
 
 </manifest>

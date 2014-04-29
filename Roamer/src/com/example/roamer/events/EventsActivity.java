@@ -132,11 +132,14 @@ public class EventsActivity extends TabActivity implements
 	@Override
 	public void onTabUnselected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
+
 	}
 
 	@Override
 	public void onTabReselected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
+		finish();
+		
 	}
 
 	/**

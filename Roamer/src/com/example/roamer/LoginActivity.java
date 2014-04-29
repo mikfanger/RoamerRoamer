@@ -481,6 +481,7 @@ public class LoginActivity extends Activity {
 				 //Get Data from Parse
 				 JSONArray  roamerList = object.getJSONArray("MyRoamers");
 				 JSONArray  requestList = object.getJSONArray("SentRequests");
+				 JSONArray  eventList = object.getJSONArray("MyEvents");
 				 
 			    	String sentList = "none,none";
 			    	int newIndex = 0;
@@ -499,6 +500,7 @@ public class LoginActivity extends Activity {
 			    	
 				 String pEmail = object.getString("Email");
 				 String pUsername = object.getString("Username");
+				 System.out.println("Username is: "+ pUsername);
 				 String pPassword = object.getString("Password");
 				 int pIndustry = object.getInt("Industry");
 				 int pJob = object.getInt("Job");
@@ -508,6 +510,15 @@ public class LoginActivity extends Activity {
 				 int pLocation = object.getInt("Location");
 				 int pCurrentLocation = object.getInt("CurrentLocation");
 				 boolean pSex = object.getBoolean("Sex");
+				 byte[] picByte = null;
+				 try {
+					picByte = object.getParseFile("Pic").getData();
+				} catch (ParseException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				 
+				 
 
 				 
 				 int pSex1 = 1;
@@ -530,6 +541,7 @@ public class LoginActivity extends Activity {
 					args.put("Loc", pLocation);
 					args.put("CurrentLocation", pCurrentLocation);
 					args.put("SentRequests", sentList);
+					args.put("Pic", picByte);
 					
 					myDB.update("MyCred", args, "rowid" + "=" + 1, null);
 					
@@ -537,7 +549,62 @@ public class LoginActivity extends Activity {
 					ArrayList<String> newList = new ArrayList();
 					myDB.delete("MyRoamers", null, null);  
 					
-					System.out.println("The count of myroamers is: "+roamerList.length());
+					if(eventList!=null){
+						int i = 0;			
+						while(i < eventList.length()){
+							//Get roamer, noted as 'MyRoamer'
+							final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
+							try {
+								query1.whereEqualTo("objectId", eventList.get(i).toString());
+							} catch (JSONException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							query1.getFirstInBackground(new GetCallback<ParseObject>() {
+
+								@Override
+								public void done(ParseObject object, ParseException e) {
+									 if (e == null) {
+										 
+										 
+										 byte[] picFile = null;
+										try {
+											picFile = object.getParseFile("Pic").getData();
+										} catch (ParseException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+										
+										int day = object.getDate("Date").getDay();
+							        	int month = object.getDate("Date").getMonth();
+							        	int year = object.getDate("Date").getYear();
+							        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+										 
+										 myDB.delete("TempRoamer", null, null);
+
+									       	String sql =   "INSERT INTO MyEvents(Type,Location,Time,Date,Host,Attend,EventId,HostPic,Blurb) VALUES(?,?,?,?,?,?,?,?,?)";
+									        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
+									        insertStmt.clearBindings();
+									        insertStmt.bindString(1,ConvertCode.convertType(object.getInt("Type")));
+									        insertStmt.bindString(2,ConvertCode.convertLocation(object.getInt("Location")));
+									        insertStmt.bindString(3,ConvertCode.convertType(object.getInt("Time")));
+									        insertStmt.bindString(4, fullDate);
+									        insertStmt.bindString(5, object.getString("Host"));
+									        insertStmt.bindLong(6, object.getLong("Attend")); 
+									        insertStmt.bindString(7, object.getObjectId());
+									        insertStmt.bindBlob(8, picFile);
+									        insertStmt.bindString(9, object.getString("Desc"));
+									        insertStmt.executeInsert();
+									        
+										 myDB.close();
+									 }
+									 
+								}
+							});
+							i++;
+						}
+					}
+
 					if( roamerList!=null ){
 						int i = 0;			
 						while(i < roamerList.length()){
@@ -637,7 +704,6 @@ public void checkPassword(){
 }
 
 public void updateLoginCount(){
-	
 	
 	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 	query.whereEqualTo("Email", mEmail);

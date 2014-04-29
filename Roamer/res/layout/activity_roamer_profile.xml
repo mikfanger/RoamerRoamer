@@ -62,7 +62,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="18dp"
         android:background="@color/transparent"
-        android:src="@drawable/add" />
+        android:src="@drawable/remove_roamer" />
 
     <TextView
         android:id="@+id/textCreateType"
@@ -162,36 +162,6 @@
         android:src="@drawable/field_entry" />
 
     <TextView
-        android:id="@+id/textFinalLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView6"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/textProfileSex"
-        android:text="Job Position"
-        android:textColor="@color/DarkWhite" />
-
-    <TextView
-        android:id="@+id/textProfileLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textFinalLocation"
-        android:layout_alignTop="@+id/imageView7"
-        android:layout_marginTop="10dp"
-        android:text="Location"
-        android:textColor="@color/DarkWhite" />
-
-    <TextView
-        android:id="@+id/textProfileHotel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView9"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/textProfileSex"
-        android:text="Hotel Preference"
-        android:textColor="@color/DarkWhite" />
-
-    <TextView
         android:id="@+id/textProfileAir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -230,5 +200,78 @@
         android:layout_marginTop="92dp"
         android:text="Travel Status"
         android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textProfileLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textCreateType"
+        android:layout_alignTop="@+id/imageView7"
+        android:layout_marginTop="8dp"
+        android:text="Location"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textProfileJob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textProfileLocation"
+        android:layout_alignTop="@+id/imageView6"
+        android:layout_marginTop="8dp"
+        android:text="Job Position"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textProfileHotel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textProfileLocation"
+        android:layout_alignTop="@+id/imageView9"
+        android:layout_marginTop="8dp"
+        android:text="Hotel Preference"
+        android:textColor="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textProfileJob"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/textProfileSex"
+        android:text="Current Job" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textProfileLocation"
+        android:layout_alignBottom="@+id/textProfileLocation"
+        android:layout_alignLeft="@+id/textView1"
+        android:text="Region from" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textProfileHotel"
+        android:layout_alignBottom="@+id/textProfileHotel"
+        android:layout_alignLeft="@+id/textView2"
+        android:text="Preferred Hotel" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/imageView8"
+        android:text="Preferred Airline" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignParentBottom="true"
+        android:text="Travel Status" />
 
 </RelativeLayout>

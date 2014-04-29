@@ -21,6 +21,7 @@ public class DiscussArrayAdapter extends ArrayAdapter<OneComment> {
 	private TextView countryName;
 	private List<OneComment> countries = new ArrayList<OneComment>();
 	private LinearLayout wrapper;
+	private TextView senderName;
 
 	@Override
 	public void add(OneComment object) {
@@ -52,11 +53,12 @@ public class DiscussArrayAdapter extends ArrayAdapter<OneComment> {
 		OneComment coment = getItem(position);
 
 		countryName = (TextView) row.findViewById(R.id.comment);
+		senderName = (TextView) row.findViewById(R.id.textSenderName);
 
 		countryName.setText(coment.comment);
 
-		countryName.setBackgroundResource(coment.left ? R.drawable.bubble_yellow : R.drawable.bubble_green);
-		wrapper.setGravity(coment.left ? Gravity.LEFT : Gravity.RIGHT);
+		//countryName.setBackgroundResource(coment.left);
+		wrapper.setGravity(Gravity.LEFT );
 
 		return row;
 	}

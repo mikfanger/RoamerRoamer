@@ -313,7 +313,9 @@ public class PlaceProvider extends ContentProvider {
         }catch(Exception e){
         		Log.d("Background Task",e.toString());
         }
+        System.out.println("Place data is: "+data);
         return data;    	
+        
     }
     
     private String getPlaceDetails(String reference){
@@ -324,6 +326,7 @@ public class PlaceProvider extends ContentProvider {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
+    	 System.out.println("Place details are: "+data);
     	return data;
     }	
 }

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/NewBlack"
     android:orientation="vertical" >
 
     <ListView
@@ -10,6 +11,7 @@
         android:layout_height="fill_parent"
         android:layout_above="@+id/form"
         android:layout_below="@+id/imageProfilePicture"
+        android:layout_marginBottom="5dp"
         android:background="@color/DarkGrey" >
 
     </ListView>
@@ -24,29 +26,46 @@
 
         <EditText
             android:id="@+id/editTextMessage"
+            android:layout_width="220dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/field_entry"
+            android:ems="10"
+            android:inputType="text"
+            android:textColor="@color/DarkWhite" >
+
+            <requestFocus />
+        </EditText>
+
+        <ImageButton
+            android:id="@+id/imageButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:ems="10"
-            android:inputType="text" />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:background="@color/transparent"
+            android:src="@drawable/send" />
+
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/imageProfilePicture"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
         android:scaleType="center"
         android:src="@drawable/gray_gradient" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
-        android:layout_height="29dp"
-        android:layout_alignTop="@+id/imageProfilePicture"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:src="@drawable/roamer" />
@@ -56,8 +75,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView2"
-        android:layout_marginRight="18dp"
-        android:layout_toLeftOf="@+id/imageView2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="16dp"
         android:background="@color/transparent"
         android:src="@drawable/back" />
 
