@@ -17,7 +17,10 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -29,6 +32,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
@@ -58,6 +62,7 @@ public class AllEvents extends Activity {
      TextView textViewTime;
      ArrayList<Item> eventsArray;
      ArrayList<String> usernameArray;
+     private View mAllEventsView;
      
      String newHost;
      String newType;
@@ -89,6 +94,11 @@ public class AllEvents extends Activity {
 		
 		this.setContentView(root);
 		
+		mAllEventsView = findViewById(R.id.progressBarAllEvents);
+		
+		//show progress spinner
+		showProgress(true);
+		
 		loadArray();
         
         Model.LoadModel(eventsArray);
@@ -99,7 +109,10 @@ public class AllEvents extends Activity {
 
             ids[i] = Integer.toString(i+1);
         }
-
+        
+        //hide progress spinner
+        showProgress(false);
+        
        final  ItemAdapter adapter = new ItemAdapter(this,R.layout.row, ids);
         listView.setAdapter(adapter);
         
@@ -294,6 +307,8 @@ public class AllEvents extends Activity {
     }
     
     public void loadArray(){
+    	
+    	
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid "+"= "+1, null);
@@ -331,7 +346,7 @@ public class AllEvents extends Activity {
 	        	host = eventList.get(i).getString("Host");
 	        	location = eventList.get(i).getInt("Location");
 	        	time = eventList.get(i).getInt("Time");
-	        	desc = eventList.get(i).getString("Desc");
+	        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
 	        	attend = eventList.get(i).getInt("Attend");
 	        	place = eventList.get(i).getString("Place");
 	        	date = eventList.get(i).getDate("Date");
@@ -383,7 +398,7 @@ public class AllEvents extends Activity {
 	        	location = eventList.get(i).getInt("Location");
 	        	date = eventList.get(i).getDate("Date");
 	        	time = eventList.get(i).getInt("Time");
-	        	desc = eventList.get(i).getString("Desc");
+	        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
 	        	attend = eventList.get(i).getInt("Attend");
 	        	place = eventList.get(i).getString("Place");
 	        	eventId = eventList.get(i).getObjectId();
@@ -458,4 +473,34 @@ public class AllEvents extends Activity {
     	  }
     	});
     }
+    
+    /**
+	 * Shows the progress UI and hides the form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int mediumAnimTime = getResources().getInteger(
+					android.R.integer.config_mediumAnimTime);
+
+			mAllEventsView.setVisibility(View.VISIBLE);
+			mAllEventsView.animate().setDuration(mediumAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mAllEventsView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mAllEventsView.setVisibility(show ? View.VISIBLE : View.GONE);
+		}
+	}
 }

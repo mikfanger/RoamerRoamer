@@ -232,7 +232,7 @@
         android:textColor="@color/DarkWhite" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textViewTravelStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textProfileJob"
@@ -246,7 +246,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textProfileLocation"
         android:layout_alignBottom="@+id/textProfileLocation"
-        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignLeft="@+id/textViewTravelStatus"
         android:text="Region from" />
 
     <TextView

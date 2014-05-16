@@ -69,8 +69,8 @@ public class CreateAccountActivity extends Activity {
         Typeface typeFace=Typeface.createFromAsset(getAssets(),"fonts/Eurostile.ttf");
         myTextView.setTypeface(typeFace);
         
-        TextView t2 = (TextView) findViewById(R.id.textWhereFrom);
-        t2.setMovementMethod(LinkMovementMethod.getInstance());
+       // TextView t2 = (TextView) findViewById(R.id.textWhereFrom);
+       //t2.setMovementMethod(LinkMovementMethod.getInstance());
     }
     
 

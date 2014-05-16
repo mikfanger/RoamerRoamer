@@ -1,10 +1,20 @@
 package com.example.roamer;
 
 import java.util.ArrayList;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.example.roamer.network.GMailSender;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseACL;
@@ -17,7 +27,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -31,9 +43,11 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +83,7 @@ public class LoginActivity extends Activity {
 	//private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+	final Context context = this;
 
 	
 	//Set detault user preferences
@@ -134,7 +149,7 @@ public class LoginActivity extends Activity {
 					public void onClick(View view) {
 						
 						final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
-						query.whereEqualTo("Email", "jon@roamer.com");
+						query.whereEqualTo("Email", mEmailView.getText().toString());
 						
 						query.getFirstInBackground(new GetCallback<ParseObject>() {
 
@@ -159,6 +174,60 @@ public class LoginActivity extends Activity {
 					}
 				});
 		
+		findViewById(R.id.imageButtonForgotPassword).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						
+						 //Start roamer creation
+						final Dialog dialog = new Dialog(context);
+						dialog.setContentView(R.layout.activity_forgot_password);
+		    			dialog.setTitle("Forgot Password");
+		    			
+		    			dialog.show();
+		    			
+		    			final EditText emailText = (EditText) dialog.findViewById(R.id.editTextForgotPassword);
+		    			ImageButton submit= (ImageButton) dialog.findViewById(R.id.imageButtonRequestPassword);
+		    			submit.setOnClickListener(new OnClickListener() {
+		    				@Override
+		    				public void onClick(View v) {
+		    					
+		    					final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+								query.whereEqualTo("Email", emailText.getText().toString());
+								String password = "does not exist";
+								
+								try {
+									ParseObject roamer = query.getFirst();
+									password = roamer.getString("Password");
+								} catch (ParseException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+		    					
+								final String newpassword = password;
+								final GMailSender sender = new GMailSender("roamerroamer1@gmail.com", "Roamer1234");
+							    new AsyncTask<Void, Void, Void>() {
+							        @Override public Void doInBackground(Void... arg) {
+							            try {   
+							                sender.sendMail("Password Retrieval",   
+							                    "Hello!  Your current password is: "+ newpassword,   
+							                    "noreply@roamer.com",   
+							                    emailText.getText().toString());   
+							                dialog.dismiss();
+							                Toast.makeText(getApplicationContext(), "An email has been sent with your password.",
+							                		   Toast.LENGTH_LONG).show();
+							            } catch (Exception e) {   
+							                Log.e("SendMail", e.getMessage(), e);   
+							            }
+										return null; 
+							        }
+							    }.execute();
+		    				}
+		    			});
+						
+					}
+				});
+		
 		findViewById(R.id.newUser).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -174,7 +243,8 @@ public class LoginActivity extends Activity {
 						public void done(ParseObject object, ParseException e) {
 							 if (e == null) {
 								 							 
-								//Start roamer creation
+								    //Start roamer creation
+								    finish();
 							    	Intent i=new Intent(LoginActivity.this,ExplainationActivity.class);
 					                startActivity(i);
 								 
@@ -722,5 +792,7 @@ public void updateLoginCount(){
 	});
 	
 	}
+
+
 	
 }

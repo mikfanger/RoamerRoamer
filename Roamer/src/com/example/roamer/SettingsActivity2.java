@@ -10,8 +10,12 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -38,12 +42,15 @@ public class SettingsActivity2 extends Activity {
 	public String emailAddress = "";
 	public String userName = "";
 	public byte[] picBytes;
+	private View mSettingsView;
 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings2);
+		
+		mSettingsView = findViewById(R.id.progressBarSettings);
 		
 		emailAddress = getEmailAddress();
 		//Recall profile picture
@@ -92,8 +99,11 @@ public class SettingsActivity2 extends Activity {
         
         ImageButton finishButton = (ImageButton) findViewById(R.id.finishProfile);
         finishButton.setOnClickListener(new OnClickListener() {
+        	
             @Override
             public void onClick(View v) {
+            	showProgress(true); 	
+            	
             	
             	final int industry;
 				final int job;
@@ -118,6 +128,10 @@ public class SettingsActivity2 extends Activity {
             	spinnerPos = position4.getSelectedItemPosition();
             	hotel = spinnerPos;
             	
+            	Spinner position5 = (Spinner) findViewById(R.id.spinnerTravelStatus);
+            	spinnerPos = position4.getSelectedItemPosition();
+            	travel = spinnerPos;
+            	
             	//Save updated data to DB
             	ParseObject Roamer = new ParseObject("Roamer");
             	
@@ -139,19 +153,23 @@ public class SettingsActivity2 extends Activity {
          		    	Log.d("score", "Error: " + e.getMessage()); 
 
          		    } else {
-         		    	//Roamer.put("Travel",travel);
+         		    	Roamer.put("Travel",travel);
                   		Roamer.put("Industry",industry);
                   		Roamer.put("Job",job);
                   		Roamer.put("Hotel",hotel);
                   		Roamer.put("Air",airline);
                   		Roamer.put("Pic",imgFile);
                   		
+                  		showProgress(false);
          			    Roamer.saveInBackground();
          		    }
          		  }
          		});
             	
             	//Move to Home Screen
+         		
+         		
+         		finish();
             	Intent i=new Intent(SettingsActivity2.this,HomeScreenActivity.class);
                 startActivity(i);
             	           	
@@ -227,6 +245,35 @@ public class SettingsActivity2 extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
                 MyData d = items2[position];
+
+                //Get selected value of key 
+                String value = d.getValue();
+                String key = d.getSpinnerText();
+            }
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+        });
+        
+        Spinner travel = (Spinner) findViewById(R.id.spinnerTravelStatus);
+        //Prepar adapter 
+        //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
+        final MyData items5[] = new MyData[6];
+        items5[0] = new MyData("Select Status", "value1");
+        items5[1] = new MyData("0%-10%   Explorer", "value2");
+        items5[2] = new MyData("10%-30%  Excursionist", "value3");
+        items5[3] = new MyData("40%-60%  Wanderer", "value4");
+        items5[4] = new MyData("60%-80%  Nomad", "value5");
+        items5[5] = new MyData("80%-100% Globetrotter", "value6");
+        ArrayAdapter<MyData> adapter5 = new ArrayAdapter<MyData>(this,
+                android.R.layout.simple_spinner_item, items5);
+        adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        travel.setAdapter(adapter5);
+        travel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                    int position, long id) {
+                MyData d = items5[position];
 
                 //Get selected value of key 
                 String value = d.getValue();
@@ -335,6 +382,9 @@ public class SettingsActivity2 extends Activity {
     	
     	Spinner position4 = (Spinner) findViewById(R.id.spinnerHotelProf);
     	position4.setSelection(hotelPos);
+    	
+    	Spinner position5 = (Spinner) findViewById(R.id.spinnerTravelStatus);
+    	position5.setSelection(travelPos);
 	}
 	
 	
@@ -485,5 +535,35 @@ public class SettingsActivity2 extends Activity {
 		 
 		 return email;
 	 }
+	 
+	 /**
+		 * Shows the progress UI and hides the form.
+		 */
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+		private void showProgress(final boolean show) {
+			// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+			// for very easy animations. If available, use these APIs to fade-in
+			// the progress spinner.
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+				int mediumAnimTime = getResources().getInteger(
+						android.R.integer.config_mediumAnimTime);
+
+				mSettingsView.setVisibility(View.VISIBLE);
+				mSettingsView.animate().setDuration(mediumAnimTime)
+						.alpha(show ? 1 : 0)
+						.setListener(new AnimatorListenerAdapter() {
+							@Override
+							public void onAnimationEnd(Animator animation) {
+								mSettingsView.setVisibility(show ? View.VISIBLE
+										: View.GONE);
+							}
+						});
+
+			} else {
+				// The ViewPropertyAnimator APIs are not available, so simply show
+				// and hide the relevant UI components.
+				mSettingsView.setVisibility(show ? View.VISIBLE : View.GONE);
+			}
+		}
 
 }

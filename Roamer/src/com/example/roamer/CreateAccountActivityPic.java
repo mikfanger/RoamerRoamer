@@ -22,6 +22,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -31,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public class CreateAccountActivityPic extends Activity {
@@ -55,10 +58,17 @@ public class CreateAccountActivityPic extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		
-		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
+		//Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
 		setContentView(R.layout.activity_create_account_pic);
 		
 		ivGalImg     =     (ImageView)findViewById(R.id.mapImage);
+		
+		//initially set the user pic to the default picture.
+		Drawable d = ivGalImg.getDrawable();
+		Bitmap bitmap  = ((BitmapDrawable)d).getBitmap();
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		picFile = stream.toByteArray();
 		
 		ImageButton introButton = (ImageButton) findViewById(R.id.findPicture);
         introButton.setOnClickListener(new OnClickListener() {
@@ -104,11 +114,19 @@ public class CreateAccountActivityPic extends Activity {
             	Spinner position5 = (Spinner) findViewById(R.id.spinnerSetTravelStatus);
             	travel = position5.getSelectedItemPosition();
             	
-            	enterInfo();
-            	//Move to Home Screen
-            	Intent i=new Intent(CreateAccountActivityPic.this,HomeScreenActivity.class);
-                startActivity(i);
-            	           	
+            	
+            	if (industry == 0 || job == 0){
+            		Toast.makeText(getApplicationContext(), "All starred fields must be updated!",
+         				   Toast.LENGTH_LONG).show();
+            	}
+            	else{
+            		Toast.makeText(getApplicationContext(), "New user created!  An email has been sent.",
+         				   Toast.LENGTH_LONG).show();
+            		enterInfo();
+                	//Move to Home Screen
+                	Intent i=new Intent(CreateAccountActivityPic.this,HomeScreenActivity.class);
+                    startActivity(i);
+            	}           	        	           	
             }
         });
         

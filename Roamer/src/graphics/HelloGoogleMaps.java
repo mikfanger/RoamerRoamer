@@ -97,7 +97,7 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
 	    getCurrentLocationLatLong();
 	    
 	    //Set my location
-	    Mmap.setMyLocationEnabled(true);
+	    //Mmap.setMyLocationEnabled(true);
 	    
 	    // Zoom in, animating the camera to current Cred Location
 	    Mmap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(cityLat,cityLong) , 14.0f) );
@@ -149,7 +149,7 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
             	
             	StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
             	sb.append("location="+cityLat+","+cityLong);
-            	sb.append("&radius=6000");
+            	sb.append("&radius=10000");
             	sb.append("&types="+type);
             	//sb.append("&types=airport");
             	//sb.append("&name="+checkLocation);

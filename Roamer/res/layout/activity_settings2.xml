@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:background="@color/DarkGrey"
     tools:context=".SettingsActivity2" >
+    
+     <ProgressBar
+        android:id="@+id/progressBarSettings"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/imageChildImage"
@@ -190,5 +200,24 @@
         android:layout_alignTop="@+id/textEventDate"
         android:background="@color/transparent"
         android:src="@drawable/select_image" />
+
+    <TextView
+        android:id="@+id/textViewTravelStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinnerHotelProf"
+        android:layout_below="@+id/spinnerHotelProf"
+        android:layout_marginTop="14dp"
+        android:text="Travel Status"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <Spinner
+        android:id="@+id/spinnerTravelStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignLeft="@+id/textViewTravelStatus"
+        android:layout_below="@+id/textViewTravelStatus"
+        android:background="@drawable/field_entry" />
 
 </RelativeLayout>

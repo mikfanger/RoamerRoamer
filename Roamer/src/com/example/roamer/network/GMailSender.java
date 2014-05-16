@@ -4,24 +4,24 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.security.Security;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Properties;
 
-import javax.sql.DataSource;
 import javax.activation.DataHandler;
-import javax.mail.*;
+import javax.activation.DataSource;
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 
 public class GMailSender extends javax.mail.Authenticator {   
     private String mailhost = "smtp.gmail.com";   
     private String user;   
     private String password;   
-    private javax.mail.Session session;   
+    private Session session;   
 
     static {   
         Security.addProvider(new JSSEProvider());   
@@ -43,7 +43,6 @@ public class GMailSender extends javax.mail.Authenticator {
         props.setProperty("mail.smtp.quitwait", "false");   
 
         session = Session.getDefaultInstance(props, this);   
-        
     }   
 
     protected PasswordAuthentication getPasswordAuthentication() {   
@@ -53,17 +52,23 @@ public class GMailSender extends javax.mail.Authenticator {
     public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {   
         try{
         MimeMessage message = new MimeMessage(session);   
-        DataHandler handler = new DataHandler((javax.activation.DataSource) new ByteArrayDataSource(body.getBytes(), "text/plain"));   
+        DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));   
         message.setSender(new InternetAddress(sender));   
+        
+        message.setFrom(new InternetAddress(sender,"Roamer Corporation"));
+        
         message.setSubject(subject);   
         message.setDataHandler(handler);   
         if (recipients.indexOf(',') > 0)   
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));   
         else  
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));   
-        Transport.send(message);   
+        Transport transport = session.getTransport("smtp");
+        transport.connect("smtp.gmail.com", 587, this.user, this.password);
+        transport.sendMessage(message, message.getAllRecipients());  
         }catch(Exception e){
-        	
+        	System.out.println("Mail not being sent!");
+        	System.out.println("Exception is: "+e.toString());
         }
     }   
 
@@ -103,55 +108,6 @@ public class GMailSender extends javax.mail.Authenticator {
 
         public OutputStream getOutputStream() throws IOException {   
             throw new IOException("Not Supported");   
-        }
-
-		@Override
-		public int getLoginTimeout() throws SQLException {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public PrintWriter getLogWriter() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void setLoginTimeout(int seconds) throws SQLException {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void setLogWriter(PrintWriter out) throws SQLException {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public <T> T unwrap(Class<T> iface) throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean isWrapperFor(Class<?> iface) throws SQLException {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public Connection getConnection() throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Connection getConnection(String theUsername, String thePassword)
-				throws SQLException {
-			// TODO Auto-generated method stub
-			return null;
-		}   
+        }   
     }   
 }  

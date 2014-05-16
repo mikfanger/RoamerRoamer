@@ -78,6 +78,7 @@ public class CreateEventActivity extends Activity {
 	            public void onClick(View v) {
 	            	
 	            	//Add to events
+	            	finish();
 	            	DatePicker datePicker = (DatePicker) findViewById(R.id.datePicker1);
 	            	
 	            	

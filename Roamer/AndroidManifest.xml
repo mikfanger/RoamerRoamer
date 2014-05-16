@@ -235,7 +235,6 @@
         <activity
             android:name="graphics.HelloGoogleMaps"
             android:label="@string/title_profile_list_activity"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
 

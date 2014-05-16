@@ -12,31 +12,31 @@
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="80dp"
             android:background="@drawable/btn_black"
             android:onClick="toggleMenu"
-            android:padding="2dp"
+            android:padding="4dp"
             android:text="Date"
             android:textColor="@color/DarkWhite"
             android:textSize="20sp" />
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="80dp"
             android:background="@drawable/btn_black"
             android:onClick="toggleMenu"
-            android:padding="2dp"
+            android:padding="4dp"
             android:text="Type"
             android:textColor="@color/DarkWhite"
             android:textSize="20sp" />
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="80dp"
             android:background="@drawable/btn_black"
             android:onClick="toggleMenu"
-            android:padding="2dp"
-            android:text="Location"
+            android:padding="4dp"
+            android:text="Time"
             android:textColor="@color/DarkWhite"
             android:textSize="20sp" />
 
@@ -53,6 +53,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
+        
+        <ProgressBar
+        android:id="@+id/progressBarAllEvents"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
 
         <ListView
             android:id="@+id/listViewEvents"

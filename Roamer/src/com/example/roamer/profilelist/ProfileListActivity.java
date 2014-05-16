@@ -225,80 +225,84 @@ public class ProfileListActivity extends Activity {
    	int locationInt = cur.getInt(index);
    	roamersArray = new ArrayList<Item>();
    	
-   	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
-   	query.whereEqualTo("Location", locationInt);
-   	try {
-   		
-			List<ParseObject> roamerList = query.find();
-			int i = 0;
-		
-       	String name;
-       	boolean sex;
-       	byte[] pic = null;
-       	String location;
-       	String eventId;
-       	Date date;
-       	int industry;
-       	
-			if(roamerList.size()>0){
-				
-	        	
-	        	name = roamerList.get(i).getString("Username");
-	        	sex = roamerList.get(i).getBoolean("Sex");
-	        	location = getLocationText(roamerList.get(i).getInt("Location"));
-	        	eventId = roamerList.get(i).getString("objectId");
-	        	date = roamerList.get(i).getCreatedAt();
-	        	industry = roamerList.get(i).getInt("Industry");
-	        	
-	        	int day = date.getDay();
-	        	int month = date.getMonth();
-	        	int year = date.getYear();
-	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-	        	System.out.println("Date before loading is: "+fullDate);
-	        	
-	        	try {
-					pic = roamerList.get(i).getParseFile("Pic").getData();
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        	
-	        	
-	        	
-	    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
-	    		i++;
-			}
-           
-       	
-   		while (i < (roamerList.size())){
+   	//Only proceed if a location is not 'Not Selected'
+   	if (locationInt != 0){
+   	   	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+   	   	query.whereEqualTo("Location", locationInt);
+   	   	try {
+   	   		
+   				List<ParseObject> roamerList = query.find();
+   				int i = 0;
    			
-   			name = roamerList.get(i).getString("Username");
-        	sex = roamerList.get(i).getBoolean("Sex");
-        	location = getLocationText(roamerList.get(i).getInt("Location"));
-        	eventId = roamerList.get(i).getString("objectId");
-        	date = roamerList.get(i).getCreatedAt();
-        	industry = roamerList.get(i).getInt("Industry");
-        	
-        	int day = date.getDay();
-        	int month = date.getMonth();
-        	int year = date.getYear();
-        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-        	
-        	System.out.println("Date before loading is: "+fullDate);
-        	
-        	try {
-				pic = roamerList.get(i).getParseFile("Pic").getData();
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-        	
-    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
-    		i++;
-   		}
-		} catch (ParseException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}	
+   	       	String name;
+   	       	boolean sex;
+   	       	byte[] pic = null;
+   	       	String location;
+   	       	String eventId;
+   	       	Date date;
+   	       	int industry;
+   	       	
+   				if(roamerList.size()>0){
+   					
+   		        	
+   		        	name = roamerList.get(i).getString("Username");
+   		        	sex = roamerList.get(i).getBoolean("Sex");
+   		        	location = getLocationText(roamerList.get(i).getInt("Location"));
+   		        	eventId = roamerList.get(i).getString("objectId");
+   		        	date = roamerList.get(i).getCreatedAt();
+   		        	industry = roamerList.get(i).getInt("Industry");
+   		        	
+   		        	int day = date.getDay();
+   		        	int month = date.getMonth();
+   		        	int year = date.getYear();
+   		        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+   		        	System.out.println("Date before loading is: "+fullDate);
+   		        	
+   		        	try {
+   						pic = roamerList.get(i).getParseFile("Pic").getData();
+   					} catch (ParseException e1) {
+   						// TODO Auto-generated catch block
+   						e1.printStackTrace();
+   					}
+   		        	
+   		        	
+   		        	
+   		    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
+   		    		i++;
+   				}
+   	           
+   	       	
+   	   		while (i < (roamerList.size())){
+   	   			
+   	   			name = roamerList.get(i).getString("Username");
+   	        	sex = roamerList.get(i).getBoolean("Sex");
+   	        	location = getLocationText(roamerList.get(i).getInt("Location"));
+   	        	eventId = roamerList.get(i).getString("objectId");
+   	        	date = roamerList.get(i).getCreatedAt();
+   	        	industry = roamerList.get(i).getInt("Industry");
+   	        	
+   	        	int day = date.getDay();
+   	        	int month = date.getMonth();
+   	        	int year = date.getYear();
+   	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+   	        	
+   	        	System.out.println("Date before loading is: "+fullDate);
+   	        	
+   	        	try {
+   					pic = roamerList.get(i).getParseFile("Pic").getData();
+   				} catch (ParseException e1) {
+   					// TODO Auto-generated catch block
+   					e1.printStackTrace();
+   				}
+   	        	
+   	    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
+   	    		i++;
+   	   		}
+   			} catch (ParseException e2) {
+   				// TODO Auto-generated catch block
+   				e2.printStackTrace();
+   			}
+   	}
+	
    }
 }

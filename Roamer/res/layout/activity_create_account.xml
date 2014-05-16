@@ -109,10 +109,11 @@
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/newEmail"
-        android:layout_alignRight="@+id/textWhereFrom"
+        android:layout_alignRight="@+id/buttonTermsConditions"
         android:layout_below="@id/textUsername"
         android:background="@drawable/field_entry"
         android:ems="10"
+        android:maxLength="20"
         android:textColor="@color/DarkWhite" />
 
     <EditText
@@ -120,11 +121,12 @@
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textPassword"
-        android:layout_alignRight="@+id/textWhereFrom"
+        android:layout_alignRight="@+id/buttonTermsConditions"
         android:layout_below="@id/textEmailAddress"
         android:background="@drawable/field_entry"
         android:ems="10"
         android:inputType="textEmailAddress"
+        android:maxLength="20"
         android:textColor="@color/DarkWhite" />
 
     <EditText
@@ -137,6 +139,7 @@
         android:background="@drawable/field_entry"
         android:ems="10"
         android:inputType="textPassword"
+        android:maxLength="20"
         android:textColor="@color/DarkWhite" />
 
     <TextView
@@ -179,17 +182,6 @@
         android:text="Username"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/DarkWhite" />
-
-    <TextView
-        android:id="@+id/textWhereFrom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/agreeCheck"
-        android:layout_alignBottom="@+id/agreeCheck"
-        android:layout_toRightOf="@+id/mapImage"
-        android:text="@string/txtCredits"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/Red" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -242,6 +234,17 @@
         android:background="@drawable/field_entry"
         android:ems="10"
         android:inputType="textPassword"
+        android:maxLength="20"
         android:textColor="@color/DarkWhite" />
+
+    <ImageButton
+        android:id="@+id/buttonTermsConditions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkFemale"
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@+id/mapImage"
+        android:background="@color/transparent"
+        android:src="@drawable/selector_terms_conditions" />
 
 </RelativeLayout>

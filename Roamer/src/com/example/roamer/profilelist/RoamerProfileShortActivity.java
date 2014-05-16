@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -166,6 +165,7 @@ public class RoamerProfileShortActivity extends Activity {
 		return true;
 	}
 	
+	/*
 	public void addRoamer(byte[] icon, String name, int sex, String loc, String date,
 			int hotel, int travel, int job, int industry, int air){
 	   	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
@@ -199,6 +199,7 @@ public class RoamerProfileShortActivity extends Activity {
 	   	
 	   	myDB.close();
 	   }
+	*/
 	
 	public void sendRequest(String name) throws ParseException, JSONException{
 		
@@ -206,6 +207,7 @@ public class RoamerProfileShortActivity extends Activity {
 		Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
 		c.moveToFirst();
 		boolean requestSent = false;
+		boolean holdExists = false;
 		
 		int index = c.getColumnIndex("SentRequests");
 		String requests = c.getString(index);
@@ -222,21 +224,43 @@ public class RoamerProfileShortActivity extends Activity {
 		}
 		System.out.println("Request has or has not been sent");
 		if(requestSent == false){
-			System.out.println("Request has not been sent");
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 	       	query.whereEqualTo("Username", name);
 	       	
 	       	final ParseObject Roamer = query.getFirst();
 	       	
 	       	JSONArray roamerList = Roamer.getJSONArray("Requests");
-	       	ArrayList<String> newList = new ArrayList();
+	       	JSONArray holdList = Roamer.getJSONArray("Hold");
 	       	
+	       	ArrayList<String> newList = new ArrayList();
+	       	ArrayList<String> newHoldList = new ArrayList();
+	       	
+	       	//Check for an existing hold
+	       	if (holdList != null){
+	       		int i = 0;
+	       		while (i < holdList.length()){
+	       			holdList.get(i).toString();
+	       			if (holdList.get(i).toString().equals(myName)){
+	       				holdExists = true;
+	       			}
+	       			newHoldList.add(roamerList.get(i).toString());
+	       			i++;
+	       		}
+	       		newHoldList.add(myName);
+	       	}
+	       	else{
+	       		newHoldList.add(myName);
+	       	}
+	       	
+	       	//Check that a request has not already been sent.
 	       	if (roamerList != null){
 	       		
 	       		int i = 0;
 	       		while (i < roamerList.length()){
-	       			System.out.println("Roamer is: "+roamerList.get(i).toString());
 	       			roamerList.get(i).toString();
+	       			if (roamerList.get(i).toString().equals(myName)){
+	       				requestSent = true;
+	       			}
 	       			newList.add(roamerList.get(i).toString());
 	       			i++;
 	       		}
@@ -249,8 +273,14 @@ public class RoamerProfileShortActivity extends Activity {
 			args.put("SentRequests", requests+","+name);
 			myDB.update("MyCred", args, "rowid" + "=" + 1, null);
 			myDB.close();
-	       	Roamer.put("Requests", newList);
-	       	Roamer.save();
+			
+			//If a request has not been sent and a hold is not in place, send the request
+			if (requestSent == false && holdExists == false){
+		       	Roamer.put("Requests", newList);
+		       	Roamer.put("Hold", newHoldList);
+		       	Roamer.save();
+			}
+
 	       	
 	       	Toast.makeText(getApplicationContext(), "Request sent to Roamer!",
      			   Toast.LENGTH_LONG).show();
