@@ -1,12 +1,6 @@
 package com.example.roamer;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-
 import com.parse.ParseAnalytics;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import android.os.Bundle;
 import android.app.Activity;

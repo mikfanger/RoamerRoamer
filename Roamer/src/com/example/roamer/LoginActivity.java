@@ -56,8 +56,8 @@ import android.widget.Toast;
  * well.
  */
 public class LoginActivity extends Activity {
-	
-	
+
+
 	/**
 	 * The default email to populate the email field with.
 	 */
@@ -73,7 +73,7 @@ public class LoginActivity extends Activity {
 	// Values for email and password at the time of the login attempt.
 	private String mEmail;
 	private String mPassword;
-	
+
 	private String userName = "1";
 	private String passWord = "1";
 
@@ -85,33 +85,33 @@ public class LoginActivity extends Activity {
 	private TextView mLoginStatusMessageView;
 	final Context context = this;
 
-	
+
 	//Set detault user preferences
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
+
 		setContentView(R.layout.activity_login);
-		
+
 		// Add your initialization code here
 		Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
 
 		ParseUser.enableAutomaticUser();
 		ParseACL defaultACL = new ParseACL();
-			    
+
 		// If you would like all objects to be private by default, remove this line.
 		defaultACL.setPublicReadAccess(true);
-				
+
 		ParseACL.setDefaultACL(defaultACL, true);
-		
-		
-		
+
+
+
 		cred = (CheckBox)findViewById(R.id.checkSaveLogin);
-		
-		
-		
+
+
+
 		int checkStatus = checkForSavedCred();
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
@@ -131,14 +131,14 @@ public class LoginActivity extends Activity {
 						return false;
 					}
 				});
-		
+
 		if (checkStatus == 1){
-			
+
 			getCredLocally();
 			mEmailView.setText(userName);
 			mPasswordView.setText(passWord);
 			cred.setChecked(true);
-			
+
 		}
 		mLoginStatusView = findViewById(R.id.progressBar1);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
@@ -147,25 +147,25 @@ public class LoginActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						
+
 						final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 						query.whereEqualTo("Email", mEmailView.getText().toString());
-						
+
 						query.getFirstInBackground(new GetCallback<ParseObject>() {
 
 						@Override
 						public void done(ParseObject object, ParseException e) {
 							 if (e == null) {
-								 							 
+
 								//Start roamer creation
 							    	attemptLogin();
-								 
+
 							    } else {
-							    	
+
 									 //Show toast of lacking network connection
 									 Toast.makeText(getApplicationContext(), "No network connection!",
 			    							   Toast.LENGTH_LONG).show();
-									 
+
 									 System.out.println("Network error is: "+e);
 							    }		
 						}
@@ -173,29 +173,29 @@ public class LoginActivity extends Activity {
 						//attemptLogin();
 					}
 				});
-		
+
 		findViewById(R.id.imageButtonForgotPassword).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						
+
 						 //Start roamer creation
 						final Dialog dialog = new Dialog(context);
 						dialog.setContentView(R.layout.activity_forgot_password);
 		    			dialog.setTitle("Forgot Password");
-		    			
+
 		    			dialog.show();
-		    			
+
 		    			final EditText emailText = (EditText) dialog.findViewById(R.id.editTextForgotPassword);
 		    			ImageButton submit= (ImageButton) dialog.findViewById(R.id.imageButtonRequestPassword);
 		    			submit.setOnClickListener(new OnClickListener() {
 		    				@Override
 		    				public void onClick(View v) {
-		    					
+
 		    					final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 								query.whereEqualTo("Email", emailText.getText().toString());
 								String password = "does not exist";
-								
+
 								try {
 									ParseObject roamer = query.getFirst();
 									password = roamer.getString("Password");
@@ -203,7 +203,7 @@ public class LoginActivity extends Activity {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-		    					
+
 								final String newpassword = password;
 								final GMailSender sender = new GMailSender("roamerroamer1@gmail.com", "Roamer1234");
 							    new AsyncTask<Void, Void, Void>() {
@@ -224,42 +224,42 @@ public class LoginActivity extends Activity {
 							    }.execute();
 		    				}
 		    			});
-						
+
 					}
 				});
-		
+
 		findViewById(R.id.newUser).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						
+
 						//Check for network connection
 						final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 						query.whereEqualTo("Email", "jon@roamer.com");
-						
+
 						query.getFirstInBackground(new GetCallback<ParseObject>() {
 
 						@Override
 						public void done(ParseObject object, ParseException e) {
 							 if (e == null) {
-								 							 
+
 								    //Start roamer creation
 								    finish();
 							    	Intent i=new Intent(LoginActivity.this,ExplainationActivity.class);
 					                startActivity(i);
-								 
+
 							    } else {
-							    	
+
 									 //Show toast of lacking network connection
 									 Toast.makeText(getApplicationContext(), "No network connection!",
 			    							   Toast.LENGTH_LONG).show();
-									 
+
 									 System.out.println("Network error is: "+e);
 							    }		
 						}
 						});
-						
-						
+
+
 					}
 				});
 	}
@@ -277,7 +277,7 @@ public class LoginActivity extends Activity {
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() {
-		
+
 		if (mAuthTask != null) {
 			return;
 		}
@@ -291,19 +291,19 @@ public class LoginActivity extends Activity {
 		mPassword = mPasswordView.getText().toString();
 		System.out.println("Email from login is: "+mEmail);
 		System.out.println("Password from login is: "+ mPassword);
-		
+
 		boolean cancel = false;
 		View focusView = null;
-		
+
 		//Check for email and password in database
 		checkPassword();
-		
-		
+
+
 		checkEmail();
 		mAuthTask = null;
 		showProgress(false);
-				
-	
+
+
 		// Check for a valid password.
 		if (TextUtils.isEmpty(mPassword)) {
 			mPasswordView.setError(getString(R.string.error_field_required));
@@ -325,16 +325,16 @@ public class LoginActivity extends Activity {
 			focusView = mEmailView;
 			cancel = true;
 		}
-		
+
 		//Check that email address match
 			if (!userName.equals(mEmail)) {
-				
+
 				mEmailView.setError("No record of email address");
 				focusView = mEmailView;
 				cancel = true;
 			}
-	
-		
+
+
 		//Check that password matches
 		if (!passWord.equals(mPassword.trim())) {
 
@@ -403,7 +403,7 @@ public class LoginActivity extends Activity {
 				return false;
 			}
 
-			
+
 				if (userName.equals(mEmail)) {
 					// Account exists, return true if the password matches.
 					return passWord.equals(mPassword);
@@ -419,14 +419,19 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
-				
+
 				saveCredIfChecked();
-				
-				saveFromDatabaseToCred();
-				
+
+				try {
+					saveFromDatabaseToCred();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 				//Update Roamer profile to increase login count
 				updateLoginCount();
-				
+
 				finish();
 				Intent i=new Intent(LoginActivity.this,HomeScreenActivity.class);
                 startActivity(i);
@@ -443,116 +448,113 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 		}
 	}
-	
+
 	public void saveCredIfChecked(){
-		
-		
+
+
 		//Check to see if 'cred saved' box is checked
 		int credSave = 0;
-		
+
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-		
+
 
 		if(credSave == 1){
 			cred.setChecked(true);
 		}
 
 		if(cred.isChecked()){
-			
+
 			Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "MyCred", null); 
-			
+
 			if(c.getCount() > 1){
-				
+
 				ContentValues args = new ContentValues();
 				args.put("Save", 1);
 				myDB.update("MyCred", args, "rowid" + "=" + 1, null);
 			}
-			
-			
+
+
 			else{
-				
+
 				myDB.execSQL("INSERT INTO "
 					       + "MyCred "
 					       + "(Email,Password,Save) "
 					       + "VALUES ('"+userName+"','"+passWord+"',"+1+");");
-				
+
 				myDB.close();	
 			}
-			
-	        	
+
+
 		}
 		else{
-			
+
 			Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "MyCred", null); 
-			
+
 			if(c.getCount() > 1){
-				
+
 				ContentValues args = new ContentValues();
 				args.put("Save", 0);
 				myDB.update("MyCred", args, "rowid" + "=" + 1, null);
 			}
-					
+
 			else{
-				
+
 				myDB.execSQL("INSERT INTO "
 					       + "MyCred "
 					       + "(Email,Password,Save) "
 					       + "VALUES ('"+userName+"','"+passWord+"',"+0+");");
-				
+
 				myDB.close();	
 			}
 		}
 	}
-	
+
 	public int checkForSavedCred(){
 		  int cred = 0;
-		
+
 		  SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 
 		  Cursor c = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
-		  
+
 		  c.moveToFirst();
 		  int Column1 = c.getColumnIndex("Save");
-		  
+
 		  cred = c.getInt(Column1);
-		      
+
 		  myDB.close();
-		  
+
 		return cred;
 	}
-	
+
 	public void getCredLocally(){
 		  SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		  Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
 		  c.moveToFirst();
-		  
+
 		  int user = c.getColumnIndex("Email");
 		  int pass = c.getColumnIndex("Password");
-		  
+
 		  userName = c.getString(user);
 		  passWord = c.getString(pass);
-		  
+
 		  myDB.close();
 	}
-	
-	public void saveFromDatabaseToCred(){
-		
-		
+
+	public void saveFromDatabaseToCred() throws ParseException{
+
+
 		final SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 		query.whereEqualTo("Email", mEmail);
 		
-		query.getFirstInBackground(new GetCallback<ParseObject>() {
-
-		@Override
-		public void done(ParseObject object, ParseException e) {
-			 if (e == null) {
-				 
+		ParseObject object;
+		
+		object = query.getFirst();
 				 //Get Data from Parse
 				 JSONArray  roamerList = object.getJSONArray("MyRoamers");
 				 JSONArray  requestList = object.getJSONArray("SentRequests");
 				 JSONArray  eventList = object.getJSONArray("MyEvents");
-				 
+
 			    	String sentList = "none,none";
 			    	int newIndex = 0;
 			    	if(requestList != null){
@@ -566,8 +568,8 @@ public class LoginActivity extends Activity {
 				    		newIndex++;
 				    	}
 			    	}
-			    	
-			    	
+
+
 				 String pEmail = object.getString("Email");
 				 String pUsername = object.getString("Username");
 				 System.out.println("Username is: "+ pUsername);
@@ -587,17 +589,17 @@ public class LoginActivity extends Activity {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-				 
-				 
 
-				 
+
+
+
 				 int pSex1 = 1;
-				 
+
 				 if (!pSex){
 					 pSex1 = 0;
 				 }
-				 
-				 
+
+
 				 ContentValues args = new ContentValues();
 					args.put("Email", pEmail);
 					args.put("Username", pUsername);
@@ -612,13 +614,13 @@ public class LoginActivity extends Activity {
 					args.put("CurrentLocation", pCurrentLocation);
 					args.put("SentRequests", sentList);
 					args.put("Pic", picByte);
-					
+
 					myDB.update("MyCred", args, "rowid" + "=" + 1, null);
-					
+
 				    //Load MyRoamers
 					ArrayList<String> newList = new ArrayList();
 					myDB.delete("MyRoamers", null, null);  
-					
+
 					if(eventList!=null){
 						int i = 0;			
 						while(i < eventList.length()){
@@ -635,8 +637,8 @@ public class LoginActivity extends Activity {
 								@Override
 								public void done(ParseObject object, ParseException e) {
 									 if (e == null) {
-										 
-										 
+
+
 										 byte[] picFile = null;
 										try {
 											picFile = object.getParseFile("Pic").getData();
@@ -644,13 +646,11 @@ public class LoginActivity extends Activity {
 											// TODO Auto-generated catch block
 											e1.printStackTrace();
 										}
-										
+
 										int day = object.getDate("Date").getDay();
 							        	int month = object.getDate("Date").getMonth();
 							        	int year = object.getDate("Date").getYear();
 							        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-										 
-										 myDB.delete("TempRoamer", null, null);
 
 									       	String sql =   "INSERT INTO MyEvents(Type,Location,Time,Date,Host,Attend,EventId,HostPic,Blurb) VALUES(?,?,?,?,?,?,?,?,?)";
 									        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
@@ -665,16 +665,17 @@ public class LoginActivity extends Activity {
 									        insertStmt.bindBlob(8, picFile);
 									        insertStmt.bindString(9, object.getString("Desc"));
 									        insertStmt.executeInsert();
-									        
-										 myDB.close();
+
+										
 									 }
-									 
+
 								}
 							});
 							i++;
 						}
 					}
 
+					
 					if( roamerList!=null ){
 						int i = 0;			
 						while(i < roamerList.length()){
@@ -687,65 +688,48 @@ public class LoginActivity extends Activity {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							query1.getFirstInBackground(new GetCallback<ParseObject>() {
+							
+							ParseObject object1 = query1.getFirst();
+							
+							int sex = 0;
+							 if(object1.getBoolean("Sex") == true){
+								 sex = 1;
+							 }
+							 byte[] picFile = null;
+							try {
+								picFile = object1.getParseFile("Pic").getData();
+							} catch (ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 
-								@Override
-								public void done(ParseObject object, ParseException e) {
-									 if (e == null) {
-										 
-										 
-										 
-										 int sex = 0;
-										 if(object.getBoolean("Sex") == true){
-											 sex = 1;
-										 }
-										 byte[] picFile = null;
-										try {
-											picFile = object.getParseFile("Pic").getData();
-										} catch (ParseException e1) {
-											// TODO Auto-generated catch block
-											e1.printStackTrace();
-										}
-										 
-										 myDB.delete("TempRoamer", null, null);
-
-									       	String sql =   "INSERT INTO MyRoamers(Pic,Username,Loc,Start,Industry,Sex,Job,Travel,Hotel,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
-									        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
-									        insertStmt.clearBindings();
-									        insertStmt.bindBlob(1,picFile);
-									        insertStmt.bindString(2,object.getString("Username"));
-									        insertStmt.bindLong(3, object.getInt("CurrentLocation"));
-									        insertStmt.bindString(4, object.getCreatedAt().toString());
-									        insertStmt.bindLong(5, object.getInt("Industry"));
-									        insertStmt.bindLong(6, sex);
-									        insertStmt.bindLong(7, object.getInt("Job"));
-									        insertStmt.bindLong(8, object.getInt("Travel"));
-									        insertStmt.bindLong(9, object.getInt("Hotel"));
-									        insertStmt.bindLong(10, object.getInt("Air"));
-									        insertStmt.executeInsert();
-									        
-										 myDB.close();
-									 }
-									 
-								}
-							});
+						       	String sql =   "INSERT INTO MyRoamers(Pic,Username,Loc,Start,Industry,Sex,Job,Travel,Hotel,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
+						        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
+						        insertStmt.clearBindings();
+						        insertStmt.bindBlob(1,picFile);
+						        insertStmt.bindString(2,object1.getString("Username"));
+						        insertStmt.bindLong(3, object1.getInt("CurrentLocation"));
+						        insertStmt.bindString(4, object1.getCreatedAt().toString());
+						        insertStmt.bindLong(5, object1.getInt("Industry"));
+						        insertStmt.bindLong(6, sex);
+						        insertStmt.bindLong(7, object1.getInt("Job"));
+						        insertStmt.bindLong(8, object1.getInt("Travel"));
+						        insertStmt.bindLong(9, object1.getInt("Hotel"));
+						        insertStmt.bindLong(10, object1.getInt("Air"));
+						        insertStmt.executeInsert();
+								
 							i++;
 						}
 					}
-				 
-			    } else {
-			    	//Do nothing
-			    }		
-		}
-		});
-		
+			
+	myDB.close();
 	}
-	
+
 public void checkEmail(){
 
 		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 		query.whereEqualTo("Email", mEmail);
-		
+
 
 		try {
 			query.getFirst();
@@ -758,14 +742,14 @@ public void checkEmail(){
 	}
 
 public void checkPassword(){
-	
+
 	final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 	query.whereEqualTo("Password", mPassword);
-	
+
 	try {
 		query.getFirst();
 		passWord = mPassword;
-		
+
 	} catch (ParseException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -774,10 +758,10 @@ public void checkPassword(){
 }
 
 public void updateLoginCount(){
-	
+
 	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 	query.whereEqualTo("Email", mEmail);
-	
+
 	query.getFirstInBackground(new GetCallback<ParseObject>() {
 	  public void done(ParseObject roamer, ParseException e) {
 	    if (roamer == null) {
@@ -790,9 +774,9 @@ public void updateLoginCount(){
 	    }
 	  }
 	});
-	
+
 	}
 
 
-	
+
 }

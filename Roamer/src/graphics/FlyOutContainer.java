@@ -83,11 +83,14 @@ public class FlyOutContainer extends LinearLayout {
 			this.menuAnimationScroller.startScroll(0, 0, this.getMenuWidth(),
 					0, menuAnimationDuration);
 			break;
+		
+		
 		case OPEN:
 			this.menuCurrentState = MenuState.CLOSING;
 			this.menuAnimationScroller.startScroll(this.currentContentOffset,
 					0, -this.currentContentOffset, 0, menuAnimationDuration);
 			break;
+		
 		default:
 			return;
 		}

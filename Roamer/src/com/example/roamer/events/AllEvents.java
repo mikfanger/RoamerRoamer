@@ -40,6 +40,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -64,6 +67,10 @@ public class AllEvents extends Activity {
      ArrayList<String> usernameArray;
      private View mAllEventsView;
      
+     CheckBox checkTime;
+     CheckBox checkDate;
+     CheckBox checkType;
+     
      String newHost;
      String newType;
      String newDate;
@@ -73,11 +80,22 @@ public class AllEvents extends Activity {
      byte[] newImage, hostImage;
      String newEventId;
      String newTime;
+    
+     
+     int dateBox = 0;
+     int timeBox = 0;
+     int typeBox = 0;
      
      private int day;
      private int month;
      private int year;
      private String parseEventId;
+     
+     private Date sortDateStart;
+     private Date sortDateEnd;
+     private String sortTime;
+     private String sortType;
+     
      
      FlyOutContainer root;
      
@@ -96,10 +114,48 @@ public class AllEvents extends Activity {
 		
 		mAllEventsView = findViewById(R.id.progressBarAllEvents);
 		
+		checkDate = (CheckBox) findViewById(R.id.checkBoxDate);
+		checkTime = (CheckBox) findViewById(R.id.checkBoxTime);
+		checkType = (CheckBox) findViewById(R.id.checkBoxType);
+
+		checkType.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked){
+					Toast.makeText(getApplicationContext(), "Sort type set!",
+							   Toast.LENGTH_LONG).show();
+				}
+				
+			}
+		});
+		
+		checkTime.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked){
+					Toast.makeText(getApplicationContext(), "Sort time set!",
+							   Toast.LENGTH_LONG).show();
+				}
+				
+			}
+		});
+		checkDate.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked){
+					Toast.makeText(getApplicationContext(), "Sort date set!",
+							   Toast.LENGTH_LONG).show();
+				}
+				
+			}
+		});
 		//show progress spinner
 		showProgress(true);
 		
-		loadArray();
+		loadArray(0,0,0);
         
         Model.LoadModel(eventsArray);
         
@@ -113,13 +169,32 @@ public class AllEvents extends Activity {
         //hide progress spinner
         showProgress(false);
         
-       final  ItemAdapter adapter = new ItemAdapter(this,R.layout.row, ids);
+        final  ItemAdapter adapter = new ItemAdapter(this,R.layout.row, ids);
         listView.setAdapter(adapter);
         
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         
-        ImageButton button = (ImageButton) findViewById(R.id.sortButton);
-        button.bringToFront();
+        ImageButton sortButton = (ImageButton) findViewById(R.id.sortButton);
+        sortButton.bringToFront();
+        
+        ImageButton sortNowButton = (ImageButton) findViewById(R.id.sortNow);
+        sortNowButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+				if (checkType.isChecked()){
+					typeBox = 1;
+				}
+				if (checkDate.isChecked()){
+					dateBox = 1;
+				}
+				if (checkTime.isChecked()){
+					timeBox = 1;
+				}
+				loadArray(typeBox,dateBox,timeBox);
+			}
+		});
+        
            
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -306,7 +381,7 @@ public class AllEvents extends Activity {
     	myDB.close();
     }
     
-    public void loadArray(){
+    public void loadArray(int sortType, int sortDate, int sortTime){
     	
     	
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
@@ -503,4 +578,11 @@ public class AllEvents extends Activity {
 			mAllEventsView.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
 	}
+	
+	/*
+	public void sort(int time, int date, int type){
+		
+		
+	}
+	*/
 }

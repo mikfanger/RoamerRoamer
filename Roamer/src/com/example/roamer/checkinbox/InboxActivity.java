@@ -39,6 +39,8 @@ public class InboxActivity extends Activity {
     final Context context = this;
     private String selectedName;
     private Spinner position;
+    private ImageButton dialogButton;
+    private TextView textRoamers;
     private Dialog dialog;
     private int count;
     private String chatName;
@@ -133,7 +135,10 @@ public class InboxActivity extends Activity {
     			getDialog().show();
     			
     			populateRoamers(getDialog());
-    			ImageButton dialogButton = (ImageButton) getDialog().findViewById(R.id.imageStartMessage);
+    			
+    			//position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
+    			
+    			
     			// if button is clicked, close the custom dialog
     			dialogButton.setOnClickListener(new OnClickListener() {
     				@Override
@@ -305,6 +310,8 @@ public class InboxActivity extends Activity {
     	
     
     position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
+    dialogButton = (ImageButton) getDialog().findViewById(R.id.imageStartMessage);
+    textRoamers = (TextView) getDialog().findViewById(R.id.textViewNoRoamers);
      
     SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
    	
@@ -317,7 +324,10 @@ public class InboxActivity extends Activity {
    	    if (cur != null && cur.getCount()>0) {
    	    	
    	        
-   	        
+   	    	dialogButton.setVisibility(View.VISIBLE);
+   			position.setVisibility(View.VISIBLE);
+   			textRoamers.setVisibility(View.INVISIBLE);
+   			
    	    	final MyData items1[] = new MyData[cur.getCount()];
   	    	cur.moveToFirst();
    	    	index = cur.getColumnIndex("Username");
@@ -334,6 +344,8 @@ public class InboxActivity extends Activity {
    	    		adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
    	    		position.setAdapter(adapter1);
    	         
+
+
    	    		position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
    	             public void onItemSelected(AdapterView<?> parent, View view,
    	                     int position, long id) {
@@ -357,7 +369,9 @@ public class InboxActivity extends Activity {
    	    	final MyData items1[] = new MyData[1];
    	    	items1[i] = new MyData("None","Value1");
    	    	   	    	
-   	    	position.setVisibility(0);
+   			position.setVisibility(View.INVISIBLE);
+   			dialogButton.setVisibility(View.INVISIBLE);
+   			textRoamers.setVisibility(View.VISIBLE);
    	    }
    	   myDB.close();
     }

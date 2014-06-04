@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.roamer.ConvertCode;
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
 import com.parse.ParseException;
@@ -148,69 +149,7 @@ public class ProfileListActivity extends Activity {
    public static String getLocationText(int locNum){
 	   String curLocation = "";
 	   
-	   switch(locNum){
-   	case 0:
-   		curLocation ="Not Selected";
-   		break;
-   	case 1:
-   		curLocation ="Boston";
-           break;
-   	case 2:
-   		curLocation ="San Francisco";
-   		break;
-   	case 3:
-   		curLocation ="Las Vegas";
-   		break;
-   	case 4:
-   		curLocation ="New York";
-   		break;
-   	case 5:
-   		curLocation ="Los Angeles";
-   		break;
-   	case 6:
-   		curLocation ="Houston";
-   		break;
-   	case 7:
-   		curLocation ="Philadelphia";
-   		break;
-   	case 8:
-   		curLocation ="Phoenix";
-   		break;
-   	case 9:
-   		curLocation ="San Antonio";
-   		break;
-   	case 10:
-   		curLocation ="San Diego";
-   		break;
-   	case 11:
-   		curLocation ="Dallas";
-   		break;
-   	case 12:
-   		curLocation ="San Jose";
-   		break;
-   	case 13:
-   		curLocation ="Austin";
-   		break;
-   	case 14:
-   		curLocation ="Jacksonville";
-   		break;
-   	case 15:
-   		curLocation ="Indianapolis";
-   		break;
-   	case 16:
-   		curLocation ="Seattle";
-   		break;
-   	case 17:
-   		curLocation ="Dever";
-   		break;
-   	case 18:
-   		curLocation ="Washington DC";
-   		break;
-   	case 19:
-   		curLocation ="Chicago";
-   		break;
-   	}
-	   
+	   curLocation = ConvertCode.convertLocation(locNum);
 	   return curLocation;
    }
    
@@ -219,8 +158,10 @@ public class ProfileListActivity extends Activity {
    	
    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid "+"= "+1, null);
    	cur.moveToFirst();
-   	int index;
+   	int index, indexName;
    	index = cur.getColumnIndex("CurrentLocation");
+   	indexName = cur.getColumnIndex("Username");
+   	String myName = cur.getString(indexName);
    	
    	int locationInt = cur.getInt(index);
    	roamersArray = new ArrayList<Item>();
@@ -266,8 +207,10 @@ public class ProfileListActivity extends Activity {
    					}
    		        	
    		        	
-   		        	
-   		    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
+   		        	if (!name.equals(myName)){
+   		        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
+   	   		    		
+   		        	}
    		    		i++;
    				}
    	           
@@ -295,8 +238,11 @@ public class ProfileListActivity extends Activity {
    					e1.printStackTrace();
    				}
    	        	
-   	    		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
-   	    		i++;
+   	        	if (!name.equals(myName)){
+		        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
+	   		    		
+		        }
+   	        	i++;
    	   		}
    			} catch (ParseException e2) {
    				// TODO Auto-generated catch block

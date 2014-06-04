@@ -10,35 +10,38 @@
         android:background="@color/NewBlack"
         android:orientation="vertical" >
 
-        <Button
+        <CheckBox
+            android:id="@+id/checkBoxDate"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="@drawable/btn_black"
-            android:onClick="toggleMenu"
-            android:padding="4dp"
             android:text="Date"
-            android:textColor="@color/DarkWhite"
-            android:textSize="20sp" />
-
-        <Button
+            android:textColor="@color/DarkWhite" />
+        
+        <CheckBox
+            android:id="@+id/checkBoxType"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="@drawable/btn_black"
-            android:onClick="toggleMenu"
-            android:padding="4dp"
-            android:text="Type"
-            android:textColor="@color/DarkWhite"
-            android:textSize="20sp" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@drawable/btn_black"
-            android:onClick="toggleMenu"
-            android:padding="4dp"
             android:text="Time"
-            android:textColor="@color/DarkWhite"
-            android:textSize="20sp" />
+            android:textColor="@color/DarkWhite" />
+        
+        <CheckBox
+            android:id="@+id/checkBoxTime"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/btn_black"
+            android:text="Type"
+            android:textColor="@color/DarkWhite" />
+        
+        <ImageButton
+            android:id="@+id/sortNow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/transparent"
+            android:padding="40dp"
+            android:src="@drawable/selector_submit" />
 
     </LinearLayout>
     

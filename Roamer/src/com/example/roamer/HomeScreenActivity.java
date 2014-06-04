@@ -2,9 +2,7 @@ package com.example.roamer;
 
 
 import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import java.util.List;
 
 import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
 import com.example.roamer.events.CreateEventActivity;
@@ -25,7 +23,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
@@ -49,6 +46,7 @@ public class HomeScreenActivity extends Activity {
     private int selectedName;
     private Spinner position;
     private TextView location;
+    private ArrayList<String> locations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,8 +172,24 @@ public class HomeScreenActivity extends Activity {
     
     public void getCurrentLocation(){
     	
+    	locations = new ArrayList();
+    	ParseQuery<ParseObject> query = ParseQuery.getQuery("Cities");
+    	query.whereNotEqualTo("Code", 0);
+
+    	try {
+			List<ParseObject> eventList = query.find();
+			
+			int i = 0;
+			while (i < eventList.size()){
+				locations.add(eventList.get(i).getString("Name"));
+				i++;
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
-    	
+
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
     	cur.moveToFirst();
@@ -190,68 +204,7 @@ public class HomeScreenActivity extends Activity {
     	System.out.println("Current Location is: "+locNum);
     	myDB.close();
     	
-    	switch(locNum){
-    	case 0:
-    		curLocation ="Not Selected";
-    		break;
-    	case 1:
-    		curLocation ="Boston";
-            break;
-    	case 2:
-    		curLocation ="San Francisco";
-    		break;
-    	case 3:
-    		curLocation ="Las Vegas";
-    		break;
-    	case 4:
-    		curLocation ="New York";
-    		break;
-    	case 5:
-    		curLocation ="Los Angeles";
-    		break;
-    	case 6:
-    		curLocation ="Houston";
-    		break;
-    	case 7:
-    		curLocation ="Philadelphia";
-    		break;
-    	case 8:
-    		curLocation ="Phoenix";
-    		break;
-    	case 9:
-    		curLocation ="San Antonio";
-    		break;
-    	case 10:
-    		curLocation ="San Diego";
-    		break;
-    	case 11:
-    		curLocation ="Dallas";
-    		break;
-    	case 12:
-    		curLocation ="San Jose";
-    		break;
-    	case 13:
-    		curLocation ="Austin";
-    		break;
-    	case 14:
-    		curLocation ="Jacksonville";
-    		break;
-    	case 15:
-    		curLocation ="Indianapolis";
-    		break;
-    	case 16:
-    		curLocation ="Seattle";
-    		break;
-    	case 17:
-    		curLocation ="Dever";
-    		break;
-    	case 18:
-    		curLocation ="Washington DC";
-    		break;
-    	case 19:
-    		curLocation ="Chicago";
-    		break;
-    	}
+    	curLocation = locations.get(locNum-1);
 
     }
      
@@ -267,30 +220,19 @@ public class HomeScreenActivity extends Activity {
         
         position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
          
-       	final MyData items1[] = new MyData[20];
+       	final MyData items1[] = new MyData[locations.size()];
 
        	//Populate cities in spinner
+       	int i = 0;
        	items1[0] = new MyData("None Selected","Value1");
-       	items1[1] = new MyData("Boston","Value2");
-       	items1[2] = new MyData("San Francisco","Value3");
-       	items1[3] = new MyData("Las Vegas","Value4");
-       	items1[4] = new MyData("New York","Value5");
-       	items1[5] = new MyData("Los Angeles","Value6");
-       	items1[6] = new MyData("Houston","Value7");
-       	items1[7] = new MyData("Philadelphia","Value8");
-       	items1[8] = new MyData("Phoenix","Value9");
-       	items1[9] = new MyData("San Antonio","Value10");
-       	items1[10] = new MyData("San Diego","Value111");
-       	items1[11] = new MyData("Dallas","Value12");
-       	items1[12] = new MyData("San Jose","Value13");
-       	items1[13] = new MyData("Austin","Value14");
-       	items1[14] = new MyData("Jacksonville","Value15");
-       	items1[15] = new MyData("Indianapolis","Value16");
-       	items1[16] = new MyData("Seattle","Value17");
-       	items1[17] = new MyData("Denver","Value18");
-       	items1[18] = new MyData("Washington DC","Value19");
-       	items1[19] = new MyData("Chicago","Value20");
+       	i++;
        	
+       	while (i < items1.length){
+       	
+       		items1[i] = new MyData(locations.get(i-1),"Value2");
+       		i++;
+       	}
+      	
            ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
                    android.R.layout.simple_spinner_item, items1);
            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

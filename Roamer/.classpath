@@ -8,10 +8,10 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="/appcompat_v7/libs/android-support-v4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Johann SB/workspace/eclipse/plugins/javax.mail.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="libs/gcm.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Mike/android-sdk/extras/android/support/v7/appcompat/libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Mike/android-sdk/extras/android/support/v13/android-support-v13.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

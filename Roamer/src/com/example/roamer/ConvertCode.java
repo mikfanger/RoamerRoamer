@@ -1,5 +1,12 @@
 package com.example.roamer;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 public class ConvertCode{
 	
 
@@ -13,68 +20,26 @@ public static String convertLocation(int location){
 	
 	String curLocation = "";
 	
-	   switch(location){
-	   	case 0:
-	   		curLocation ="Not Selected";
-	   		break;
-	   	case 1:
-	   		curLocation ="Boston";
-	           break;
-	   	case 2:
-	   		curLocation ="San Francisco";
-	   		break;
-	   	case 3:
-	   		curLocation ="Las Vegas";
-	   		break;
-	   	case 4:
-	   		curLocation ="New York";
-	   		break;
-	   	case 5:
-	   		curLocation ="Los Angeles";
-	   		break;
-	   	case 6:
-	   		curLocation ="Houston";
-	   		break;
-	   	case 7:
-	   		curLocation ="Philadelphia";
-	   		break;
-	   	case 8:
-	   		curLocation ="Phoenix";
-	   		break;
-	   	case 9:
-	   		curLocation ="San Antonio";
-	   		break;
-	   	case 10:
-	   		curLocation ="San Diego";
-	   		break;
-	   	case 11:
-	   		curLocation ="Dallas";
-	   		break;
-	   	case 12:
-	   		curLocation ="San Jose";
-	   		break;
-	   	case 13:
-	   		curLocation ="Austin";
-	   		break;
-	   	case 14:
-	   		curLocation ="Jacksonville";
-	   		break;
-	   	case 15:
-	   		curLocation ="Indianapolis";
-	   		break;
-	   	case 16:
-	   		curLocation ="Seattle";
-	   		break;
-	   	case 17:
-	   		curLocation ="Dever";
-	   		break;
-	   	case 18:
-	   		curLocation ="Washington DC";
-	   		break;
-	   	case 19:
-	   		curLocation ="Chicago";
-	   		break;
-	   }
+	ArrayList<String>locations = new ArrayList();
+	ParseQuery<ParseObject> query = ParseQuery.getQuery("Cities");
+	query.whereNotEqualTo("Code", 0);
+
+	try {
+		List<ParseObject> cityList = query.find();
+		
+		int i = 0;
+		locations.add("Not Selected");
+		
+		while (i < cityList.size()){
+			locations.add(cityList.get(i).getString("Name"));
+			i++;
+		}
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	curLocation = locations.get(location);
 	return curLocation;
 	
 }

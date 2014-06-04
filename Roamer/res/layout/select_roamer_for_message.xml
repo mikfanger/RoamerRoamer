@@ -38,4 +38,13 @@
         android:text="Select Roamer"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <TextView
+        android:id="@+id/textViewNoRoamers"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageStartMessage"
+        android:layout_centerHorizontal="true"
+        android:text="No Roamers to message!"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </RelativeLayout>

@@ -262,8 +262,9 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/imageView8"
+        android:layout_alignTop="@+id/textProfileAir"
         android:text="Preferred Airline" />
 
     <TextView
@@ -272,6 +273,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView3"
         android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/textProfileTravel"
         android:text="Travel Status" />
 
 </RelativeLayout>
