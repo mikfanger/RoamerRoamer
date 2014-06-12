@@ -26,10 +26,13 @@ public class Model {
         		int industryTemp = item.Industry;
         		
         		System.out.println("Date during model load is: "+dateTemp);
+        		System.out.println("Name during model load is: "+nameTemp);
+        		System.out.println("location during model load is: "+locTemp);
         		
         		Items.add(new Item (idTemp,iconTemp,nameTemp,locTemp, sexTemp,dateTemp, industryTemp));
         	}
-        }       
+        }   
+           
     }
 
     public static Item GetbyId(int id){

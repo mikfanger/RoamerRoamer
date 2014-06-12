@@ -1,6 +1,9 @@
 package com.example.roamer.checkinbox;
 
+import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -28,6 +31,7 @@ import com.parse.ParseQuery;
 
 public class ItemAdapterRequest extends ArrayAdapter<String> {
 
+	
     private final Context context;
     private final String[] Ids;
     private final int rowResourceId;
@@ -183,10 +187,11 @@ public class ItemAdapterRequest extends ArrayAdapter<String> {
        	//Add to his roamer list as well
        	ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Roamer");
     	
-    	System.out.println("Username to add is: "+name);
        	query2.whereEqualTo("Username", name);
        	
        	final ParseObject Roamer2 = query2.getFirst();
+       	
+       	AddActivity.addToDatabase(name);
        	
        	JSONArray roamerList2= Roamer2.getJSONArray("MyRoamers");
 		ArrayList<String> newList2 = new ArrayList();
@@ -205,5 +210,55 @@ public class ItemAdapterRequest extends ArrayAdapter<String> {
        	Roamer2.put("MyRoamers", newList2);
        	Roamer2.save();
     }
+ 
+ 
+ public static class AddActivity extends Activity {
+	 
+	 	
+	 public static void addToDatabase(String name) throws ParseException{
+		 ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Roamer");
+		 	
+	    	query2.whereEqualTo("Username", name);
+	    	
+	    	final ParseObject Roamer2 = query2.getFirst();
+	    	
+			int sex = 0;
+			 if(Roamer2.getBoolean("Sex") == true){
+				 sex = 1;
+			 }
+			 byte[] picFile = null;
+			try {
+				picFile = Roamer2.getParseFile("Pic").getData();
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			//Convert Start date to actual string
+			int day = Roamer2.getCreatedAt().getDay();
+	   	int month = Roamer2.getCreatedAt().getMonth();
+	   	int year = Roamer2.getCreatedAt().getYear();
+	   	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+			
+	   	SQLiteDatabase myDB2 = SQLiteDatabase.openOrCreateDatabase("RoamerDatabase", null);
+		       	String sql =   "INSERT INTO MyRoamers(Pic,Username,Loc,Start,Industry,Sex,Job,Travel,Hotel,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
+		        SQLiteStatement insertStmt      =   myDB2.compileStatement(sql);
+		        insertStmt.clearBindings();
+		        insertStmt.bindBlob(1,picFile);
+		        insertStmt.bindString(2,Roamer2.getString("Username"));
+		        insertStmt.bindLong(3, Roamer2.getInt("CurrentLocation"));
+		        insertStmt.bindString(4, fullDate);
+		        insertStmt.bindLong(5, Roamer2.getInt("Industry"));
+		        insertStmt.bindLong(6, sex);
+		        insertStmt.bindLong(7, Roamer2.getInt("Job"));
+		        insertStmt.bindLong(8, Roamer2.getInt("Travel"));
+		        insertStmt.bindLong(9, Roamer2.getInt("Hotel"));
+		        insertStmt.bindLong(10, Roamer2.getInt("Air"));
+		        insertStmt.executeInsert();
+				
+		        myDB2.close();
+		 
+	 }	 		 
+ }
 
 }

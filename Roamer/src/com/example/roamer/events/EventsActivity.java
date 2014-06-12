@@ -2,7 +2,6 @@ package com.example.roamer.events;
 
 import java.util.Locale;
 
-import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
 
 import android.app.ActionBar;
@@ -19,8 +18,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
@@ -72,18 +69,7 @@ public class EventsActivity extends TabActivity implements
  
 		//set Windows tab as default (zero based)
 		tabHost.setCurrentTab(2);
-		
-		ImageButton inboxButton = (ImageButton) findViewById(R.id.backFromEvents);
-        inboxButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	
-            	finish();
-            	Intent i=new Intent(EventsActivity.this,HomeScreenActivity.class);
-                startActivity(i);
-            		  
-            }
-        });
+				
 	}
 
 	@Override
@@ -132,6 +118,7 @@ public class EventsActivity extends TabActivity implements
 	@Override
 	public void onTabUnselected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
+		finish();
 
 	}
 

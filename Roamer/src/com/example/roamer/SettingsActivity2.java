@@ -234,7 +234,7 @@ public class SettingsActivity2 extends Activity {
         items2[8] = new MyData("Power & Utilities", "value9");
         items2[9] = new MyData("Real Estate", "value10");
         items2[10] = new MyData("Government", "value11");
-        items2[11] = new MyData("Student", "value12");
+        items2[11] = new MyData("Healthcare", "value12");
         items2[12] = new MyData("Travel/Hospitality", "value13");
         items2[13] = new MyData("Information Technology", "value14");
         ArrayAdapter<MyData> adapter2 = new ArrayAdapter<MyData>(this,

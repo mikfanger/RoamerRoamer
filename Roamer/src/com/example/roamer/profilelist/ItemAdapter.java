@@ -43,18 +43,15 @@ public class ItemAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView) rowView.findViewById(R.id.textViewName);
         TextView textViewLocation = (TextView) rowView.findViewById(R.id.textViewPosition);
         
-        //Find current location
-        //String location = 
-
         int id = Integer.parseInt(Ids[position]);
         
-        
-  
-        byte[] imageFile = Model.GetbyId(id).IconFile;
-        
-        textView.setText(Model.GetbyId(id).Name);
+        System.out.println("Roamer name is: "+Model.GetbyId(id).Name);
+        System.out.println("Roamer location is: "+Model.GetbyId(id).Location);
         
         textViewLocation.setText(Model.GetbyId(id).Location);
+        textView.setText(Model.GetbyId(id).Name);
+        byte[] imageFile = Model.GetbyId(id).IconFile;
+        
       
         
       //Set images either from database or default user.

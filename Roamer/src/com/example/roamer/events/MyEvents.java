@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
+import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -222,8 +225,8 @@ public class MyEvents extends Activity {
 		 
 		 System.out.println("value is: " +c.getString(C1));
 
-		 String correctLocation = c.getString(C2).replace("&amp&", "'");
-		 String correctDesc = c.getString(C6).replace("&amp&", "'");
+		 String correctLocation = c.getString(C2).replace("*/", "'");
+		 String correctDesc = c.getString(C6).replace("*/", "'");
 		 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9)));
 		
 		while(c.moveToNext()){
@@ -250,5 +253,12 @@ public class MyEvents extends Activity {
     	else{
     		 System.out.println("Row Count is: " + 1);
     	}
+    }
+    
+    @Override
+    public void onBackPressed() 
+    {
+    	 Intent i=new Intent(MyEvents.this,HomeScreenActivity.class);
+        startActivity(i);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.roamer;
 
+import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -36,16 +38,6 @@ public class SettingsActivity extends Activity {
 		TextView userName = (TextView) findViewById(R.id.usernameProf);
 		userName.setText(user);
 		
-		 ImageButton backButton = (ImageButton) findViewById(R.id.backFromProfile);
-	        backButton.setOnClickListener(new OnClickListener() {
-	            @Override
-	            public void onClick(View v) {
-	            	
-	            	Intent i=new Intent(SettingsActivity.this,HomeScreenActivity.class);
-	                startActivity(i);
-	            }
-	        });
-	        
 	        ImageButton nextButton = (ImageButton) findViewById(R.id.nextProfile1);
 	        nextButton.setOnClickListener(new OnClickListener() {
 	            @Override
@@ -63,6 +55,13 @@ public class SettingsActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.settings, menu);
 		return true;
+	}
+	
+	@Override
+	public void onBackPressed() 
+	{
+		 Intent i=new Intent(SettingsActivity.this,HomeScreenActivity.class);
+	    startActivity(i);
 	}
 
 }

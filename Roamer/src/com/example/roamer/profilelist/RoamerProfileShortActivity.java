@@ -165,41 +165,7 @@ public class RoamerProfileShortActivity extends Activity {
 		return true;
 	}
 	
-	/*
-	public void addRoamer(byte[] icon, String name, int sex, String loc, String date,
-			int hotel, int travel, int job, int industry, int air){
-	   	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-	   	 
-	   	String sql   =   "INSERT INTO MyRoamers (Pic,Username,Sex,Loc,Start,Hotel,Travel,Job,Industry,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
-	    SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
-	    insertStmt.clearBindings();
-	    insertStmt.bindBlob(1,icon);
-	    insertStmt.bindString(2,name);
-	    insertStmt.bindLong(3, sex);
-	    insertStmt.bindString(4, loc);
-	    insertStmt.bindString(5, date);
-	    insertStmt.bindLong(6, hotel);
-	    insertStmt.bindLong(7, travel);
-	    insertStmt.bindLong(8, job);
-	    insertStmt.bindLong(9, industry);
-	    insertStmt.bindLong(10, air);
-	    
-	    insertStmt.executeInsert();
-	   	
-	   	//Update count of events in Credentials
-	   	ContentValues args = new ContentValues();
-	   	Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
-	   	c.moveToFirst();
-	   	int index = c.getColumnIndex("CountR");
-	   	System.out.println("Current Count of my Roamers is: "+c.getInt(index));
-	   	args.put("CountR",c.getInt(index)+1);
-	   	myDB.update("MyCred", args, "rowid"+"="+1, null);
-	   	
-	   	myDB.delete("TempRoamer", null, null);
-	   	
-	   	myDB.close();
-	   }
-	*/
+	
 	
 	public void sendRequest(String name) throws ParseException, JSONException{
 		
@@ -211,9 +177,7 @@ public class RoamerProfileShortActivity extends Activity {
 		
 		int index = c.getColumnIndex("SentRequests");
 		String requests = c.getString(index);
-		System.out.println("Requests sent are+ "+requests);
 		String[] roamerList1 = requests.split(",");
-		System.out.println("Request list length is+ "+roamerList1.length);
 		int i1 = 0;
 		while(i1 < roamerList1.length){
 			if(roamerList1[i1].equals(name)){
@@ -229,11 +193,8 @@ public class RoamerProfileShortActivity extends Activity {
 	       	
 	       	final ParseObject Roamer = query.getFirst();
 	       	
-	       	JSONArray roamerList = Roamer.getJSONArray("Requests");
+
 	       	JSONArray holdList = Roamer.getJSONArray("Hold");
-	       	
-	       	ArrayList<String> newList = new ArrayList();
-	       	ArrayList<String> newHoldList = new ArrayList();
 	       	
 	       	//Check for an existing hold
 	       	if (holdList != null){
@@ -243,32 +204,15 @@ public class RoamerProfileShortActivity extends Activity {
 	       			if (holdList.get(i).toString().equals(myName)){
 	       				holdExists = true;
 	       			}
-	       			newHoldList.add(roamerList.get(i).toString());
 	       			i++;
 	       		}
-	       		newHoldList.add(myName);
 	       	}
 	       	else{
-	       		newHoldList.add(myName);
+	       		Roamer.addUnique("Hold", myName);
 	       	}
 	       	
 	       	//Check that a request has not already been sent.
-	       	if (roamerList != null){
-	       		
-	       		int i = 0;
-	       		while (i < roamerList.length()){
-	       			roamerList.get(i).toString();
-	       			if (roamerList.get(i).toString().equals(myName)){
-	       				requestSent = true;
-	       			}
-	       			newList.add(roamerList.get(i).toString());
-	       			i++;
-	       		}
-	       		newList.add(myName);
-	       	}
-	       	else{
-	       		newList.add(myName);
-	       	}
+	       	
 	        ContentValues args = new ContentValues();
 			args.put("SentRequests", requests+","+name);
 			myDB.update("MyCred", args, "rowid" + "=" + 1, null);
@@ -276,9 +220,10 @@ public class RoamerProfileShortActivity extends Activity {
 			
 			//If a request has not been sent and a hold is not in place, send the request
 			if (requestSent == false && holdExists == false){
-		       	Roamer.put("Requests", newList);
-		       	Roamer.put("Hold", newHoldList);
-		       	Roamer.save();
+				
+				Roamer.addUnique("Requests", myName);
+				Roamer.addUnique("Hold",myName);
+		       	Roamer.saveInBackground();
 			}
 
 	       	

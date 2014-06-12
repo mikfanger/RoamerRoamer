@@ -48,6 +48,7 @@ public class CreateAccountActivity extends Activity {
 	private static final String fieldEmpty = "All fields must be filled!";
     private static final String invalidEmail = "Email addresses much contain @ symbol!";
     private static final String emailExists = "Email address already exists!";
+    private static final String invalidUsername = "Username must not have spaces!";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +120,11 @@ public class CreateAccountActivity extends Activity {
     	{
     		 cancel = true;
     		 error = invalidEmail;
+    	}
+    	if (mUsername.contains(" "))
+    	{
+    		cancel = true;
+    		error = invalidUsername;
     	}
     	
     	//Check that email address does not yet exist

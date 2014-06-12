@@ -53,6 +53,7 @@
     <string-array name="place_type">
         <item>restaurant</item>
         <item>cafe</item>
+        <item>establishment</item>
         <item>airport</item>
         <item>park</item>
         <item>night_club</item>
@@ -62,8 +63,9 @@
         <item>movie_theater</item>
     </string-array>
     <string-array name="place_type_name">
-        <item>cafe</item>
         <item>restaurant</item>
+        <item>cafe</item>
+        <item>coffee shop</item>
         <item>airport</item>
         <item>park</item>
         <item>night club</item>

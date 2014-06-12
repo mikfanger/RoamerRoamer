@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.example.roamer.ConvertCode;
+import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
 import com.example.roamer.profilelist.ProfileListActivity;
 import com.example.roamer.profilelist.RoamerProfileShortActivity;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 
 public class RequestsActivity extends Activity {
@@ -69,6 +71,9 @@ public class RequestsActivity extends Activity {
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                 int position, long id) {
+            	
+            	Toast.makeText(getApplicationContext(), "this is my Toast message!!! =)",
+            			   Toast.LENGTH_LONG).show();
             	
             	//Add to temp roamer
             	newIcon = ModelRequest.GetbyId(position+1).IconFile;
@@ -274,4 +279,10 @@ public class RequestsActivity extends Activity {
        	
        	myDB.close();
        }
+    
+    public void onBackPressed() 
+    {
+    	 Intent i=new Intent(RequestsActivity.this,HomeScreenActivity.class);
+        startActivity(i);
+    }
 }

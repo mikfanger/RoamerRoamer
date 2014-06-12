@@ -38,7 +38,7 @@ public class MyRoamersListActivity extends Activity {
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.my_roamers_list);
         listView = (ListView) findViewById(R.id.listView);
-        
+		 
         loadArray();
         
         if (count>0){
@@ -81,19 +81,6 @@ public class MyRoamersListActivity extends Activity {
 	            public void onNothingSelected(AdapterView<?> parent){
 				}
 	          });
-        
-        ImageButton backButton = (ImageButton) findViewById(R.id.roamerListBackButton);
-        backButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	
-            	Intent i=new Intent(MyRoamersListActivity.this,HomeScreenActivity.class);
-                startActivity(i);
-            		  
-            }
-        });      
-        
-
     }
     
    
@@ -243,4 +230,12 @@ public class MyRoamersListActivity extends Activity {
 	    
 	    insertStmt.executeInsert();
     }
+    
+    
+	 @Override
+	 public void onBackPressed() 
+	 {
+		 Intent i=new Intent(MyRoamersListActivity.this,HomeScreenActivity.class);
+         startActivity(i);
+	 }
 }

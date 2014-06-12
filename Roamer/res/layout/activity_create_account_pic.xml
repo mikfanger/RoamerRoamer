@@ -85,15 +85,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/DarkWhite" />
 
-    <ImageButton
-        android:id="@+id/backProfile2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/mapImage"
-        android:layout_alignTop="@+id/imageView2"
-        android:background="@color/transparent"
-        android:src="@drawable/back" />
-
     <TextView
         android:id="@+id/textRecentDate"
         android:layout_width="wrap_content"

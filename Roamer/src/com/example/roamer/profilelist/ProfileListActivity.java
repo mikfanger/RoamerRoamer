@@ -45,17 +45,7 @@ public class ProfileListActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.roamers_list);
-
-        ImageButton backButton = (ImageButton) findViewById(R.id.inboxBackButton);
-        backButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	
-            	Intent i=new Intent(ProfileListActivity.this,HomeScreenActivity.class);
-                startActivity(i);
-            		  
-            }
-        });
+       
               
         TextView currentText = (TextView) findViewById(R.id.currentLocation);
         
@@ -65,7 +55,7 @@ public class ProfileListActivity extends Activity {
     	
     	int index;
     	index = cur.getColumnIndex("CurrentLocation");
-    	currentText.setText(getLocationText(cur.getInt(index)));
+    	currentText.setText(getLocationFromText(cur.getInt(index)));
     	
     	myDB.close();
         
@@ -149,6 +139,13 @@ public class ProfileListActivity extends Activity {
    public static String getLocationText(int locNum){
 	   String curLocation = "";
 	   
+	   curLocation = ConvertCode.convertFromLocation(locNum);
+	   return curLocation;
+   }
+   
+   public static String getLocationFromText(int locNum){
+	   String curLocation = "";
+	   
 	   curLocation = ConvertCode.convertLocation(locNum);
 	   return curLocation;
    }
@@ -169,7 +166,7 @@ public class ProfileListActivity extends Activity {
    	//Only proceed if a location is not 'Not Selected'
    	if (locationInt != 0){
    	   	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
-   	   	query.whereEqualTo("Location", locationInt);
+   	   	query.whereEqualTo("CurrentLocation", locationInt);
    	   	try {
    	   		
    				List<ParseObject> roamerList = query.find();
@@ -187,6 +184,8 @@ public class ProfileListActivity extends Activity {
    					
    		        	
    		        	name = roamerList.get(i).getString("Username");
+   		        	
+   		        	System.out.println("Username  of roamer in city is: "+name);
    		        	sex = roamerList.get(i).getBoolean("Sex");
    		        	location = getLocationText(roamerList.get(i).getInt("Location"));
    		        	eventId = roamerList.get(i).getString("objectId");
@@ -218,6 +217,7 @@ public class ProfileListActivity extends Activity {
    	   		while (i < (roamerList.size())){
    	   			
    	   			name = roamerList.get(i).getString("Username");
+   	   		    System.out.println("Username  of roamer in city is: "+name);
    	        	sex = roamerList.get(i).getBoolean("Sex");
    	        	location = getLocationText(roamerList.get(i).getInt("Location"));
    	        	eventId = roamerList.get(i).getString("objectId");
@@ -250,5 +250,12 @@ public class ProfileListActivity extends Activity {
    			}
    	}
 	
+   }
+   
+   @Override
+   public void onBackPressed() 
+   {
+   	 Intent i=new Intent(ProfileListActivity.this,HomeScreenActivity.class);
+       startActivity(i);
    }
 }

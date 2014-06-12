@@ -52,6 +52,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.maps.GeoPoint;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 public class HelloGoogleMaps extends FragmentActivity implements LocationListener,
 OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClickListener{
@@ -95,7 +100,12 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
 	    
 	    //Get lat long for current set location
 	    getCredLocation();
-	    getCurrentLocationLatLong();
+	    try {
+			getCurrentLocationLatLong();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    
 	    //Set my location
 	    //Mmap.setMyLocationEnabled(true);
@@ -222,87 +232,18 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
  
     
 
-    public void getCurrentLocationLatLong() {
+    public void getCurrentLocationLatLong() throws ParseException {
     	
-    	switch(credLocation){
-    	case 11:
-    		cityLong = -96.7967;
-            cityLat = 32.7758;
-            break;
-    	case 1:
-    		cityLong = -71.059773;
-            cityLat = 42.358431;
-    		break;
-    	case 19:
-    		cityLong = -87.629798;
-            cityLat = 41.878114;
-    		break;
-    	case 4:
-    		cityLong = -74.005973;
-            cityLat = 40.714353;
-    		break;
-    	case 2:
-    		cityLong = -122.419416;
-            cityLat = 37.774929;
-    		break;
-    	case 5:
-    		cityLong = -118.243685;
-            cityLat = 34.052234;
-    		break;
-    	case 3:
-    		cityLong = -115.238349;
-            cityLat = 36.255123;
-    		break;
-    	case 6:
-    		cityLong = -95.369390;
-            cityLat = 29.760193;
-    		break;
-    	case 7:
-    		cityLong = -75.163789;
-            cityLat = 39.952335;
-    		break;
-    	case 8:
-    		cityLong = -112.074037;
-            cityLat = 33.448377;
-    		break;
-    	case 9:
-    		cityLong = -98.493628;
-            cityLat = 29.424122;
-    		break;
-    	case 12:
-    		cityLong = -121.894955;
-            cityLat = 37.339386;
-    		break;
-    	case 10:
-    		cityLong = -117.157255;
-            cityLat = 32.715329;
-    		break;
-    	case 13:
-    		cityLong = -97.743061;
-            cityLat = 30.267153;
-    		break;
-    	case 14:
-    		cityLong = -81.655651;
-            cityLat = 30.332184;
-    		break;
-    	case 15:
-    		cityLong = -86.158068;
-            cityLat = 39.768403;
-    		break;
-    	case 16:
-    		cityLong = -122.332071;
-            cityLat = 47.606209;
-    		break;
-    	case 17:
-    		cityLong = -104.984718;
-            cityLat = 39.737567;
-    		break;
-    	case 18:
-    		cityLong = -77.036464;
-            cityLat = 38.907231;
-    		break;
-    	}
-
+    	
+    	ParseQuery<ParseObject> query = ParseQuery.getQuery("Cities");
+    	query.whereEqualTo("Code", credLocation);
+    	
+    	ParseObject object = query.getFirst();
+    	
+    	ParseGeoPoint geo = object.getParseGeoPoint("LatLong");
+    	cityLat = geo.getLatitude();
+    	cityLong = geo.getLongitude();
+    	System.out.println("City corrdinates are: "+cityLat+","+cityLong);
 
     }
     

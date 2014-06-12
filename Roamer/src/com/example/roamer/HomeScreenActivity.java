@@ -10,6 +10,7 @@ import com.example.roamer.events.EventsActivity;
 import com.example.roamer.profilelist.MyRoamersListActivity;
 import com.example.roamer.profilelist.ProfileListActivity;
 import com.parse.GetCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -40,6 +41,7 @@ public class HomeScreenActivity extends Activity {
 	
 	Point p;
 	private String curLocation;
+	private String username;
 	private String email;
 	private Dialog dialog;
 	private Context context = this;
@@ -157,7 +159,12 @@ public class HomeScreenActivity extends Activity {
     				@Override
     				public void onClick(View v) {
     					    	            	
-    					setCity(selectedName);
+    					try {
+							setCity(selectedName);
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
     					getCurrentLocation();
     					location.setText(curLocation);
     					    					
@@ -174,7 +181,7 @@ public class HomeScreenActivity extends Activity {
     	
     	locations = new ArrayList();
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("Cities");
-    	query.whereNotEqualTo("Code", 0);
+    	query.whereNotEqualTo("Code", -1);
 
     	try {
 			List<ParseObject> eventList = query.find();
@@ -196,15 +203,17 @@ public class HomeScreenActivity extends Activity {
 
     	int index, indexEmail;
     	index = cur.getColumnIndex("CurrentLocation");
-    	indexEmail = cur.getColumnIndex("Email");
+    	indexEmail = cur.getColumnIndex("Username");
+    	int indexUsername = cur.getColumnIndex("Email");
     	
-    	email = cur.getString(indexEmail);
+    	username = cur.getString(indexEmail);
+    	email = cur.getString(indexUsername);
     	int locNum = cur.getInt(index);
     	
     	System.out.println("Current Location is: "+locNum);
     	myDB.close();
     	
-    	curLocation = locations.get(locNum-1);
+    	curLocation = locations.get(locNum);
 
     }
      
@@ -224,12 +233,10 @@ public class HomeScreenActivity extends Activity {
 
        	//Populate cities in spinner
        	int i = 0;
-       	items1[0] = new MyData("None Selected","Value1");
-       	i++;
        	
        	while (i < items1.length){
        	
-       		items1[i] = new MyData(locations.get(i-1),"Value2");
+       		items1[i] = new MyData(locations.get(i),"Value2");
        		i++;
        	}
       	
@@ -257,13 +264,13 @@ public class HomeScreenActivity extends Activity {
            });
             
         }
-    public void setCity(int name){
+    public void setCity(int name) throws ParseException{
     	
     	final int name1 = name;
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	ContentValues args = new ContentValues();
-    	args.put("CurrentLocation",name);
+    	args.put("CurrentLocation",name1);
     	
     	myDB.update("MyCred", args, "rowid" + "=" + 1, null);
     	
@@ -272,19 +279,18 @@ public class HomeScreenActivity extends Activity {
     	query.whereEqualTo("Email", email);
     	
     	query.getFirstInBackground(new GetCallback<ParseObject>() {
-    	  public void done(ParseObject roamer, ParseException e) {
-    	    if (roamer == null) {
-    	    	Log.d("score", "Error: " + e.getMessage()); 
+   		  public void done(ParseObject Roamer, ParseException e) {
+   		    if (Roamer == null) {
+   		    	Log.d("score", "Error: " + e.getMessage()); 
 
-    	    } else {
-
-    	    	 roamer.put("CurrentLocation",name1);
-    		     roamer.saveInBackground();
-    	    }
-    	  }
-    	});
-    	
-    	
+   		    } else {
+   		    	Roamer.put("CurrentLocation",3); 
+   		    	
+   			    Roamer.saveInBackground();
+   		    }
+   		  }
+   		});
+    	myDB.close();	
     }
     
     class MyData {

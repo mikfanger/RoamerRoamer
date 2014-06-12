@@ -78,7 +78,8 @@
         android:layout_alignTop="@+id/imageView5"
         android:layout_marginLeft="29dp"
         android:background="@color/transparent"
-        android:src="@drawable/back" />
+        android:src="@drawable/back"
+        android:visibility="invisible" />
 
     <ImageButton
         android:id="@+id/nextProfile1"

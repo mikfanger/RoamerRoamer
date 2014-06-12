@@ -53,8 +53,9 @@ public class CreateEventActivity extends Activity {
 	public byte[] pic;
 	public String date;
 	public EditText blurbText;
-	public TextView profileJob;
+	public TextView eventLocationPost;
 	public int currentLocation;
+	private SharedPreferences preferences;
 	
 	
 	@Override
@@ -64,12 +65,11 @@ public class CreateEventActivity extends Activity {
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		 blurbText = (EditText)findViewById(R.id.editText2);
-		 profileJob = (TextView)findViewById(R.id.textProfileJob);
+		 eventLocationPost = (TextView)findViewById(R.id.textEventLocationPost);
 		 
-		 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		 preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		 location = preferences.getString("location","");
-		 System.out.println("Location is: "+location);
-		 profileJob.setText(location);
+		 eventLocationPost.setText(location);
 		 
 		 ImageButton postButton = (ImageButton) findViewById(R.id.imageButtonPostEvent);
 	        postButton.setOnClickListener(new OnClickListener() {
@@ -103,16 +103,19 @@ public class CreateEventActivity extends Activity {
 		            	blurb = blurbText.getText().toString();
 		            	addToEvents(host, type, time, date, location, blurb, pic);
 		            	
-		            	  //Get Date
+		            	//Get Date
+		            	int year = 0;
 		    	        Calendar yeartime = Calendar.getInstance();
 		    	        Calendar beginTime = Calendar.getInstance();
-						int year =yeartime.get(Calendar.YEAR);
+		    	        
+		    	        if(month - c.get(Calendar.MONTH) < 0){
+		    	        	 year = yeartime.get(Calendar.YEAR)+1;
+		    	        }
+		    	        if(month - c.get(Calendar.MONTH) >= 0){
+		    	        	 year = yeartime.get(Calendar.YEAR);
+		    	        }
+						
 
-						System.out.println("Time is: "+time);
-						System.out.println("Year is: "+year);
-						System.out.println("Month is: "+month);
-						
-						
 						//Get time
 						int startHour = 0;
 						int startMinute = 0;
@@ -169,22 +172,22 @@ public class CreateEventActivity extends Activity {
     					    .putExtra(Events.EVENT_LOCATION, location)
     					    .putExtra(Events.AVAILABILITY, Events.AVAILABILITY_BUSY);
     					startActivity(intent);
-						
-						Toast.makeText(getApplicationContext(), "Event added to Calendar!",
-								   Toast.LENGTH_LONG).show();
+
+		            	//set  on screen message and quit to home screen
 		            	
-		            	//set  on screen message
-		            	Toast.makeText(getApplicationContext(), "Event Posted!", Toast.LENGTH_LONG).show();
-		            	
-		            	//finish();
-		            	//Intent i=new Intent(CreateEventActivity.this,HomeScreenActivity.class);
-		               // startActivity(i);
+    					Toast.makeText(getApplicationContext(), "Event Posted!", Toast.LENGTH_LONG).show();
+		            	eventLocationPost.setText("");
+		            	SharedPreferences.Editor editor = preferences.edit();
+		                editor.putString("location","");
+		                editor.commit();
+		                
 	    	        }
 	    	        if(month - c.get(Calendar.MONTH) > 6){
 	    	        	Toast.makeText(getApplicationContext(), "Cannot post more than 6 months out!", Toast.LENGTH_LONG).show();
 	    	        }
 		  
 	            }
+	            
 	        });
 	        
 	        ImageButton backButton = (ImageButton) findViewById(R.id.imageBackFromCreate);
@@ -243,16 +246,16 @@ public class CreateEventActivity extends Activity {
 				}
 	        });
 	        
-	        //Type of Event
+	        //Time of Event
 	        Spinner position1 = (Spinner) findViewById(R.id.spinnerCreateTime);
 	        //Prepare adapter 
 	        //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
 	        final MyData items2[] = new MyData[5];
-	        items2[0] = new MyData("Morning", "value1");
-	        items2[1] = new MyData("Mid-day", "value2");
-	        items2[2] = new MyData("Evening", "value3");
-	        items2[3] = new MyData("Night", "value4");
-	        items2[4] = new MyData("Late Night", "value5");
+	        items2[0] = new MyData("Morning:    (6AM - 11:30AM)", "value1");
+	        items2[1] = new MyData("Mid-day:    (11:30AM - 1:30PM)", "value2");
+	        items2[2] = new MyData("Evening:    (5:30PM - 7:30PM)", "value3");
+	        items2[3] = new MyData("Night:      (8:30PM - 10:30PM)", "value4");
+	        items2[4] = new MyData("Late Night: (11:30PM - 2:00AM)", "value5");
 	        ArrayAdapter<MyData> adapter2 = new ArrayAdapter<MyData>(this,
 	                android.R.layout.simple_spinner_item, items2);
 	        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -265,7 +268,8 @@ public class CreateEventActivity extends Activity {
 
 	                //Get selected value of key 
 	                String value = d.getValue();
-	                time = d.getSpinnerText();
+	                String[] splitter = d.getSpinnerText().toString().split(":");
+	                time = splitter[0].trim();
 	                System.out.println("Spinner is: "+time);
 	                
 	            }
@@ -326,7 +330,6 @@ public class CreateEventActivity extends Activity {
      	pic = c.getBlob(index2);
      	
      	host = c.getString(index1);
-     	System.out.println("Host  is: "+host);
      	currentLocation = c.getInt(index3);
     	 
      	String locationModified = location.replace("'", "*/");

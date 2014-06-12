@@ -52,7 +52,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="15dp"
         android:background="@color/transparent"
-        android:src="@drawable/back" />
+        android:src="@drawable/back"
+        android:visibility="invisible" />
 
     <ImageButton
         android:id="@+id/submitInfo2"

@@ -6,9 +6,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
 import com.parse.Parse;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -130,18 +132,6 @@ public class CreateAccountActivityPic extends Activity {
             }
         });
         
-        ImageButton backButton = (ImageButton) findViewById(R.id.backProfile2);
-        backButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	
-            	Intent i=new Intent(CreateAccountActivityPic.this,CreateAccountActivity2.class);
-                startActivity(i);
-            	
-            	
-            }
-        });
-        
         Spinner position = (Spinner) findViewById(R.id.spinnerJob);
         //Prepare adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
@@ -188,7 +178,7 @@ public class CreateAccountActivityPic extends Activity {
         items2[8] = new MyData("Power & Utilities", "value9");
         items2[9] = new MyData("Real Estate", "value10");
         items2[10] = new MyData("Government", "value11");
-        items2[11] = new MyData("Student", "value12");
+        items2[11] = new MyData("Healthcare", "value12");
         items2[12] = new MyData("Travel/Hospitality", "value13");
         items2[13] = new MyData("Information Technology", "value14");
   
@@ -516,6 +506,14 @@ public class CreateAccountActivityPic extends Activity {
 		user1.put("Airline", airline);
 		user1.put("LoginCount", 1);
 		user1.put("Pic", imgFile);
+		
+		ParseUser.enableAutomaticUser();
+		
+		ParseACL defaultACL = new ParseACL();
+		// Optionally enable public read access while disabling public write access.
+		defaultACL.setPublicReadAccess(true);
+		defaultACL.setPublicWriteAccess(true);
+		user1.setACL(defaultACL);
         
 		user1.saveInBackground();
  	     

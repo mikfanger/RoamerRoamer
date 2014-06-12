@@ -39,16 +39,6 @@
             android:layout_marginTop="15dp"
             android:src="@drawable/roamer" />
 
-        <ImageButton
-            android:id="@+id/inboxBackButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignTop="@+id/roamerCreateTag"
-            android:layout_marginLeft="17dp"
-            android:background="@color/transparent"
-            android:src="@drawable/back" />
-
         <TextView
             android:id="@+id/textRecentDate"
             android:layout_width="wrap_content"
@@ -65,7 +55,7 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="430dp"
         android:cacheColorHint="@color/DarkWhite"
         android:divider="@android:color/transparent"
         android:dividerHeight="10.0sp"
@@ -121,7 +111,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@+id/locationName"
             android:background="@color/transparent"
-            android:src="@drawable/chicago_cartoon" />
+            android:src="@drawable/buildings" />
 
     </RelativeLayout>
 

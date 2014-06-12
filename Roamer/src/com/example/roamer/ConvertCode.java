@@ -3,6 +3,8 @@ package com.example.roamer;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -20,16 +22,14 @@ public static String convertLocation(int location){
 	
 	String curLocation = "";
 	
-	ArrayList<String>locations = new ArrayList();
+	ArrayList<String> locations = new ArrayList();
 	ParseQuery<ParseObject> query = ParseQuery.getQuery("Cities");
-	query.whereNotEqualTo("Code", 0);
+	query.whereNotEqualTo("Code", 1000);
 
 	try {
 		List<ParseObject> cityList = query.find();
 		
 		int i = 0;
-		locations.add("Not Selected");
-		
 		while (i < cityList.size()){
 			locations.add(cityList.get(i).getString("Name"));
 			i++;
@@ -48,7 +48,8 @@ public static String converSex(int sex){
 	
 	String stringSex = "";
 	
-	if(sex == 1){
+	if(sex == 0){
+		System.out.println("Sex of roamer is: "+sex);
 		stringSex = "male";
 	}
 	else{
@@ -97,7 +98,7 @@ public static String convertIndustry(int industry){
    		stringIndustry ="Government";
    		break;
    	case 11:
-   		stringIndustry ="Student";
+   		stringIndustry ="Heathcare";
    		break;
    	case 12:
    		stringIndustry ="Travel/Hospitality";
@@ -167,6 +168,33 @@ public static String convertTravel(int travel){
    		break;
    	case 5:
    		stringTravel ="60%-80%  Nomad";
+   		break;
+	}
+	
+	return stringTravel;
+	
+}
+
+public static String convertFromLocation(int travel){
+	
+	String stringTravel = "";
+	
+	switch(travel){
+
+   	case 1:
+   		stringTravel ="West";
+           break;
+   	case 2:
+   		stringTravel ="Southwest";
+   		break;
+   	case 3:
+   		stringTravel ="Midwest";
+   		break;
+   	case 4:
+   		stringTravel ="Southeast";
+   		break;
+   	case 5:
+   		stringTravel ="Northeast";
    		break;
 	}
 	

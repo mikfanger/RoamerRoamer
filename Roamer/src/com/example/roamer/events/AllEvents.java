@@ -11,7 +11,9 @@ import org.json.JSONArray;
 import graphics.FlyOutContainer;
 
 import com.example.roamer.ConvertCode;
+import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
+import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -353,8 +355,8 @@ public class AllEvents extends Activity {
     public void addToMyEvents(String host, String type, String date, String attend, String location, String desc, byte[] image, String eventId, String time){
     	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	 
-    	 String my_new_str = desc.replaceAll("'", "&amp&");
-    	 String my_new_str_place = location.replaceAll("'", "&amp&");
+    	 String my_new_str = desc.replaceAll("'", "*/");
+    	 String my_new_str_place = location.replaceAll("'", "*/");
     	 
     	String sql =   "INSERT INTO MyEvents(Type,Location,Date,Host,HostPic,Blurb,Attend,EventId,Time) VALUES(?,?,?,?,?,?,?,?,?)";
         SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
@@ -519,10 +521,10 @@ public class AllEvents extends Activity {
     	  public void done(ParseObject event, ParseException e) {
     	    if (event == null) {
     	    	 
-
+    	    	
     	    } else {
     	    	 int i = event.getInt("Attend");
-    	    	 JSONArray newJSON = event.getJSONArray("Attendees");
+    	    	 //JSONArray newJSON = event.getJSONArray("Attendees");
     	    	 
     	    	 event.put("LoginCount",i+1);
     	    	 event.addAllUnique("Attendees", usernameArray);
@@ -532,9 +534,7 @@ public class AllEvents extends Activity {
     	});
     	
     	ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
-    	query1.whereEqualTo("Username", usernameArray.get(1));
-    	final ArrayList eventList = new ArrayList<String>();
-    	eventList.add(parseEventId);
+    	query1.whereEqualTo("Username", usernameArray.get(0));
     	
     	query1.getFirstInBackground(new GetCallback<ParseObject>() {
     	  public void done(ParseObject event, ParseException e) {
@@ -542,7 +542,7 @@ public class AllEvents extends Activity {
     	    	 
 
     	    } else {
-    	    	 event.addAllUnique("MyEvents", eventList);
+    	    	 event.addUnique("MyEvents", parseEventId);
     		     event.saveInBackground();
     	    }
     	  }
@@ -585,4 +585,11 @@ public class AllEvents extends Activity {
 		
 	}
 	*/
+	
+	@Override
+	public void onBackPressed() 
+	{
+		 Intent i=new Intent(AllEvents.this,HomeScreenActivity.class);
+	    startActivity(i);
+	}
 }

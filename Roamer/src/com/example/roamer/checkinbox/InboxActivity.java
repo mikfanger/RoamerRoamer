@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
 
 import android.app.Activity;
@@ -110,9 +111,9 @@ public class InboxActivity extends Activity {
             	System.out.println("table name will be: "+chatName);
         		addToTempRoamer(chatName);
         		
-        		//createTable(chatName);
+        		createTable(chatName);
         		getChatFromTable(chatName);
-
+        		finish();
             	Intent i=new Intent(InboxActivity.this,DiscussActivity.class);
                 startActivity(i);
             	
@@ -143,9 +144,11 @@ public class InboxActivity extends Activity {
     			dialogButton.setOnClickListener(new OnClickListener() {
     				@Override
     				public void onClick(View v) {
-    					    	            	
-    					createTable(getSelectedName());
-    					    					
+    					    	           
+    					String newName = getSelectedName();
+    					createTable(newName);
+    					addToTempRoamer(newName);    	
+    					
     					getDialog().dismiss();
     					Intent i=new Intent(InboxActivity.this,DiscussActivity.class);
     	                startActivity(i);
@@ -454,6 +457,12 @@ public class InboxActivity extends Activity {
 	System.out.println("Username in temp roamer is: "+c.getString(i));
 
 	db.close();
+	}
+	
+	public void onBackPressed() 
+	{
+		 Intent i=new Intent(InboxActivity.this,HomeScreenActivity.class);
+	    startActivity(i);
 	}
     
 }

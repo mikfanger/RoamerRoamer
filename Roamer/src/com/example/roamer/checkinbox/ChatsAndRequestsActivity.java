@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
+import com.example.roamer.profilelist.MyRoamersListActivity;
 
 
 import android.app.ActionBar;
@@ -77,17 +78,6 @@ tabHost.addTab(tabSpecApple);
 //set Windows tab as default (zero based)
 tabHost.setCurrentTab(2);
 
-ImageButton inboxButton = (ImageButton) findViewById(R.id.backFromEvents);
-inboxButton.setOnClickListener(new OnClickListener() {
-    @Override
-    public void onClick(View v) {
-    	
-    	finish();
-    	Intent i=new Intent(ChatsAndRequestsActivity.this,HomeScreenActivity.class);
-        startActivity(i);
-    		  
-    }
-});
 }
 
 @Override
@@ -208,6 +198,13 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			ARG_SECTION_NUMBER)));
 	return rootView;
 }
+}
+
+@Override
+public void onBackPressed() 
+{
+	 Intent i=new Intent(ChatsAndRequestsActivity.this,HomeScreenActivity.class);
+    startActivity(i);
 }
 
 }

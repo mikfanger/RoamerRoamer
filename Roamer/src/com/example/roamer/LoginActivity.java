@@ -1,27 +1,21 @@
 package com.example.roamer;
 
 import java.util.ArrayList;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.example.roamer.checkinbox.InboxActivity;
 import com.example.roamer.network.GMailSender;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.PushService;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -481,7 +475,7 @@ public class LoginActivity extends Activity {
 					       + "(Email,Password,Save) "
 					       + "VALUES ('"+userName+"','"+passWord+"',"+1+");");
 
-				myDB.close();	
+				//myDB.close();	
 			}
 
 
@@ -504,7 +498,7 @@ public class LoginActivity extends Activity {
 					       + "(Email,Password,Save) "
 					       + "VALUES ('"+userName+"','"+passWord+"',"+0+");");
 
-				myDB.close();	
+				//myDB.close();	
 			}
 		}
 	}
@@ -546,6 +540,8 @@ public class LoginActivity extends Activity {
 		final SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 		query.whereEqualTo("Email", mEmail);
+		
+		
 		
 		ParseObject object;
 		
@@ -590,7 +586,7 @@ public class LoginActivity extends Activity {
 					e2.printStackTrace();
 				}
 
-
+				 
 
 
 				 int pSex1 = 1;
@@ -599,9 +595,20 @@ public class LoginActivity extends Activity {
 					 pSex1 = 0;
 				 }
 
-
+				 int eventListCount = 0;
+				 int roamerListCount = 0;
+				 
+				 if (eventList != null){
+					 eventListCount = eventList.length();
+				 }
+				 if (roamerList != null){
+					 roamerListCount = roamerList.length();
+				 }
+				 
 				 ContentValues args = new ContentValues();
 					args.put("Email", pEmail);
+					args.put("CountR", eventListCount);
+					args.put("CountM", roamerListCount);
 					args.put("Username", pUsername);
 					args.put("Password", pPassword);
 					args.put("Industry", pIndustry);
@@ -622,9 +629,10 @@ public class LoginActivity extends Activity {
 					myDB.delete("MyRoamers", null, null);  
 
 					if(eventList!=null){
+						
 						int i = 0;			
 						while(i < eventList.length()){
-							//Get roamer, noted as 'MyRoamer'
+							//Get events, noted as 'MyEvents'
 							final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
 							try {
 								query1.whereEqualTo("objectId", eventList.get(i).toString());
@@ -632,57 +640,50 @@ public class LoginActivity extends Activity {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							query1.getFirstInBackground(new GetCallback<ParseObject>() {
-
-								@Override
-								public void done(ParseObject object, ParseException e) {
-									 if (e == null) {
-
+							
+							ParseObject object1 = query1.getFirst();
 
 										 byte[] picFile = null;
 										try {
-											picFile = object.getParseFile("Pic").getData();
+											picFile = object1.getParseFile("Pic").getData();
 										} catch (ParseException e1) {
 											// TODO Auto-generated catch block
 											e1.printStackTrace();
 										}
 
-										int day = object.getDate("Date").getDay();
-							        	int month = object.getDate("Date").getMonth();
-							        	int year = object.getDate("Date").getYear();
+										int day = object1.getDate("Date").getDay();
+							        	int month = object1.getDate("Date").getMonth();
+							        	int year = object1.getDate("Date").getYear();
 							        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-
+							        		
+							        	SQLiteDatabase myDB3 = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 									       	String sql =   "INSERT INTO MyEvents(Type,Location,Time,Date,Host,Attend,EventId,HostPic,Blurb) VALUES(?,?,?,?,?,?,?,?,?)";
-									        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
+									        SQLiteStatement insertStmt      =   myDB3.compileStatement(sql);
 									        insertStmt.clearBindings();
-									        insertStmt.bindString(1,ConvertCode.convertType(object.getInt("Type")));
-									        insertStmt.bindString(2,ConvertCode.convertLocation(object.getInt("Location")));
-									        insertStmt.bindString(3,ConvertCode.convertType(object.getInt("Time")));
+									        insertStmt.bindString(1,ConvertCode.convertType(object1.getInt("Type")));
+									        insertStmt.bindString(2,ConvertCode.convertLocation(object1.getInt("Location")));
+									        insertStmt.bindString(3,ConvertCode.convertType(object1.getInt("Time")));
 									        insertStmt.bindString(4, fullDate);
-									        insertStmt.bindString(5, object.getString("Host"));
-									        insertStmt.bindLong(6, object.getLong("Attend")); 
-									        insertStmt.bindString(7, object.getObjectId());
+									        insertStmt.bindString(5, object1.getString("Host"));
+									        insertStmt.bindLong(6, object1.getLong("Attend")); 
+									        insertStmt.bindString(7, object1.getObjectId());
 									        insertStmt.bindBlob(8, picFile);
-									        insertStmt.bindString(9, object.getString("Desc"));
+									        insertStmt.bindString(9, object1.getString("Desc"));
 									        insertStmt.executeInsert();
-
-										
-									 }
-
-								}
-							});
-							i++;
+									        
+									        myDB3.close();
+									        i++;
 						}
+						
 					}
 
-					
+					//If you have Roamers, populate that list
 					if( roamerList!=null ){
 						int i = 0;			
 						while(i < roamerList.length()){
 							//Get roamer, noted as 'MyRoamer'
 							final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
 							try {
-								System.out.println("Roamer is: "+roamerList.get(i).toString());
 								query1.whereEqualTo("Username", roamerList.get(i).toString());
 							} catch (JSONException e1) {
 								// TODO Auto-generated catch block
@@ -702,14 +703,21 @@ public class LoginActivity extends Activity {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-
+							
+							//Convert Start date to actual string
+							int day = object1.getCreatedAt().getDay();
+				        	int month = object1.getCreatedAt().getMonth();
+				        	int year = object1.getCreatedAt().getYear();
+				        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+							
+								SQLiteDatabase myDB2 = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 						       	String sql =   "INSERT INTO MyRoamers(Pic,Username,Loc,Start,Industry,Sex,Job,Travel,Hotel,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
-						        SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
+						        SQLiteStatement insertStmt      =   myDB2.compileStatement(sql);
 						        insertStmt.clearBindings();
 						        insertStmt.bindBlob(1,picFile);
 						        insertStmt.bindString(2,object1.getString("Username"));
 						        insertStmt.bindLong(3, object1.getInt("CurrentLocation"));
-						        insertStmt.bindString(4, object1.getCreatedAt().toString());
+						        insertStmt.bindString(4, fullDate);
 						        insertStmt.bindLong(5, object1.getInt("Industry"));
 						        insertStmt.bindLong(6, sex);
 						        insertStmt.bindLong(7, object1.getInt("Job"));
@@ -718,11 +726,20 @@ public class LoginActivity extends Activity {
 						        insertStmt.bindLong(10, object1.getInt("Air"));
 						        insertStmt.executeInsert();
 								
+						        myDB2.close();
 							i++;
 						}
 					}
 			
-	myDB.close();
+	 myDB.close();
+	
+	 //Set push notification to this installation
+	 ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+		
+	 installation.addUnique("channels", pUsername);
+	 installation.saveInBackground();
+	 PushService.subscribe(this, pUsername, InboxActivity.class);
+	 
 	}
 
 public void checkEmail(){

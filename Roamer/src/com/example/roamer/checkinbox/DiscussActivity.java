@@ -1,6 +1,14 @@
 package com.example.roamer.checkinbox;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.example.roamer.R;
+import com.google.gson.JsonObject;
+import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.ParsePush;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,10 +16,8 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -22,6 +28,7 @@ public class DiscussActivity extends Activity {
 	private ListView lv;
 	private EditText editText1;
 	private String chatName = "none";
+	private String myName = "none";
 	
 
 
@@ -36,47 +43,67 @@ public class DiscussActivity extends Activity {
 		//Set chat name from Temp Roamer
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		
+		Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
+    	cur.moveToFirst();
+    	
+    	int myNameIndex = cur.getColumnIndex("Username");
+    	myName = cur.getString(myNameIndex);
+		
 		Cursor c = myDB.rawQuery("SELECT  *  FROM " + "" + "TempRoamer", null);
     	
     	c.moveToFirst();
     	int index;
+    	int index2;
     	index = c.getColumnIndex("Username");
-    	
+
     	chatName = c.getString(index);
     	System.out.println("Chat name is: "+chatName);
-    	
+		adapter = new DiscussArrayAdapter(getApplicationContext(), R.layout.listitem_discuss);
+		
 		addItems();
     	
     	//Load list from saved chats with user (if any)
 		lv = (ListView) findViewById(R.id.listView1);
 
-		adapter = new DiscussArrayAdapter(getApplicationContext(), R.layout.listitem_discuss);
+
 
 		lv.setAdapter(adapter);
 		lv.setDivider(null);
 
 		editText1 = (EditText) findViewById(R.id.editTextMessage);
-		editText1.setOnKeyListener(new OnKeyListener() {
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				// If the event is a key-down event on the "enter" button
-				if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-					// Perform action on key press
-					adapter.add(new OneComment(false, editText1.getText().toString()));
-					
-					String phrase = editText1.getText().toString();
-					writeChatToDb(phrase, 2);
-					editText1.setText("");
-					
-					return true;
-					
+		
+		ImageButton sendButton = (ImageButton) findViewById(R.id.imageButtonSendMessage);
+        sendButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	
+            	adapter.add(new OneComment(false, editText1.getText().toString()));
+
+				String phrase = editText1.getText().toString();
+				writeChatToDb(phrase, 2);
+				editText1.setText("");
+				
+            	ParsePush push = new ParsePush();
+            	
+            	JSONObject data = null;
+				try {
+					data = new JSONObject(myName);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				return false;
-			}
-			
-		});
-		
-		
-		
+
+            	push.setChannel(chatName);
+            	//push.setData(data);
+            	push.setData(data);
+            	push.setMessage(phrase);
+            	push.sendInBackground();   
+            	
+            	
+            		  
+            }
+        });
+        		
 		ImageButton inboxButton = (ImageButton) findViewById(R.id.imageBackFromMessages);
         inboxButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -96,7 +123,7 @@ public class DiscussActivity extends Activity {
 		myDB.execSQL("INSERT INTO "
 			       + chatName
 			       + " (Field1,Field2) "
-			       + "VALUES ('"+phrase+"',"+type+");");
+			       + "VALUES ('"+phrase.replace("'","%@%")+"',"+type+");");
 			
 		myDB.close();		
 	}
@@ -116,11 +143,12 @@ public class DiscussActivity extends Activity {
 
 		   // Check if our result was valid.
 		   c.moveToFirst();
-		   if (c != null && Column1 !=0 && c.getCount()>1) {
+
+		   if (c != null && c.getCount()>1) {
 		    // Loop through all Results
 		    do {
 		     String Comment = c.getString(Column1);
-		     System.out.println("Chat is: "+Comment);
+		     
 		     int Side = c.getInt(Column2);
 		     if(Side == 1){
 		    	 side = true;
@@ -128,7 +156,10 @@ public class DiscussActivity extends Activity {
 		     else{
 		    	 side = false;
 		     }
-		     adapter.add(new OneComment(side, Comment));
+		     
+		     String newComment = Comment.replace("%@%","'");
+		     
+		     adapter.add(new OneComment(side, newComment));
 		    }while(c.moveToNext());
 		   }
 		   
