@@ -53,7 +53,6 @@
     <string-array name="place_type">
         <item>restaurant</item>
         <item>cafe</item>
-        <item>establishment</item>
         <item>airport</item>
         <item>park</item>
         <item>night_club</item>
@@ -61,11 +60,11 @@
         <item>stadium</item>
         <item>bowling_alley</item>
         <item>movie_theater</item>
+        <item>lodging</item>
     </string-array>
     <string-array name="place_type_name">
         <item>restaurant</item>
         <item>cafe</item>
-        <item>coffee shop</item>
         <item>airport</item>
         <item>park</item>
         <item>night club</item>
@@ -73,6 +72,7 @@
         <item>stadium</item>
         <item>bowling alley</item>
         <item>movie theater</item>
+        <item>lodging</item>
     </string-array>
 
     <string name="title_activity_forgot_password">ForgotPasswordActivity</string>

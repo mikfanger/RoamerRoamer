@@ -43,24 +43,43 @@ public class ItemAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView) rowView.findViewById(R.id.textViewName);
         TextView textViewLocation = (TextView) rowView.findViewById(R.id.textViewPosition);
         
+        textViewLocation.setText("Nothing");
+        textView.setText("Nothing");
+        byte[] imageFile = null;
         int id = Integer.parseInt(Ids[position]);
         
-        System.out.println("Roamer name is: "+Model.GetbyId(id).Name);
-        System.out.println("Roamer location is: "+Model.GetbyId(id).Location);
+        try{
+        	
+        	textViewLocation.setText(Model.GetbyId(id).Location);
+        }
+        catch(NullPointerException e){
+        	textViewLocation.setText("none");
+        }
+        try{
+        	
+        	textView.setText(Model.GetbyId(id).Name);
+        }
+        catch(NullPointerException e){
+        	textView.setText("none");
+        }
+
+        int noPic = 0;
+        try{
+        	imageFile = Model.GetbyId(id).IconFile;
+        }
+        catch (NullPointerException e){
+        	noPic = 1;
+        }
         
-        textViewLocation.setText(Model.GetbyId(id).Location);
-        textView.setText(Model.GetbyId(id).Name);
-        byte[] imageFile = Model.GetbyId(id).IconFile;
         
-      
         
       //Set images either from database or default user.
-        if(imageFile != null){
+        if(noPic == 0){
         	Bitmap bmp = BitmapFactory.decodeByteArray(imageFile, 0, imageFile.length);
     	    imageView.setBackgroundResource(0);
     	    imageView.setImageBitmap(bmp);
         }
-        if(imageFile == null){
+        if(noPic == 1){
         	InputStream ims = null;
             try {
                 ims = context.getAssets().open("default_userpic.png");

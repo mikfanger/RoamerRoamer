@@ -160,6 +160,17 @@
         android:layout_alignRight="@+id/imageButtonPost"
         android:background="@color/transparent"
         android:scaleType="fitCenter"
-        android:src="@drawable/exit_icon" />
+        android:src="@drawable/logout" />
+
+    <ImageButton
+        android:id="@+id/imageButtonNewMail"
+        android:layout_width="100dp"
+        android:layout_height="85dp"
+        android:layout_above="@+id/checkEventsButton"
+        android:layout_alignRight="@+id/checkInboxButton"
+        android:background="@color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/selector_new_mail"
+        android:visibility="invisible" />
 
 </RelativeLayout>

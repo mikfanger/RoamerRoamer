@@ -1,6 +1,6 @@
 package com.example.roamer;
 
-
+import com.example.roamer.checkinbox.InboxActivity;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseUser;
@@ -25,9 +25,8 @@ public class ParseApplication extends Application {
 	ParseACL.setDefaultACL(defaultACL, true);
 
 	// Specify an Activity to handle all pushes by default.
-	//PushService.setDefaultPushCallback(this, InboxActivity.class);
-	
-	
+	PushService.setDefaultPushCallback(this, InboxActivity.class);
+			
 	
   }
 

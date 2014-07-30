@@ -1,5 +1,7 @@
 package com.example.roamer;
 
+import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -33,6 +35,13 @@ public class ExplainationActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.explaination, menu);
 		return true;
+	}
+	
+	@Override
+	public void onBackPressed() 
+	{
+		 Intent i=new Intent(ExplainationActivity.this,LoginActivity.class);
+	    startActivity(i);
 	}
 
 }

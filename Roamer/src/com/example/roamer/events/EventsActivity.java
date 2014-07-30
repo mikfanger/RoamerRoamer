@@ -9,6 +9,7 @@ import android.app.FragmentTransaction;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -47,28 +48,34 @@ public class EventsActivity extends TabActivity implements
  
 		Resources ressources = getResources(); 
 		TabHost tabHost = getTabHost(); 
- 
+		
+		
 		// My Events tab
 		Intent intentAndroid = new Intent().setClass(this, MyEvents.class);
 		TabSpec tabSpecAndroid = tabHost
 		  .newTabSpec("My Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_dark))
+		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_light))
 		  .setContent(intentAndroid);
  
 		// All Events tab
 		Intent intentApple = new Intent().setClass(this, AllEvents.class);
 		TabSpec tabSpecApple = tabHost
 		  .newTabSpec("All Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_dark))
+		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_light))
 		  .setContent(intentApple);
- 
+		
  
 		// add all tabs 
 		tabHost.addTab(tabSpecAndroid);
 		tabHost.addTab(tabSpecApple);
+
+		
  
 		//set Windows tab as default (zero based)
 		tabHost.setCurrentTab(2);
+		
+		tabHost.getTabWidget().getChildAt(1).setBackgroundColor(Color.DKGRAY);
+		tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.DKGRAY);
 				
 	}
 
@@ -95,14 +102,14 @@ public class EventsActivity extends TabActivity implements
 		Intent intentAndroid = new Intent().setClass(this, MyEvents.class);
 		TabSpec tabSpecAndroid = tabHost
 		  .newTabSpec("My Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_dark))
+		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_light))
 		  .setContent(intentAndroid.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
  
 		// All Events tab
 		Intent intentApple = new Intent().setClass(this, AllEvents.class);
 		TabSpec tabSpecApple = tabHost
 		  .newTabSpec("All Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_dark))
+		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_light))
 		  .setContent(intentApple.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
  
  

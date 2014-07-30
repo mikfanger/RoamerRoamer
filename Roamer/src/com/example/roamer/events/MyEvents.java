@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
-import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -31,7 +36,7 @@ import android.widget.AdapterView.OnItemClickListener;
  
 public class MyEvents extends Activity {
 	
- ImageView imageView;
+	 ImageView imageView;
 	 
      TextView textViewHost;
 	 TextView textViewEventType;
@@ -39,6 +44,7 @@ public class MyEvents extends Activity {
      TextView textViewAttend;
      TextView textViewLocation;
      TextView textViewDesc;
+     TextView textViewTime;
      int count;
      ArrayList<ItemMyEvents> loadArray;
      
@@ -98,11 +104,13 @@ public class MyEvents extends Activity {
                  textViewDate = (TextView) dialog.findViewById(R.id.textChildDate);
                  textViewAttend = (TextView) dialog.findViewById(R.id.textChildAttend);
                  textViewLocation = (TextView) dialog.findViewById(R.id.textChildLocation);
-                 textViewDesc = (TextView) dialog.findViewById(R.id.textChildDesc);                 
+                 textViewDesc = (TextView) dialog.findViewById(R.id.textChildDesc);    
+                 textViewTime = (TextView) dialog.findViewById(R.id.textChildTime);
                  
                  String correctString = ModelMyEvents.GetbyId(position+1).Description.replaceAll("&amp&", "'");
                  String correctStringPlace = ModelMyEvents.GetbyId(position+1).Location.replaceAll("&amp&", "'");
                  textViewHost.setText(ModelMyEvents.GetbyId(position+1).Host);
+                 textViewTime.setText(ModelMyEvents.GetbyId(position+1).Time);
                  textViewDesc.setText(correctString);
                  textViewAttend.setText(ModelMyEvents.GetbyId(position+1).Attend);
                  textViewDate.setText(ModelMyEvents.GetbyId(position+1).Date);
@@ -149,7 +157,15 @@ public class MyEvents extends Activity {
     				@Override
     				public void onClick(View v) {
     					
-    					removeEvent(myId);
+    					try {
+							removeEvent(myId);
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
     					dialog.dismiss();
     				}
     			});
@@ -161,7 +177,7 @@ public class MyEvents extends Activity {
           });
     }
     
-    public void removeEvent(int eventId){
+    public void removeEvent(int eventId) throws ParseException, JSONException{
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	myDB.execSQL("DELETE FROM MyEvents WHERE rowid="+eventId);
@@ -171,8 +187,59 @@ public class MyEvents extends Activity {
     	Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
     	c.moveToFirst();
     	int index = c.getColumnIndex("CountM");
+    	int indexUser = c.getColumnIndex("Username");
+    	String userName = c.getString(indexUser);
+    	
     	args.put("CountM",c.getInt(index)-1);
     	myDB.update("MyCred", args, "rowid"+"="+1, null);
+    	
+    	//Remove from Parse Event
+    	ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+       	query.whereEqualTo("objectId", eventId);
+       	ParseObject Event = query.getFirst();
+       	
+       	JSONArray roamerList = Event.getJSONArray("Attendees");
+       	int newIndex = 0;
+       	
+       	ArrayList newAttend = new ArrayList<String>();
+       	
+       	while(newIndex < roamerList.length()){
+       		if(roamerList.get(newIndex).toString().equals(userName)){
+       			//nothing
+       		}
+       		else{
+       			newAttend.add(roamerList.get(newIndex).toString());
+       		}
+       		newIndex++;
+       	}
+       	
+       	Event.put("Attendees", newAttend);
+       	Event.save();
+       	
+        //Remove from Parse MyEvents
+    	ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
+       	query1.whereEqualTo("Username", userName);
+       	ParseObject Roamer = query1.getFirst();
+       	
+       	JSONArray eventList = Roamer.getJSONArray("MyEvents");
+       	int eventIndex = 0;
+       	
+       	ArrayList myEvents = new ArrayList<String>();
+       	
+       	while(eventIndex < eventList.length()){
+       		if(eventList.get(eventIndex).toString().equals(eventId)){
+       			//nothing
+       		}
+       		else{
+       			myEvents.add(eventList.get(eventIndex).toString());
+       		}
+       		eventIndex++;
+       	}
+       	
+       	//Add back to Parse
+       	Roamer.put("MyEvents", myEvents);
+       	Roamer.save();
+       	
     	
     	myDB.close();
     	
@@ -196,15 +263,22 @@ public class MyEvents extends Activity {
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
+    	
+    	Cursor curCount = myDB.rawQuery("SELECT COUNT(*) FROM MyEvents", null);
     	cur.moveToFirst();
     	int index;
     	index = cur.getColumnIndex("CountM");
     	count = cur.getInt(index);
     	
-    	System.out.println("Checking Count of MyEvents");
-    	System.out.println("Count of my events is: " + count);
-    	
-    	if (count > 0) {
+    	int isNotEmpty = 0;
+    	if (curCount != null){
+    		curCount.moveToFirst();
+    		if (curCount.getInt(0) != 0){
+    			isNotEmpty = 1;
+    		}
+    		System.out.println("Int at 0 = "+curCount.getInt(0));
+    	}
+    	if (isNotEmpty == 1) {
     		
     		
     	loadArray = new ArrayList<ItemMyEvents>();
@@ -222,12 +296,13 @@ public class MyEvents extends Activity {
 		 int C7 = c.getColumnIndex("Attend");
 		 int C8 = c.getColumnIndex("rowid");
 		 int C9 = c.getColumnIndex("EventId");
+		 int C10 = c.getColumnIndex("Time");
 		 
 		 System.out.println("value is: " +c.getString(C1));
 
 		 String correctLocation = c.getString(C2).replace("*/", "'");
 		 String correctDesc = c.getString(C6).replace("*/", "'");
-		 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9)));
+		 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9), c.getString(C10)));
 		
 		while(c.moveToNext()){
 			i++;
@@ -241,11 +316,12 @@ public class MyEvents extends Activity {
 			  C7 = c.getColumnIndex("Attend");
 			  C8 = c.getColumnIndex("rowid");
 			  C9 = c.getColumnIndex("EventId");
+			  C10 = c.getColumnIndex("Time");
 			  
 				 correctLocation = c.getString(C2).replace("&amp&", "'");
 				 correctDesc = c.getString(C6).replace("&amp&", "'");
 			 
-			 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9)));			
+			 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9),c.getString(C10)));			
 		}
 		
 		myDB.close();

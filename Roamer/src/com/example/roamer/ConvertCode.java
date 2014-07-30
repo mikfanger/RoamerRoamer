@@ -2,9 +2,6 @@ package com.example.roamer;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.database.sqlite.SQLiteDatabase;
-
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -315,6 +312,61 @@ public static String convertType(int type){
 
 }
 
+public static int convertTypeBack(String type){
+	
+	int stringType = 0;
+	
+	switch(type){
+
+   	case "At Airport":
+   		stringType =1;
+           break;
+   	case "Concert/Festival":
+   		stringType =2;
+   		break;
+   	case "Dinner/Meal":
+   		stringType =3;
+   		break;
+   	case "Drinks":
+   		stringType =4;
+   		break;
+   	case "Professional/Seminar":
+   		stringType =5;
+   		break;
+   	case "Sporting Event":
+   		stringType =6;
+   		break;
+	}
+	
+	
+	return stringType;
+}
+
+public static int convertTimeBack(String time){
+	
+	int stringTime = 0;
+	
+	switch(time){
+
+   	case "Morning: (6AM - 11:30AM)":
+   		stringTime =1;
+           break;
+   	case "Mid-Day: (11:30AM - 1:30PM)":
+   		stringTime =2;
+   		break;
+   	case "Evening: (5:30PM - 7:30PM)":
+   		stringTime =3;
+   		break;
+   	case "Night: (8:30PM - 10:30PM)":
+   		stringTime =4;
+   		break;
+   	case "Late Night: (11:30PM - 2:00AM)":
+   		stringTime =5;
+   		break;
+	}	
+	return stringTime;
+}
+
 public static String convertTime(int time){
 	
 	String stringHotel = "";
@@ -322,19 +374,19 @@ public static String convertTime(int time){
 	switch(time){
 
 	case 1:
-		stringHotel = "Morning";
+		stringHotel = "Morning: (6AM - 11:30AM)";
 		break;
    	case 2:
-   		stringHotel ="Mid-day";
+   		stringHotel ="Mid-Day: (11:30AM - 1:30PM)";
         break;
    	case 3:
-   		stringHotel ="Evening";
+   		stringHotel ="Evening: (5:30PM - 7:30PM)";
    		break;
    	case 4:
-   		stringHotel ="Night";
+   		stringHotel ="Night: (8:30PM - 10:30PM)";
    		break;
    	case 5:
-   		stringHotel = "Late Night";
+   		stringHotel = "Late Night: (11:30PM - 2:00AM)";
    		break;
 	}
 	

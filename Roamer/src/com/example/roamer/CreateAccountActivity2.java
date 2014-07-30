@@ -86,7 +86,7 @@ public class CreateAccountActivity2 extends Activity {
 		 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
  		
 		 ContentValues args = new ContentValues();
-		 args.put("Loc", spinnerPos);
+		 args.put("Loc", spinnerPos+1);
 		 myDB.update("TempRoamer", args, "rowid" + "=" + 1, null);
  			
  	     myDB.close();	

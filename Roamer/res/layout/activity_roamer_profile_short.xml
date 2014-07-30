@@ -64,16 +64,6 @@
         android:background="@color/transparent"
         android:src="@drawable/add" />
 
-    <TextView
-        android:id="@+id/textCreateType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageProfilePicture"
-        android:layout_alignLeft="@+id/imageAddRoamer"
-        android:layout_marginBottom="14dp"
-        android:text="Industry"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
@@ -82,16 +72,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:src="@drawable/roamer" />
-
-    <TextView
-        android:id="@+id/textRoamerDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textCreateType"
-        android:layout_alignBottom="@+id/textCreateType"
-        android:layout_alignRight="@+id/imageAddRoamer"
-        android:text="Date"
-        android:textStyle="italic" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -111,5 +91,34 @@
         android:layout_marginTop="5dp"
         android:background="@color/transparent"
         android:src="@drawable/x" />
+
+    <TextView
+        android:id="@+id/textRoamerDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageProfilePicture"
+        android:layout_alignLeft="@+id/imageAddRoamer"
+        android:text="Date"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textCreateType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textRoamerDate"
+        android:layout_alignTop="@+id/imageProfilePicture"
+        android:layout_marginTop="20dp"
+        android:text="Industry"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ImageView
+        android:id="@+id/imageButtonLargePicture"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@+id/textCreateType"
+        android:layout_centerHorizontal="true"
+        android:background="@color/NewBlack"
+        android:src="@drawable/default_userpic"
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -5,12 +5,12 @@ package com.example.roamer;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
-import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,6 +52,7 @@ public class CreateAccountActivityPic extends Activity {
 	public int industry;
 	public int travel;
 	public byte[] picFile;
+	private ImageButton finishButton;
 	
 	
 	
@@ -60,7 +61,6 @@ public class CreateAccountActivityPic extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		
-		//Parse.initialize(this, "aK2KQsRgRhGl9HeQrmdQqsW1nNBtXqFSn8OIwgCV", "mN9kJJF96z4Qg5ypejlIqbBplY1zcXMYHYACJEFp");
 		setContentView(R.layout.activity_create_account_pic);
 		
 		ivGalImg     =     (ImageView)findViewById(R.id.mapImage);
@@ -84,11 +84,12 @@ public class CreateAccountActivityPic extends Activity {
             }
         });
         
-        ImageButton finishButton = (ImageButton) findViewById(R.id.finishProfile);
+        finishButton = (ImageButton) findViewById(R.id.finishProfile);
         finishButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
             	
+            	finishButton.setEnabled(false);
             	//commit selections
             	Spinner position = (Spinner) findViewById(R.id.spinnerIndustry);
             	industry = position.getSelectedItemPosition();
@@ -118,15 +119,19 @@ public class CreateAccountActivityPic extends Activity {
             	
             	
             	if (industry == 0 || job == 0){
+            		
+            		finishButton.setEnabled(true);
             		Toast.makeText(getApplicationContext(), "All starred fields must be updated!",
          				   Toast.LENGTH_LONG).show();
             	}
             	else{
             		Toast.makeText(getApplicationContext(), "New user created!  An email has been sent.",
          				   Toast.LENGTH_LONG).show();
+            		
             		enterInfo();
-                	//Move to Home Screen
-                	Intent i=new Intent(CreateAccountActivityPic.this,HomeScreenActivity.class);
+            		
+                	//Move back to login screen
+                	Intent i=new Intent(CreateAccountActivityPic.this,LoginActivity.class);
                     startActivity(i);
             	}           	        	           	
             }
@@ -456,6 +461,23 @@ public class CreateAccountActivityPic extends Activity {
  		String username = c.getString(index3);
  		int sex = c.getInt(index4);
  		String loc = c.getString(index5);
+ 		
+		//enter user information into ParseUser
+		ParseUser user = new ParseUser();
+		user.setUsername(email);
+		user.setPassword(password);
+		user.setEmail(email);
+		 		 
+		user.signUpInBackground(new SignUpCallback() {
+		  public void done(ParseException e) {
+		    if (e == null) {
+		      // Hooray! Let them use the app now.
+		    } else {
+		      // Sign up didn't succeed. Look at the ParseException
+		      // to figure out what went wrong
+		    }
+		  }
+		});
  		
  		boolean sexbool = true;
  		

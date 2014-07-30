@@ -1,10 +1,17 @@
 package com.example.roamer.profilelist;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.example.roamer.ConvertCode;
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -17,9 +24,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -39,9 +44,17 @@ public class MyRoamersListActivity extends Activity {
         setContentView(R.layout.my_roamers_list);
         listView = (ListView) findViewById(R.id.listView);
 		 
-        loadArray();
+        try {
+			loadArray();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
-        if (count>0){
+        if (loadArray.size()>0){
         MyRoamerModel.LoadModel(loadArray);
         
         String[] ids = new String[MyRoamerModel.Items.size()];
@@ -70,9 +83,20 @@ public class MyRoamersListActivity extends Activity {
 	        	    String location = MyRoamerModel.GetbyId(position+1).Location;
 	        	    String start = MyRoamerModel.GetbyId(position+1).StartDate;
 	        	    
-	        	    addToTempRoamer(name,icon,2,5,5,5,
-	        	    		5,5, location, start);
+	        	    int sexInt = 0;
+	        	    int travelInt = 0;
+	        	    int industryInt = 0;
+	        	    int jobInt = 0;
+	        	    int hotelInt = 0;
+	        	    int airInt = 0;
 	        	    
+	        	    //Convert sex
+	        	    if (sex.equals("male")){
+	        	    	sexInt = 1;
+	        	    }
+	        	    addToTempRoamer(name,icon,sexInt,5,5,5,
+	        	    		5,5, location, start);
+	
 	            	Intent i=new Intent(MyRoamersListActivity.this,RoamerProfileActivity.class);
 	                startActivity(i);
 	    			
@@ -92,7 +116,7 @@ public class MyRoamersListActivity extends Activity {
     }
     
     
-    public void removeRoamer(int eventId){
+    public void removeRoamer(int eventId) throws JSONException, ParseException{
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	myDB.execSQL("DELETE FROM MyRoamers WHERE rowid="+eventId);
@@ -123,97 +147,166 @@ public class MyRoamersListActivity extends Activity {
     	 finish();
     }
     
-    public void loadArray(){
+    public void loadArray() throws JSONException, ParseException{
+    	
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
     	cur.moveToFirst();
     	int index;
-    	index = cur.getColumnIndex("CountR");
-    	count = cur.getInt(index);
+    	index = cur.getColumnIndex("Username");
+    	String userName = cur.getString(index);
+    	String credName = userName;
     	
+    	myDB.close();
     	
-    	Cursor c = myDB.rawQuery("SELECT * FROM " + "MyRoamers ", null);
-    	
-    	count = c.getCount();
-    	System.out.println("MyRoamer count is: "+count);
-    	if (count > 0) {
-    		
-    		
     	loadArray = new ArrayList<MyRoamerItem>();
-    	int i = 1;
+   	
+    	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+       	query.whereEqualTo("Username", userName);
+       	
+       	final ParseObject Roamer = query.getFirst();
+       	
+       	try {
+       		
+    			JSONArray roamerList = Roamer.getJSONArray("MyRoamers");
+    			
+    			int i = 0;
+    		
+    			String name;
+    			boolean sex;
+    			byte[] pic = null;
+    			String location;
+    			Date date;
+    			String airline;
+    			String job;
+    			String industry;
+    			String hotel;
+    			String travel;
+           	
+    			if( roamerList!=null && roamerList.length()!=0){
+    			
+    				System.out.println("MyRoamers are: "+roamerList);
+    	        	name = roamerList.get(i).toString();
+    	        	System.out.println("First roamer name is: "+name);
+    	        	
+    	        	
+    	        	ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
+    	        	query1.whereEqualTo("Username", name);
+    	        	
+    	        	ParseObject newRoamer = query1.getFirst();
+    	        	sex = newRoamer.getBoolean("Sex");
+    	        	date = newRoamer.getCreatedAt();
+    	        	travel = ConvertCode.convertTravel(newRoamer.getInt("Travel"));
+    	        	industry = ConvertCode.convertIndustry(newRoamer.getInt("Industry"));
+    	        	job = ConvertCode.convertJob(newRoamer.getInt("Job"));
+    	        	hotel = ConvertCode.convertHotel(newRoamer.getInt("Hotel"));
+    	        	airline = ConvertCode.convertAirline(newRoamer.getInt("Airline"));
+    	        	
+    	        	ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Cities");
+    	        	query2.whereEqualTo("Code", newRoamer.getInt("CurrentLocation"));
+    	        	ParseObject currentLocation = query2.getFirst();
+    	        	
+    	        	location = currentLocation.getString("Name");
+    	        	
+    	        	
+					int day = date.getDay();
+					int month = date.getMonth();
+					int year = date.getYear();
+    	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+    	        	System.out.println("Full date is: "+fullDate);
+    	        	
+    	        	//set sex
+    	        	String sexString = "";
+    	        	if(sex == true){
+    	        		sexString = "male";
+    	        	}
+    	        	else{
+    	        		sexString = "female";
+    	        	}
+	
+    	        	try {
+    					pic = newRoamer.getParseFile("Pic").getData();
+    				} catch (ParseException e1) {
+    					// TODO Auto-generated catch block
+    					e1.printStackTrace();
+    				}
+    	        	System.out.println("Current Roamer has: "+pic+","+name+","+location+","+sexString+","+fullDate+","+airline+","+job+","+travel+","+industry+","+hotel);
+    	   		    loadArray.add(new MyRoamerItem(i+1,pic,name,location,sexString,fullDate,
+    	   		    		airline,job,travel,industry,hotel));
+    	    		i++;
+    			
+               
+           	
+       		while (i < (roamerList.length())){
+       			
+       			name = (String) roamerList.get(i);
+	        	
+	        	query1 = ParseQuery.getQuery("Roamer");
+	        	query1.whereEqualTo("Username", name);
+	        	
+	        	newRoamer = query1.getFirst();
+	        	sex = newRoamer.getBoolean("Sex");
+	        	date = newRoamer.getCreatedAt();
+	        	travel = ConvertCode.convertTravel(newRoamer.getInt("Travel"));
+	        	industry = ConvertCode.convertIndustry(newRoamer.getInt("Industry"));
+	        	job = ConvertCode.convertJob(newRoamer.getInt("Job"));
+	        	hotel = ConvertCode.convertHotel(newRoamer.getInt("Hotel"));
+	        	airline = ConvertCode.convertAirline(newRoamer.getInt("Airline"));
+	        	
+	        	ParseQuery<ParseObject> query3 = ParseQuery.getQuery("Cities");
+	        	query3.whereEqualTo("Code", newRoamer.getInt("CurrentLocation"));
+	        	ParseObject currentLocationNew = query3.getFirst();
+	        	
+	        	location = currentLocationNew.getString("Name");
+	        	
+	        	day = date.getDay();
+	        	month = date.getMonth();
+	        	year = date.getYear();
+	        	fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+	        	System.out.println("Full date is: "+fullDate);
+	        	
+	        	//set sex
+	        	sexString = "";
+	        	if(sex){
+	        		sexString = "male";
+	        	}
+	        	else{
+	        		sexString = "female";
+	        	}
+	        	//location = ProfileListActivity.getLocationText(newRoamer.getInt("Location"));
+	        	
+	        	
+	        	try {
+					pic = newRoamer.getParseFile("Pic").getData();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	        	
+	        	System.out.println("Current Roamer has: "+pic+","+name+","+location+","+sexString+","+fullDate+","+airline+","+job+","+travel+","+industry+","+hotel);
 
-		
-		c.moveToFirst();
-		
-		 int C1 = c.getColumnIndex("Pic");
-		 int C2 = c.getColumnIndex("Username");
-		 int C3 = c.getColumnIndex("Loc");
-		 int C4 = c.getColumnIndex("Sex");
-		 int C5 = c.getColumnIndex("Travel");
-		 int C6 = c.getColumnIndex("Industry");
-		 int C7 = c.getColumnIndex("Hotel");
-		 int C8 = c.getColumnIndex("Air");
-		 int C10 = c.getColumnIndex("Job");
-		 int C11 = c.getColumnIndex("Start");
-		 
-		 byte[] tempPic = c.getBlob(C1);
-		 String tempName = c.getString(C2);
-		 String tempSex = ConvertCode.converSex(c.getInt(C4));
-		 String tempTravel = ConvertCode.convertTravel(c.getInt(C5));
-		 String tempIndustry = ConvertCode.convertIndustry(c.getInt(C6));
-		 String tempHotel = ConvertCode.convertHotel(C7);
-		 String tempAir = ConvertCode.convertAirline(C8);
-		 String tempJob = ConvertCode.convertJob(C10);
-		 String tempStart = c.getString(C11);
-		 String tempLoc = ConvertCode.convertLocation(C3);
-		 
-
-		 
-		 loadArray.add(new MyRoamerItem(i,tempPic, tempName, tempLoc,tempSex,tempStart,
-				 tempAir,tempJob,tempTravel,tempIndustry,tempHotel));
-		
-		while(c.moveToNext()){
-			i++;
-			
-			 C1 = c.getColumnIndex("Pic");
-			 C2 = c.getColumnIndex("Username");
-			 C3 = c.getColumnIndex("Loc");
-			 C4 = c.getColumnIndex("Sex");
-			 C5 = c.getColumnIndex("Travel");
-			 C6 = c.getColumnIndex("Industry");
-			 C7 = c.getColumnIndex("Hotel");
-			 C8 = c.getColumnIndex("Air");
-			 C10 = c.getColumnIndex("Job");
-			 C11 = c.getColumnIndex("Start");
-			 
-			 tempPic = c.getBlob(C1);
-			 tempName = c.getString(C2);
-			 tempSex = ConvertCode.converSex(c.getInt(C4));
-			 tempTravel = ConvertCode.convertTravel(c.getInt(C5));
-			 tempIndustry = ConvertCode.convertIndustry(c.getInt(C6));
-			 tempHotel = ConvertCode.convertHotel(C7);
-			 tempAir = ConvertCode.convertAirline(C8);
-			 tempJob = ConvertCode.convertJob(C10);
-			 tempStart = c.getString(C11);
-			 tempLoc = ConvertCode.convertLocation(C3);
-			
-			 
-			  loadArray.add(new MyRoamerItem(i,tempPic, tempName, tempLoc,tempSex,tempStart,
-						 tempAir,tempJob,tempTravel,tempIndustry,tempHotel));			
-		}
-		
-		myDB.close();
+	        	
+	   		    loadArray.add(new MyRoamerItem(i+1,pic, name, location,sexString,fullDate,
+					 airline,job,travel,industry,hotel));
+	    		i++;
+       		}
+       	}
     }
-    	else{
-    		 
-    	}
+       	catch(ParseException e){
+       		
+       	}
     }
     
     public void addToTempRoamer(String name, byte[] icon, int sex, int travel, int industry, int job,
     		int hotel, int air, String location, String start){
     	
+    	
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    	
+    	//clear temp roamer
+    	myDB.delete("TempRoamer",null,null);
+    	
     	String sql                      =   "INSERT INTO TempRoamer (Username,Pic,Sex,Travel,Industry,Job,Hotel,Air,Loc,Start) VALUES(?,?,?,?,?,?,?,?,?,?)";
 	    SQLiteStatement insertStmt      =   myDB.compileStatement(sql);
 	    insertStmt.clearBindings();

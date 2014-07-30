@@ -2,9 +2,13 @@ package com.example.roamer.profilelist;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import com.example.roamer.ConvertCode;
 import com.example.roamer.R;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -23,6 +27,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RoamerProfileActivity extends Activity {
+	
+	private ImageView largeImage;
+	private String tempName = "";
+	private String myName = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,12 @@ public class RoamerProfileActivity extends Activity {
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		
+		Cursor cName = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
+    	cName.moveToFirst();
+    	int index = cName.getColumnIndex("Username");
+    	myName = cName.getString(index);
+    	
 		Cursor c = myDB.rawQuery("SELECT * FROM " + "TempRoamer" , null);
 	   	c.moveToFirst();
 	   	
@@ -46,7 +60,7 @@ public class RoamerProfileActivity extends Activity {
 		 int C11 = c.getColumnIndex("Start");
 		 
 		 byte[] tempPic = c.getBlob(C1);
-		 String tempName = c.getString(C2);
+		 tempName = c.getString(C2);
 		 String tempSex = ConvertCode.converSex(c.getInt(C4));
 		 String tempTravel = ConvertCode.convertTravel(c.getInt(C5));
 		 String tempIndustry = ConvertCode.convertIndustry(c.getInt(C6));
@@ -59,6 +73,7 @@ public class RoamerProfileActivity extends Activity {
 	   	TextView nameView = (TextView) findViewById(R.id.textProfileName);
 	   	TextView sexView = (TextView) findViewById(R.id.textProfileSex);
 	   	ImageView picView = (ImageView) findViewById(R.id.imageProfilePicture);
+	   	largeImage = (ImageView) findViewById(R.id.imageButtonLargePicture3);
 	   	TextView dateView = (TextView) findViewById(R.id.textRoamerDate);
 	   	//TextView industryView = (TextView) findViewById(R.id.textProfileIndustry);
 	   	TextView travelView = (TextView) findViewById(R.id.textProfileTravel);
@@ -84,6 +99,9 @@ public class RoamerProfileActivity extends Activity {
         	Bitmap bmp = BitmapFactory.decodeByteArray(tempPic, 0, tempPic.length);
     	    picView.setBackgroundResource(0);
     	    picView.setImageBitmap(bmp);
+    	    
+    	    largeImage.setBackgroundResource(0);
+    	    largeImage.setImageBitmap(bmp);
         }
         if(tempPic == null){
         	InputStream ims = null;
@@ -96,6 +114,7 @@ public class RoamerProfileActivity extends Activity {
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView
             picView.setImageDrawable(d);
+            largeImage.setImageDrawable(d);
         }
 		
 		 ImageButton backButton = (ImageButton) findViewById(R.id.imageButtonOut);
@@ -106,6 +125,68 @@ public class RoamerProfileActivity extends Activity {
 	            	Intent i=new Intent(RoamerProfileActivity.this,MyRoamersListActivity.class);
 	                startActivity(i);
 	            		  
+	            }
+	        });
+	        
+	        ImageButton removeButton = (ImageButton) findViewById(R.id.imageRemoveRoamer);
+	        removeButton.setOnClickListener(new OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	            	
+	            	//Remove myself from their list
+	            	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+	            	
+	               	query.whereEqualTo("Username", tempName);
+	               	
+	               	try {
+						final ParseObject Roamer = query.getFirst();
+						
+						ArrayList<String> newArray = new ArrayList();
+						newArray.add(myName);
+						
+						Roamer.removeAll("MyRoamers", newArray);
+						Roamer.save();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	               	
+	               	//Remove them from my list
+	               	query.whereEqualTo("Username", myName);
+	               	
+	               	try {
+						final ParseObject Roamer2 = query.getFirst();
+						
+						ArrayList<String> values = new ArrayList();
+						values.add(tempName);
+						
+						Roamer2.removeAll("MyRoamers", values);
+						Roamer2.save();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+	            	Intent i=new Intent(RoamerProfileActivity.this,MyRoamersListActivity.class);
+	                startActivity(i);
+	            		  
+	            }
+	        });
+	        
+	        picView.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+	               largeImage.setVisibility(View.VISIBLE);
+	               
+	            }
+	        });
+	        
+	        largeImage.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+	            	
+	            	if(largeImage.getVisibility() == View.VISIBLE){
+	            		largeImage.setVisibility(View.INVISIBLE);
+	            	}
+	               
 	            }
 	        });
 

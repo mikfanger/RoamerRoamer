@@ -1,5 +1,7 @@
 package com.example.roamer.checkinbox;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -9,6 +11,7 @@ import org.json.JSONException;
 import com.example.roamer.ConvertCode;
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
+import com.example.roamer.profilelist.MyRoamerItemAdapter;
 import com.example.roamer.profilelist.ProfileListActivity;
 import com.example.roamer.profilelist.RoamerProfileShortActivity;
 import com.parse.ParseException;
@@ -19,6 +22,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -49,6 +53,18 @@ public class RequestsActivity extends Activity {
         setContentView(R.layout.request_list);
         
         try {
+			createListView();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
+    }
+    
+    public void createListView() throws IOException{
+    	
+    	try {
 			loadArray();
 		} catch (JSONException | ParseException e) {
 			// TODO Auto-generated catch block
@@ -93,7 +109,6 @@ public class RequestsActivity extends Activity {
             	
             }
         });
-        
     }
     
     public int getRowCount(String tableName){
@@ -118,7 +133,7 @@ public class RequestsActivity extends Activity {
     
     
     @SuppressWarnings("deprecation")
-	public void loadArray() throws JSONException, ParseException{
+	public void loadArray() throws JSONException, ParseException, IOException{
     	
     	
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
@@ -157,10 +172,7 @@ public class RequestsActivity extends Activity {
            	
     			if( roamerList!=null && roamerList.length()!=0){
     			
-    				System.out.println("Requests are: "+roamerList);
     	        	name = roamerList.get(i).toString();
-    	        	System.out.println("First roamer name is: "+name);
-    	        	
     	        	
     	        	ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
     	        	query1.whereEqualTo("Username", name);
@@ -176,11 +188,11 @@ public class RequestsActivity extends Activity {
     	        	location = ProfileListActivity.getLocationText(newRoamer.getInt("Location"));
     	        	
     	        	
+    	        	
 					int day = date.getDay();
 					int month = date.getMonth();
 					int year = date.getYear();
     	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-    	        	System.out.println("Full date is: "+fullDate);
     	        	
     	        	//set sex
     	        	String sexString = "";
@@ -190,18 +202,21 @@ public class RequestsActivity extends Activity {
     	        	else{
     	        		sexString = "female";
     	        	}
-    	        	
-    	        	
-
-    	        	
+	
     	        	try {
+    	        		System.out.println("Roamer is: "+name);
     					pic = newRoamer.getParseFile("Pic").getData();
     				} catch (ParseException e1) {
     					// TODO Auto-generated catch block
     					e1.printStackTrace();
+    					finish();
     				}
-    	        	
-    	        	
+    	        	finally {
+    	        		AssetManager assetManager = getAssets();
+    	        		InputStream is = assetManager.open("default_userpic.png");
+    	        		
+    	        		pic = new byte[is.available()];
+    	        	}
     	        	
     	    		loadArray.add(new ItemRequest(i+1,pic,name,fullDate,sexString,travel,industry,hotel,job,location,airline, credName));
     	    		i++;
@@ -253,7 +268,7 @@ public class RequestsActivity extends Activity {
 	    		loadArray.add(new ItemRequest(i+1,pic,name,fullDate,sexString,travel,industry,hotel,job,location,airline,credName));
 	    		i++;
        		}
-    	}
+    	  }
        	}
        	catch(ParseException e){
        		
@@ -280,6 +295,32 @@ public class RequestsActivity extends Activity {
        	myDB.close();
        }
     
+    public void addToDatabase(String name) throws ParseException{
+    	ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Roamer");
+	 	
+    	query2.whereEqualTo("Username", name);
+    	
+    	final ParseObject Roamer2 = query2.getFirst();
+    	
+		int sex = 0;
+		 if(Roamer2.getBoolean("Sex") == true){
+			 sex = 1;
+		 }
+		 byte[] picFile = null;
+		try {
+			picFile = Roamer2.getParseFile("Pic").getData();
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//Convert Start date to actual string
+		int day = Roamer2.getCreatedAt().getDay();
+		int month = Roamer2.getCreatedAt().getMonth();
+		int year = Roamer2.getCreatedAt().getYear();
+		String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+	
+    }
     public void onBackPressed() 
     {
     	 Intent i=new Intent(RequestsActivity.this,HomeScreenActivity.class);

@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
-import com.example.roamer.profilelist.MyRoamersListActivity;
 
 
 import android.app.ActionBar;
@@ -34,7 +33,7 @@ ActionBar.TabListener {
 /**
 * The {@link android.support.v4.view.PagerAdapter} that will provide
 * fragments for each of the sections. We use a
-* {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
+* {@link android.support.v4.app.Fragment erAdapter} derivative, which
 * will keep every loaded fragment in memory. If this becomes too memory
 * intensive, it may be best to switch to a
 * {@link android.support.v4.app.FragmentStatePagerAdapter}.

@@ -1,5 +1,8 @@
 package com.example.roamer;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.parse.ParseAnalytics;
 import com.parse.ParsePush;
 
@@ -84,21 +87,23 @@ public class IntroActivity extends Activity {
                 + myEventsTable
                 + " (rowid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , Type VARCHAR, Location VARCHAR, Time VARCHAR, Date VARCHAR, Host VARCHAR, HostPic BLOB, Blurb VARCHAR, Attend VARCHAR, EventId VARCHAR);");
         
-        //myDB.delete(myCredTable, null, null);
+        //clear tables
         myDB.delete(tempRoamer, null, null);
+        myDB.delete(myRoamersTable, null, null);
+        myDB.delete(myEventsTable, null, null);
         
         
-       myDB.close();
-        
-        ImageButton introButton = (ImageButton) findViewById(R.id.StartRoamerButton);
-        introButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	           	
+        new Timer().schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				finish();
             	Intent i=new Intent(IntroActivity.this,LoginActivity.class);
                 startActivity(i);
-            }
-        });
+			}
+        	
+        },5000);
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

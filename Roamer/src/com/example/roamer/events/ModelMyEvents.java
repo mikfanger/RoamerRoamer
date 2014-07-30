@@ -13,9 +13,17 @@ public class ModelMyEvents {
     	ItemsMyEvents = new ArrayList<ItemMyEvents>();
     	
 		 
-		 for(ItemMyEvents item : loadArray) {
-	           ItemsMyEvents.add(item);
-	        } 
+    	
+		if (loadArray != null){
+			
+			if (loadArray.size() != 0){
+				for(ItemMyEvents item : loadArray) {
+			           ItemsMyEvents.add(item);
+			        } 
+			}
+			
+		}
+    	
     }
 
     public static ItemMyEvents GetbyId(int id){

@@ -8,6 +8,7 @@ import com.example.roamer.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +58,15 @@ public class DiscussArrayAdapter extends ArrayAdapter<OneComment> {
 
 		countryName.setText(coment.comment);
 
-		//countryName.setBackgroundResource(coment.left);
+		if (coment.left == true){
+			senderName.setText(coment.chatName);
+			senderName.setTextColor(Color.YELLOW);
+		}
+		if (coment.left == false){
+			senderName.setText("Me");
+			senderName.setTextColor(Color.RED);
+		}
+		
 		wrapper.setGravity(Gravity.LEFT );
 
 		return row;

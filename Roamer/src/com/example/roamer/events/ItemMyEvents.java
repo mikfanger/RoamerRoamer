@@ -5,6 +5,7 @@ public class ItemMyEvents {
 	public int Id;
 	//public int RowId;
     public byte[] IconFile;
+    public String Time;
     public String Date;
     public String EventType;
     public String Host;
@@ -14,7 +15,7 @@ public class ItemMyEvents {
     public String EventId;
 
     public ItemMyEvents(int id, byte[] iconFile, String date, 
-    		String eventtype, String host, String attend, String desc, String location, String eventId) {
+    		String eventtype, String host, String attend, String desc, String location, String eventId, String time) {
 
         Id = id;
         IconFile = iconFile;
@@ -25,6 +26,7 @@ public class ItemMyEvents {
         Location = location;
         Description = desc;
         EventId = eventId;
+        Time = time;
 
     }
 

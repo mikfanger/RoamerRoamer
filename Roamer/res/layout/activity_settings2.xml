@@ -140,7 +140,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="20dp"
         android:background="@color/transparent"
-        android:src="@drawable/next" />
+        android:src="@drawable/save" />
 
     <ImageView
         android:id="@+id/backFromProfile"

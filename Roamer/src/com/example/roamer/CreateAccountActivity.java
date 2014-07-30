@@ -5,6 +5,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -16,11 +17,13 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,10 @@ public class CreateAccountActivity extends Activity {
 	private EditText newUsername;
 	private EditText newPassword;
 	private EditText newConfirmPassword;
+	private ImageView termsButton;
+	private ImageButton exitTermsButton;
+	
+	final Context context = this;
 	
 	private String mEmailAddress;
 	private String mUsername;
@@ -63,6 +70,39 @@ public class CreateAccountActivity extends Activity {
             public void onClick(View v) {
             	
             	submitInfo();
+            }
+        });
+        
+        exitTermsButton = (ImageButton) findViewById(R.id.imageFinishTerms1);
+        termsButton = (ImageView) findViewById(R.id.imageTermsAndConditions);
+        ImageButton terms = (ImageButton) findViewById(R.id.buttonTermsConditions);
+        
+        terms.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	
+            	
+            	Dialog dialog = new Dialog(context);
+            	
+    			dialog.setContentView(R.layout.terms_and_conditions);
+    			dialog.setTitle("Terms and Conditions");
+    			dialog.show();
+    			
+            	//exitTermsButton.setVisibility(View.VISIBLE);
+            	//termsButton.setVisibility(View.VISIBLE);
+            	//termsButton.bringToFront();
+            	//exitTermsButton.bringToFront();
+            	
+            }
+        });
+        
+        
+        exitTermsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	
+            	exitTermsButton.setVisibility(View.INVISIBLE);
+            	termsButton.setVisibility(View.INVISIBLE);
             }
         });
         

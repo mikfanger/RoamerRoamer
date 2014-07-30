@@ -5,22 +5,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
+import com.example.roamer.events.AllEvents;
 import com.example.roamer.events.CreateEventActivity;
 import com.example.roamer.events.EventsActivity;
 import com.example.roamer.profilelist.MyRoamersListActivity;
 import com.example.roamer.profilelist.ProfileListActivity;
 import com.parse.GetCallback;
-import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,17 +51,25 @@ public class HomeScreenActivity extends Activity {
     private Spinner position;
     private TextView location;
     private ArrayList<String> locations;
+    private TextView textCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	
 
+    	SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+    	SharedPreferences.Editor editor = preferences.edit();
+	    editor.putInt("typeCheck",0);
+	    editor.putInt("timeCheck",0);
+	    editor.commit();
+	    
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
         getCurrentLocation();
         location = (TextView) findViewById(R.id.textCurLocation);
+        textCity = (TextView) findViewById(R.id.textProfileTravel);
         location.setText(curLocation);
         
         ImageButton sendButton = (ImageButton) findViewById(R.id.checkInboxButton);
@@ -67,6 +77,7 @@ public class HomeScreenActivity extends Activity {
             @Override
             public void onClick(View v) {
             	
+            	finish();
             	Intent i=new Intent(HomeScreenActivity.this,ChatsAndRequestsActivity.class);
                 startActivity(i);
             		  
@@ -78,6 +89,7 @@ public class HomeScreenActivity extends Activity {
             @Override
             public void onClick(View v) {
             	
+            	finish();
             	Intent i=new Intent(HomeScreenActivity.this,ProfileListActivity.class);
                 startActivity(i);
             		  
@@ -89,6 +101,7 @@ public class HomeScreenActivity extends Activity {
             @Override
             public void onClick(View v) {
             	
+            	finish();
             	Intent i=new Intent(HomeScreenActivity.this,MyRoamersListActivity.class);
                 startActivity(i);
             		  
@@ -100,6 +113,7 @@ public class HomeScreenActivity extends Activity {
             @Override
             public void onClick(View v) {
             	
+            	finish();
             	Intent i=new Intent(HomeScreenActivity.this,EventsActivity.class);
                 startActivity(i);
             		  
@@ -140,8 +154,8 @@ public class HomeScreenActivity extends Activity {
             }
         });
         
-        ImageButton locationButton = (ImageButton) findViewById(R.id.imageButtonChangeLocation);
-        locationButton.setOnClickListener(new OnClickListener() {
+        //ImageButton locationButton = (ImageButton) findViewById(R.id.imageButtonChangeLocation);
+        textCity.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
             	
@@ -284,7 +298,7 @@ public class HomeScreenActivity extends Activity {
    		    	Log.d("score", "Error: " + e.getMessage()); 
 
    		    } else {
-   		    	Roamer.put("CurrentLocation",3); 
+   		    	Roamer.put("CurrentLocation",name1); 
    		    	
    			    Roamer.saveInBackground();
    		    }
@@ -314,5 +328,11 @@ public class HomeScreenActivity extends Activity {
         String spinnerText;
         String value;
     }
+    
+    @Override
+	public void onBackPressed()
+    {
+    	//Do nothing
+	}
       
 }

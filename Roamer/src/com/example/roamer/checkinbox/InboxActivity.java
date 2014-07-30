@@ -4,12 +4,21 @@ package com.example.roamer.checkinbox;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -53,7 +62,7 @@ public class InboxActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.inbox_list);
-        
+
         loadArray();
 
         Model.LoadModel(loadArray);
@@ -75,7 +84,7 @@ public class InboxActivity extends Activity {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                     int pos, long id) {
                 // TODO Auto-generated method stub
-            	
+            	final String name1 = Model.GetbyId(pos+1).Name;
             	final Dialog dialog = new Dialog(context);
             	
     			dialog.setContentView(R.layout.dialog_clear_chat);
@@ -88,10 +97,10 @@ public class InboxActivity extends Activity {
     			dialogButton.setOnClickListener(new OnClickListener() {
     				@Override
     				public void onClick(View v) {
+    					    		
     					
-    					String name = "None";
     					//name = MyRoamerModel.GetbyId(pos+1).Name;
-    					clearChat(name);
+    					clearChat(name1);
     					dialog.dismiss();
     				}
     			});
@@ -107,11 +116,14 @@ public class InboxActivity extends Activity {
                 int position, long id) {
             	
             	String chatName = Model.GetbyId(position+1).Name;
-            	System.out.println("Date is: "+Model.GetbyId(position+1).Date);
-            	System.out.println("table name will be: "+chatName);
         		addToTempRoamer(chatName);
         		
-        		createTable(chatName);
+        		try {
+					createTable(chatName);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         		getChatFromTable(chatName);
         		finish();
             	Intent i=new Intent(InboxActivity.this,DiscussActivity.class);
@@ -135,7 +147,12 @@ public class InboxActivity extends Activity {
 
     			getDialog().show();
     			
-    			populateRoamers(getDialog());
+    			try {
+					populateRoamers(getDialog());
+				} catch (JSONException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
     			
     			//position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
     			
@@ -146,7 +163,12 @@ public class InboxActivity extends Activity {
     				public void onClick(View v) {
     					    	           
     					String newName = getSelectedName();
-    					createTable(newName);
+    					try {
+							createTable(newName);
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
     					addToTempRoamer(newName);    	
     					
     					getDialog().dismiss();
@@ -186,14 +208,24 @@ public class InboxActivity extends Activity {
     public void clearChat(String name){
     	
     	SQLiteDatabase db = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-		db.delete("ChatTable", null, null);
+		db.delete(name, null, null);
+		db.delete("ChatTable", "Field1" + "='" + name + "'", null);
+		
+		Cursor c = db.rawQuery("SELECT * FROM MyCred WHERE rowid = 1", null);
+    	
+    	c.moveToFirst();
+    	int index;
+    	index = c.getColumnIndex("ChatCount");
+    	int count = c.getInt(index);
 		
 		ContentValues args = new ContentValues();
-    	args.put("ChatCount",0);
+    	args.put("ChatCount",count-1);
 		db.update("MyCred", args, "rowid" + "=" + 1, null);
 		
 		db.close();
 		finish();
+		Intent i=new Intent(InboxActivity.this,ChatsAndRequestsActivity.class);
+        startActivity(i);
     }
     
     public void getChatFromTable(String name){
@@ -207,7 +239,8 @@ public class InboxActivity extends Activity {
 			       + "VALUES ('"+name+"');");
     }
     
-    public void createTable(String tableName){
+    public void createTable(String tableName) throws ParseException{
+    	boolean nameExists = false;
     	SQLiteDatabase db = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	System.out.println("table name will be: "+tableName);
@@ -215,45 +248,63 @@ public class InboxActivity extends Activity {
 		          + tableName
 		          + " (Field1 VARCHAR,Field2 VARCHAR);");
     	
-    	Cursor c = db.rawQuery("SELECT * FROM MyRoamers", null);
-    	
-    	c.moveToFirst();
-    	int index;
-    	index = c.getColumnIndex("Username");
-    	chatName = c.getString(index);
-
-    	while(!chatName.equals(tableName) && c.moveToNext()){
-    		index = c.getColumnIndex("Username");
-        	chatName = c.getString(index);
-    	}
-    	
-    	index = c.getColumnIndex("Pic");
-    	byte[] picFile = c.getBlob(index);
-    	
+    	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+       	query.whereEqualTo("Username", tableName);
+       	
+       	ParseObject roamer = query.getFirst();
+       	
+    	byte[] picFile = null;
+    	try {
+				picFile = roamer.getParseFile("Pic").getData();
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	Cursor c = null;
     	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
     	String currentDateandTime = sdf.format(new Date());
     	
     	//check if there is an open chat with this user
+    	int index = 0;
+    	c = db.rawQuery("SELECT * FROM " + "MyCred ", null);
+		c.moveToFirst();
+		index = c.getColumnIndex("ChatCount");
+		int count = c.getInt(index);
+    	int isNotEmpty = 0;
+    	c = db.rawQuery("SELECT COUNT(*) FROM ChatTable", null);
     	
-    	c = db.rawQuery("SELECT * FROM " + "ChatTable ", null);
-    	c.moveToFirst();
+    	if (c != null) {
+    	    c.moveToFirst();                       // Always one row returned.
+    	    if (c.getInt (0) != 0) {               // Zero count means empty table.
+    	    	isNotEmpty = 1;
+    	    }
+    	}
+    	
     	String tempName = "";
-    	boolean nameExists = false;
-    	if (c!= null && c.getCount() > 1){
+    	
+    	if (isNotEmpty == 1){
+    		
+    		c = db.rawQuery("SELECT * FROM ChatTable", null);
+    		c.moveToFirst();
+    		
     		int i = c.getColumnIndex("Field1");
     		tempName = c.getString(i);
     		
+    		//Check that name is not already an existing chat
+    		if(tempName.trim().equals(tableName.trim())){
+    			nameExists = true;
+    		}
     		
-    		while(c.moveToNext() && !tempName.equals(tableName)){
+    		while(c.moveToNext() && !tempName.trim().equals(tableName.trim())){
         		i = c.getColumnIndex("Field1");
         		tempName = c.getString(i);
-        		if(tempName.equals(tableName)){
+        		if(tempName.trim().equals(tableName.trim())){
         			nameExists = true;
         		}
         	}
     	}
     	
-    	if (!nameExists){
+    	if (nameExists == false){
     		
     		String sql                      =   "INSERT INTO ChatTable (Field1,Field2,Field3) VALUES(?,?,?)";
     	    SQLiteStatement insertStmt      =   db.compileStatement(sql);
@@ -263,17 +314,18 @@ public class InboxActivity extends Activity {
     	    insertStmt.bindString(3,currentDateandTime);
 
     	    insertStmt.executeInsert();
-    	}
+    	
     	
     	ContentValues args1 = new ContentValues();
     	
     	c = db.rawQuery("SELECT * FROM " + "MyCred ", null);
 		c.moveToFirst();
 		index = c.getColumnIndex("ChatCount");
-		int count = c.getInt(index);
-    	args1.put("ChatCount",count+1);
+		int countNew = c.getInt(index);
+    	args1.put("ChatCount",countNew+1);
 		db.update("MyCred", args1, "rowid" + "=" + 1, null);
 		
+    	}
 		//Update temp roamer to pass table name to discussion activity
 		
 		//db.delete("TempRoamer",null,null);
@@ -309,7 +361,7 @@ public class InboxActivity extends Activity {
         return true;
     }
     
-    public void populateRoamers(Dialog dialog){
+    public void populateRoamers(Dialog dialog) throws JSONException, ParseException{
     	
     
     position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
@@ -317,66 +369,74 @@ public class InboxActivity extends Activity {
     textRoamers = (TextView) getDialog().findViewById(R.id.textViewNoRoamers);
      
     SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+	
+	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
+	cur.moveToFirst();
+	int index;
+	index = cur.getColumnIndex("Username");
+	String userName = cur.getString(index);
+	String credName = userName;
+		
+	
+	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+   	query.whereEqualTo("Username", userName);
    	
-   	Cursor cur = myDB.rawQuery("SELECT * FROM MyRoamers", null);
+   	final ParseObject Roamer = query.getFirst();
    	
-   	cur.moveToFirst();
-   	int index;
-   	int i = 0;
    	
-   	    if (cur != null && cur.getCount()>0) {
-   	    	
-   	        
-   	    	dialogButton.setVisibility(View.VISIBLE);
-   			position.setVisibility(View.VISIBLE);
-   			textRoamers.setVisibility(View.INVISIBLE);
-   			
-   	    	final MyData items1[] = new MyData[cur.getCount()];
-  	    	cur.moveToFirst();
-   	    	index = cur.getColumnIndex("Username");
-   	    	items1[i] = new MyData(cur.getString(index),"Value1");
-   	 		
-   	    	while(cur.moveToNext()){
-   	    		i=i+1;
-   	    		index = cur.getColumnIndex("Username");
-   	    		items1[i] = new MyData(cur.getString(index),"Value1");
-   	    	}
-   	    	
-   	    		ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
-   	                 android.R.layout.simple_spinner_item, items1);
-   	    		adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-   	    		position.setAdapter(adapter1);
-   	         
+   	JSONArray roamerList = Roamer.getJSONArray("MyRoamers");
+  	
+	int i = 0;
+	if (roamerList != null && roamerList.length()>0) {
+		
+	    System.out.println("Roamer list is not null or 0");
+		dialogButton.setVisibility(View.VISIBLE);
+		position.setVisibility(View.VISIBLE);
+		textRoamers.setVisibility(View.INVISIBLE);
+		
+		final MyData items1[] = new MyData[roamerList.length()];
+		items1[i] = new MyData(roamerList.get(i).toString(),"Value1");
+		
+		while(i < roamerList.length()-1){
+			i=i+1;
+			items1[i] = new MyData(roamerList.get(i).toString(),"Value1");
+		}
+		
+			ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
+	             android.R.layout.simple_spinner_item, items1);
+			adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			position.setAdapter(adapter1);
+	     
 
 
-   	    		position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-   	             public void onItemSelected(AdapterView<?> parent, View view,
-   	                     int position, long id) {
-   	          	   
-   	          	   ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-   	                 MyData d = items1[position];
+			position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+	         public void onItemSelected(AdapterView<?> parent, View view,
+	                 int position, long id) {
+	      	   
+	      	   ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+	             MyData d = items1[position];
 
-   	                 //Get selected value of key 
-   	                 //String value = d.getValue();
-   	                 setSelectedName(d.getSpinnerText());
-   	                 
-   	             }
+	             //Get selected value of key 
+	             //String value = d.getValue();
+	             setSelectedName(d.getSpinnerText());
+	             
+	         }
 
-   	  			@Override
-   	  			public void onNothingSelected(AdapterView<?> arg0) {
-   	  			}
-   	         });
-   	    	
-   	    }
-   	    else{
-   	    	final MyData items1[] = new MyData[1];
-   	    	items1[i] = new MyData("None","Value1");
-   	    	   	    	
-   			position.setVisibility(View.INVISIBLE);
-   			dialogButton.setVisibility(View.INVISIBLE);
-   			textRoamers.setVisibility(View.VISIBLE);
-   	    }
-   	   myDB.close();
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	     });
+		
+	}
+	else{
+		final MyData items1[] = new MyData[1];
+		items1[i] = new MyData("None","Value1");
+		   	    	
+		position.setVisibility(View.INVISIBLE);
+		dialogButton.setVisibility(View.INVISIBLE);
+		textRoamers.setVisibility(View.VISIBLE);
+	}
+  	   myDB.close();
     }
     
     public void loadArray(){
@@ -391,28 +451,42 @@ public class InboxActivity extends Activity {
     	
     	//If there are entries in MyRoamers, populate the list
     	loadArray = new ArrayList<Item>();
+    	loadArray.clear();
     	
     	System.out.println("Chat Count is: "+count);
-    	if (count > 0) {
+    	
+    	Cursor chatCount = myDB.rawQuery("SELECT COUNT(*) FROM ChatTable", null);
+    	int isNotEmpty = 0;
+    	if (chatCount != null){
+    		chatCount.moveToFirst();
+    		if (chatCount.getInt(0) != 0){
+    			isNotEmpty = 1;
+    		}
+    	}
+		
+		
+    	if (isNotEmpty == 1) {
     		
     	int i = 1;
 
 		Cursor c = myDB.rawQuery("SELECT * FROM " + "ChatTable", null);
 		c.moveToFirst();
 		
+		 
 		 int C1 = c.getColumnIndex("Field2");
 		 int C2 = c.getColumnIndex("Field1");
 		 int C3 = c.getColumnIndex("Field3");
+		 System.out.println("The chat name is: "+c.getString(C2));
 		 		 
 		 loadArray.add(new Item(i,c.getBlob(C1), c.getString(C2), c.getString(C3)));
 		
 		while(c.moveToNext()){
 			i++;
 			
+			
 			  C1 = c.getColumnIndex("Field2");
 			  C2 = c.getColumnIndex("Field1");
 			  C3 = c.getColumnIndex("Field3");
-
 			 
 			 loadArray.add(new Item(i,c.getBlob(C1), c.getString(C2), c.getString(C3)));			
 		}
@@ -454,7 +528,6 @@ public class InboxActivity extends Activity {
 	Cursor c = db.rawQuery("SELECT  *  FROM " + "" + "TempRoamer", null);
 	c.moveToFirst();
 	int i = c.getColumnIndex("Username");
-	System.out.println("Username in temp roamer is: "+c.getString(i));
 
 	db.close();
 	}
@@ -464,5 +537,62 @@ public class InboxActivity extends Activity {
 		 Intent i=new Intent(InboxActivity.this,HomeScreenActivity.class);
 	    startActivity(i);
 	}
-    
+	
+	//Process the push message and move to the discussion
+	public void onResume(){
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			
+			String fromData = "";
+			String alertData = "";
+			
+			try {
+				JSONObject json = new JSONObject(bundle.getString("com.parse.Data"));
+				
+				Iterator itr = json.keys();
+			      while (itr.hasNext()) {
+			        String key = (String) itr.next();
+			        
+			        if (key.equals("alert")){
+			        	alertData = json.getString(key);
+			        }
+			        if (key.equals("from")){
+			        	fromData = json.getString(key);
+			        }
+			      }
+			      
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		    String notificationData = bundle.getString("com.parse.Data");
+		    if (notificationData != null) {
+		        System.out.println("Bundle is: "+notificationData);
+		        
+		        writeChatToDb(alertData,1,fromData);
+		        
+		        addToTempRoamer(fromData);
+		        
+		        finish();
+		        Intent i=new Intent(InboxActivity.this,DiscussActivity.class);
+			    startActivity(i);
+		        
+		    }
+   
+		}
+		super.onResume();
+	}
+	
+	//Write chat to DB
+	void writeChatToDb(String phrase, int type, String chatname) {
+		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		
+		myDB.execSQL("INSERT INTO "
+			       + chatname
+			       + " (Field1,Field2) "
+			       + "VALUES ('"+phrase.replace("'","%@%")+"',"+type+");");
+			
+		myDB.close();		
+	}
 }

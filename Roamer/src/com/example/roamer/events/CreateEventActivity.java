@@ -7,11 +7,14 @@ import java.util.Date;
 
 import graphics.HelloGoogleMaps;
 
+import com.example.roamer.ConvertCode;
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -45,9 +48,9 @@ public class CreateEventActivity extends Activity {
 	final Context context = this;
 	public int day;
 	public int month;
-	public String type;
+	public int type;
 	public String location = "anywhere";
-	public String time;
+	public int time;
 	public String blurb;
 	public String host;
 	public byte[] pic;
@@ -90,16 +93,22 @@ public class CreateEventActivity extends Activity {
 	            	Date eventDate = new Date();
 	    	        day = datePicker.getDayOfMonth();
 	    	        month = datePicker.getMonth();
+	    	        
+	    	        System.out.println("day is: "+day);
+	    	        System.out.println("month is: "+month);
 	    	        Calendar c = Calendar.getInstance();
 	    	        
 	    	        eventDate.setDate(day);
-	    	        eventDate.setMonth(month);
-	    	        eventDate.setYear(c.get(Calendar.YEAR));
+	    	        eventDate.setMonth(month+1);
+	    	        eventDate.setYear(c.get(Calendar.YEAR)-1900);
+	    	        
 	    	        
 	    	        //Check with the time of posting
-	    	        if ((month - c.get(Calendar.MONTH) )< 6){
+	    	        if (((month - c.get(Calendar.MONTH) )< 6) && (location != "anywhere")){
 	    	        	
-	    	        	date = Integer.toString(day) +"/"+ Integer.toString(month)+"/"+c.get(Calendar.YEAR);
+	    	        	date = Integer.toString(month) +"/"+ Integer.toString(day)+"/"+c.get(Calendar.YEAR);
+	    	        	
+	    	        	System.out.println("Date of event is: "+date);
 		            	blurb = blurbText.getText().toString();
 		            	addToEvents(host, type, time, date, location, blurb, pic);
 		            	
@@ -121,31 +130,31 @@ public class CreateEventActivity extends Activity {
 						int startMinute = 0;
 						int finishMinute = 0;
 						int finishHour = 0;
-						if (time.equals("Mid-day")){
+						if (time == 2){
 							startHour = 11;
 							startMinute = 30;	
 							finishHour = 13;
 							finishMinute = 30;
 						}
-						if (time.equals("Evening")){
+						if (time == 3){
 							startHour = 17;
 							startMinute = 30;	
 							finishHour = 19;
 							finishMinute = 30;
 						}
-						if (time.equals("Night")){
+						if (time == 4){
 							startHour = 20;
 							startMinute = 30;	
 							finishHour = 22;
 							finishMinute = 30;
 						}
-						if (time.equals("Morning")){
+						if (time == 1){
 							startHour = 6;
 							startMinute = 30;	
 							finishHour = 11;
 							finishMinute = 30;
 						}
-						if (time.equals("Late Night")){
+						if (time == 5){
 							startHour = 20;
 							startMinute = 30;	
 							finishHour = 23;
@@ -167,7 +176,7 @@ public class CreateEventActivity extends Activity {
     					    .setData(Events.CONTENT_URI)
     					    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
     					    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
-    					    .putExtra(Events.TITLE, type)
+    					    .putExtra(Events.TITLE, ConvertCode.convertType(type))
     					    .putExtra(Events.DESCRIPTION, blurb)
     					    .putExtra(Events.EVENT_LOCATION, location)
     					    .putExtra(Events.AVAILABILITY, Events.AVAILABILITY_BUSY);
@@ -184,6 +193,9 @@ public class CreateEventActivity extends Activity {
 	    	        }
 	    	        if(month - c.get(Calendar.MONTH) > 6){
 	    	        	Toast.makeText(getApplicationContext(), "Cannot post more than 6 months out!", Toast.LENGTH_LONG).show();
+	    	        }
+	    	        if(location == "anywhere"){
+	    	        	Toast.makeText(getApplicationContext(), "Must pick a location!!", Toast.LENGTH_LONG).show();
 	    	        }
 		  
 	            }
@@ -238,7 +250,7 @@ public class CreateEventActivity extends Activity {
 	                String value = d.getValue();
 	                String key = d.getSpinnerText();
 	                
-	                type = key;
+	                type = position+1;
 	            }
 
 				@Override
@@ -269,8 +281,7 @@ public class CreateEventActivity extends Activity {
 	                //Get selected value of key 
 	                String value = d.getValue();
 	                String[] splitter = d.getSpinnerText().toString().split(":");
-	                time = splitter[0].trim();
-	                System.out.println("Spinner is: "+time);
+	                time = position+1;
 	                
 	            }
 
@@ -312,7 +323,7 @@ public class CreateEventActivity extends Activity {
 	}
 	
 	//Add event to myevents table and allevents table
-    public void addToEvents(String hosttype, String type, String time1, String date, String location, String desc, byte[] image){
+    public void addToEvents(String hosttemp, int type, int time1, String date, String location, String desc, byte[] image){
     	 SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	 
      	//Update count of events in Credentials
@@ -339,8 +350,8 @@ public class CreateEventActivity extends Activity {
         insertStmt.clearBindings();
         insertStmt.bindString(1,host);
         insertStmt.bindBlob(2,pic);
-        insertStmt.bindString(3, time1);
-        insertStmt.bindString(4, type);
+        insertStmt.bindString(3, ConvertCode.convertTime(time1));
+        insertStmt.bindString(4, ConvertCode.convertType(type));
         insertStmt.bindString(5, date);
         insertStmt.bindString(6, desc);
         insertStmt.bindString(7, locationModified);
@@ -352,7 +363,7 @@ public class CreateEventActivity extends Activity {
     	myDB.close();
     }
     
-    public void addToParse(String timetemp,String typetemp,String blurbtemp,Date datetemp,String locationtemp,String hosttemp) throws ParseException{
+    public void addToParse(int timetemp,int typetemp,String blurbtemp,Date datetemp,String locationtemp,String hosttemp) throws ParseException{
     	
     	ParseObject event = new ParseObject("Event");
     	ParseFile file = new ParseFile(host+".png",pic);
@@ -362,41 +373,12 @@ public class CreateEventActivity extends Activity {
     	int timeInt = 0;
     	ArrayList<String> attendees = new ArrayList();
     	attendees.add(host);
-    	if(typetemp.equals("At Airport")){
-    		typeInt = 1;
-    	}
-    	if(typetemp.equals("Concert/Festival")){
-    		typeInt = 2;
-    	}
-    	if(typetemp.equals("Dinner/Meal")){
-    		typeInt = 3;
-    	}
-    	if(typetemp.equals("Drinks")){
-    		typeInt = 4;
-    	}
-    	if(typetemp.equals("Professional/Seminar")){
-    		typeInt = 5;
-    	}
-    	if(typetemp.equals("Sporting Event")){
-    		typeInt = 6;
-    	}
+    	
+    	//Get type int
+    	typeInt = typetemp;
     	
     	//Get time int
-    	if(timetemp.equals("Morning")){
-    		timeInt = 1;
-    	}
-    	if(timetemp.equals("Mid-day")){
-    		timeInt = 2;
-    	}
-    	if(timetemp.equals("Evening")){
-    		timeInt = 3;
-    	}
-    	if(timetemp.equals("Night")){
-    		timeInt = 4;
-    	}
-    	if(timetemp.equals("Late Night")){
-    		timeInt = 5;
-    	}
+    	timeInt = timetemp;
     
     	
     	event.put("Place", locationtemp);
@@ -408,9 +390,25 @@ public class CreateEventActivity extends Activity {
     	event.put("Host", hosttemp);
     	event.put("Time", timeInt);
     	event.put("Pic",file);
-    	event.put("Location", currentLocation);  	
+    	event.put("Location", currentLocation); 
     	
-    	event.saveInBackground();
+    	ParseACL defaultACL = new ParseACL();
+		// Optionally enable public read access while disabling public write access.
+		defaultACL.setPublicReadAccess(true);
+		defaultACL.setPublicWriteAccess(true);
+		event.setACL(defaultACL);
+    	
+    	event.save();
+    	
+    	String objectId = event.getObjectId();
+
+    	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+    	query.whereEqualTo("Username", hosttemp);
+    	
+    	ParseObject roamer = query.getFirst();
+    	
+    	roamer.addUnique("MyEvents", objectId);
+	    roamer.saveInBackground();
     	
     }
 

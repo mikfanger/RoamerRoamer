@@ -1,19 +1,19 @@
 package com.example.roamer.events;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.json.JSONArray;
-
 import graphics.FlyOutContainer;
 
 import com.example.roamer.ConvertCode;
 import com.example.roamer.HomeScreenActivity;
 import com.example.roamer.R;
-import com.example.roamer.checkinbox.ChatsAndRequestsActivity;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -28,14 +28,19 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.view.View;
@@ -45,9 +50,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
  
@@ -73,6 +81,9 @@ public class AllEvents extends Activity {
      CheckBox checkDate;
      CheckBox checkType;
      
+     private Spinner spinnerSortTime;
+     private Spinner spinnerSortType;
+     
      String newHost;
      String newType;
      String newDate;
@@ -84,30 +95,29 @@ public class AllEvents extends Activity {
      String newTime;
     
      
-     int dateBox = 0;
-     int timeBox = 0;
-     int typeBox = 0;
+     private Date dateStart;
+     private Date dateEnd;
+     private int time = 0;
+     private int type = 0;
      
      private int day;
      private int month;
      private int year;
      private String parseEventId;
-     
-     private Date sortDateStart;
-     private Date sortDateEnd;
-     private String sortTime;
-     private String sortType;
+
+     private SharedPreferences preferences;
      
      
-     FlyOutContainer root;
+    FlyOutContainer root;
      
-     //Look at what we have done!
+    //Look at what we have done!
      
 	final Context context = this;
 	
     public void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
         this.root = (FlyOutContainer) this.getLayoutInflater().inflate(R.layout.events_list, null);
@@ -116,40 +126,112 @@ public class AllEvents extends Activity {
 		
 		mAllEventsView = findViewById(R.id.progressBarAllEvents);
 		
+		dateStart = new Date();
+		dateEnd = new Date();
+		
 		checkDate = (CheckBox) findViewById(R.id.checkBoxDate);
-		checkTime = (CheckBox) findViewById(R.id.checkBoxTime);
-		checkType = (CheckBox) findViewById(R.id.checkBoxType);
+		checkTime = (CheckBox) findViewById(R.id.checkBoxType);
+		checkType = (CheckBox) findViewById(R.id.checkBoxTime);
+		
+		type = preferences.getInt("type",1);;
+		time = preferences.getInt("time",1);;
+		
+		if (preferences.getInt("timeCheck",0) > 0){
+			checkTime.setChecked(true);
+		}
+		if (preferences.getInt("typeCheck",0) > 0){
+			checkType.setChecked(true);
+		}
 
+		//Bring sort dialog for type if checked
 		checkType.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				if (isChecked){
-					Toast.makeText(getApplicationContext(), "Sort type set!",
-							   Toast.LENGTH_LONG).show();
+					
+					final Dialog dialog = new Dialog(context);
+	            	
+	    			dialog.setContentView(R.layout.sort_type);
+	    			dialog.setTitle("Sort by Type");
+	    			dialog.show();
+	    			
+	    			populateSpinnerType(dialog);
+	    			
+	    			ImageButton backButton = (ImageButton) dialog.findViewById(R.id.imageBackFromSortType);
+	    			// if button is clicked, close the custom dialog
+	    			backButton.setOnClickListener(new OnClickListener() {
+	    				@Override
+	    				public void onClick(View v) {
+	    					dialog.dismiss();
+	    				}
+	    			});
 				}
 				
 			}
 		});
 		
+		//Bring dialog for time if checked
 		checkTime.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				if (isChecked){
-					Toast.makeText(getApplicationContext(), "Sort time set!",
-							   Toast.LENGTH_LONG).show();
+					
+					final Dialog dialog = new Dialog(context);
+	            	
+	    			dialog.setContentView(R.layout.sort_time);
+	    			dialog.setTitle("Sort by Time");
+	    			dialog.show();
+	    			
+	    			populateSpinnerTime(dialog);
+	    			ImageButton backButton = (ImageButton) dialog.findViewById(R.id.imageBackFromSortTime);
+	    			// if button is clicked, close the custom dialog
+	    			backButton.setOnClickListener(new OnClickListener() {
+	    				@Override
+	    				public void onClick(View v) {
+	    					dialog.dismiss();
+	    				}
+	    			});
 				}
 				
 			}
 		});
+		
+		//Show sort date dialog if date is checked
 		checkDate.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				if (isChecked){
-					Toast.makeText(getApplicationContext(), "Sort date set!",
-							   Toast.LENGTH_LONG).show();
+					
+					final Dialog dialog = new Dialog(context);
+	            	
+	    			dialog.setContentView(R.layout.sort_date);
+	    			dialog.setTitle("Select Date");
+	    			dialog.show();
+	    			
+					final DatePicker datePickerStart = (DatePicker) dialog.findViewById(R.id.datePickerStart1);
+					final DatePicker datePickerEnd = (DatePicker) dialog.findViewById(R.id.datePickerEnd2);
+					
+	    			ImageButton backButton = (ImageButton) dialog.findViewById(R.id.imageBackFromSort);
+	    			// if button is clicked, close the custom dialog
+	    			backButton.setOnClickListener(new OnClickListener() {
+	    				@Override
+	    				public void onClick(View v) {
+	    					
+	    					dateStart.setYear(datePickerStart.getYear());
+	    					dateStart.setMonth(datePickerStart.getMonth());
+	    					dateStart.setDate(datePickerStart.getDayOfMonth());
+	    					
+	    					dateEnd.setYear(datePickerEnd.getYear());
+	    					dateEnd.setMonth(datePickerEnd.getMonth());
+	    					dateEnd.setDate(datePickerEnd.getDayOfMonth());
+	    					
+	    					
+	    					dialog.dismiss();
+	    				}
+	    			});
 				}
 				
 			}
@@ -157,24 +239,31 @@ public class AllEvents extends Activity {
 		//show progress spinner
 		showProgress(true);
 		
-		loadArray(0,0,0);
-        
-        Model.LoadModel(eventsArray);
-        
-        listView = (ListView) findViewById(R.id.listViewEvents);
-        final String[] ids = new String[Model.Items.size()];
-        for (int i= 0; i < ids.length; i++){
+		loadArray(type,dateStart,dateEnd,time);
+		listView = (ListView) findViewById(R.id.listViewEvents);
+		System.out.println("Amount of events is: "+eventsArray.size());
+		if (eventsArray.size() > 0){
+			
+			
+			Model.LoadModel(eventsArray);
+	        
+	        final String[] ids = new String[Model.Items.size()];
+	        for (int i= 0; i < ids.length; i++){
 
-            ids[i] = Integer.toString(i+1);
-        }
+	            ids[i] = Integer.toString(i+1);
+	        }
+	        
+	        //hide progress spinner
+	        
+	        
+	        ItemAdapter adapter = new ItemAdapter(this,R.layout.row, ids);
+	        //final ItemAdapter adapter1 = new ItemAdapter(this,R.layout.row, ids);
+	        listView.setAdapter(adapter);
+	        
+	        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		}
+		showProgress(false);
         
-        //hide progress spinner
-        showProgress(false);
-        
-        final  ItemAdapter adapter = new ItemAdapter(this,R.layout.row, ids);
-        listView.setAdapter(adapter);
-        
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         
         ImageButton sortButton = (ImageButton) findViewById(R.id.sortButton);
         sortButton.bringToFront();
@@ -183,17 +272,21 @@ public class AllEvents extends Activity {
         sortNowButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
+				finish();
+				startActivity(getIntent());
 				
-				if (checkType.isChecked()){
-					typeBox = 1;
+				if(checkTime.isChecked()){
+					SharedPreferences.Editor editor = preferences.edit();
+  			        editor.putInt("timeCheck",1);
+  			        editor.commit();
 				}
-				if (checkDate.isChecked()){
-					dateBox = 1;
+				if(checkType.isChecked()){
+					SharedPreferences.Editor editor = preferences.edit();
+  			        editor.putInt("typeCheck",1);
+  			        editor.commit();
 				}
-				if (checkTime.isChecked()){
-					timeBox = 1;
-				}
-				loadArray(typeBox,dateBox,timeBox);
+
 			}
 		});
         
@@ -383,7 +476,7 @@ public class AllEvents extends Activity {
     	myDB.close();
     }
     
-    public void loadArray(int sortType, int sortDate, int sortTime){
+    public void loadArray(int sortType, Date sortDateStart, Date sortDateEnd, int sortTime){
     	
     	
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
@@ -405,9 +498,10 @@ public class AllEvents extends Activity {
     		
 			List<ParseObject> eventList = query.find();
 			int i = 0;
-        	int type;
+			int nextEvent = 1;
+        	int typeNow;
         	int location;
-        	int time;
+        	int timeNow;
         	int attend;
         	String place;
         	String desc;
@@ -419,10 +513,10 @@ public class AllEvents extends Activity {
 			if(eventList.size()!=0){
 				
 	        	
-	        	type = eventList.get(i).getInt("Type");
+	        	typeNow = eventList.get(i).getInt("Type");
 	        	host = eventList.get(i).getString("Host");
 	        	location = eventList.get(i).getInt("Location");
-	        	time = eventList.get(i).getInt("Time");
+	        	timeNow = eventList.get(i).getInt("Time");
 	        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
 	        	attend = eventList.get(i).getInt("Attend");
 	        	place = eventList.get(i).getString("Place");
@@ -435,46 +529,70 @@ public class AllEvents extends Activity {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+	        	catch (NullPointerException e) {
+	        		InputStream ims = null;
+	                try {
+	                    ims = context.getAssets().open("default_userpic.png");
+	                } catch (IOException e2) {
+	                    e.printStackTrace();
+	                }
+	                // load image as Drawable
+	                Drawable d = Drawable.createFromStream(ims, null);
+	                // set image to ImageView
+	                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+
+	                ByteArrayOutputStream out = new ByteArrayOutputStream();
+	                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+	                pic= out.toByteArray(); 
+	        	}
 	        	
 	        	String timeString = "";
-	        	if (time == 1){
+	        	if (timeNow == 1){
 	        		timeString = "Mid-Day";
 	        	}
-	        	if (time == 2){
+	        	if (timeNow == 2){
 	        		timeString = "Evening";
 	        	}
-	        	if (time == 3){
+	        	if (timeNow == 3){
 	        		timeString = "Night";
 	        	}
 	        	
-	        	day = date.getDay();
+	        	day = date.getDate();
 	        	month = date.getMonth();
 	        	year = date.getYear();
-	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-	        	System.out.println("Date is: "+fullDate);
-	        	
-	        	
-	    		eventsArray.add(new Item(i+1, 
-	    				pic, 
-	    				host, 
-	    				fullDate, 
-	    				ConvertCode.convertType(type), 
-	    				Integer.toString(attend),
-	    				place,
-	    				desc,
-	    				eventId,
-	    				timeString));
-	    		i++;
+	        	String fullDate = Integer.toString(month+1)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+
+	        	//Check that the date of the event is after or equal to today.
+	        	Date currentDate = new Date(System.currentTimeMillis());
+	        	int dateCompare = date.compareTo(currentDate);
+
+	        	if (dateCompare > 0 || dateCompare == 0){
+	        		if (checkEventBySort(date,typeNow,timeNow) > 0){
+	        	 		eventsArray.add(new Item(nextEvent, 
+			    				pic, 
+			    				host, 
+			    				fullDate, 
+			    				ConvertCode.convertType(typeNow), 
+			    				Integer.toString(attend),
+			    				place,
+			    				desc,
+			    				eventId,
+			    				timeString));
+	        	 		nextEvent++;
+	        		}		    		
+	        	}
+	        	i++;
+	    		
 			}
             
         	
     		while (i < (eventList.size())){
     			
-    			type = eventList.get(i).getInt("Type");
+    			typeNow = eventList.get(i).getInt("Type");
 	        	host = eventList.get(i).getString("Host");
 	        	location = eventList.get(i).getInt("Location");
 	        	date = eventList.get(i).getDate("Date");
-	        	time = eventList.get(i).getInt("Time");
+	        	timeNow = eventList.get(i).getInt("Time");
 	        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
 	        	attend = eventList.get(i).getInt("Attend");
 	        	place = eventList.get(i).getString("Place");
@@ -482,29 +600,56 @@ public class AllEvents extends Activity {
 	        	
 	        	try {
 					pic = eventList.get(i).getParseFile("Pic").getData();
-				} catch (ParseException e1) {
+				} 
+	        	catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+	        	catch (NullPointerException e) {
+	        		InputStream ims = null;
+	                try {
+	                    ims = context.getAssets().open("default_userpic.png");
+	                } catch (IOException e2) {
+	                    e.printStackTrace();
+	                }
+	                // load image as Drawable
+	                Drawable d = Drawable.createFromStream(ims, null);
+	                // set image to ImageView
+	                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+
+	                ByteArrayOutputStream out = new ByteArrayOutputStream();
+	                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+	                pic= out.toByteArray(); 
+	        	}
 	        	
-	        	String timeString = ConvertCode.convertTime(time);
+	        	String timeString = ConvertCode.convertTime(timeNow);
 	        	
-	        	day = date.getDay();
+	        	day = date.getDate();
 	        	month = date.getMonth();
 	        	year = date.getYear();
-	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+	        	String fullDate = Integer.toString(month+1)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+	        	System.out.println("fulldate is: "+fullDate);
 	        	
-	        	eventsArray.add(new Item(i+1, 
-	    				pic, 
-	    				host, 
-	    				fullDate, 
-	    				ConvertCode.convertType(type), 
-	    				Integer.toString(attend),
-	    				place,
-	    				desc,
-	    				eventId,
-	    				timeString));
-	    		i++;
+	        	//Check that the event is equal to or after the current date
+	        	Date currentDate = new Date(System.currentTimeMillis());
+	        	int dateCompare = date.compareTo(currentDate);
+
+	        	if (dateCompare > 0 || dateCompare == 0){
+	        		if (checkEventBySort(date,typeNow,timeNow) > 0){
+	        			eventsArray.add(new Item(nextEvent, 
+	    	    				pic, 
+	    	    				host, 
+	    	    				fullDate, 
+	    	    				ConvertCode.convertType(typeNow), 
+	    	    				Integer.toString(attend),
+	    	    				place,
+	    	    				desc,
+	    	    				eventId,
+	    	    				timeString));
+	        			nextEvent++;
+	        		}
+	        	}
+	        	i++;
     		}
 		} catch (ParseException e2) {
 			// TODO Auto-generated catch block
@@ -586,10 +731,146 @@ public class AllEvents extends Activity {
 	}
 	*/
 	
+	class MyData {
+        public MyData(String spinnerText, String value) {
+            this.spinnerText = spinnerText;
+            this.value = value;
+        }
+
+        public String getSpinnerText() {
+            return spinnerText;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String toString() {
+            return spinnerText;
+        }
+
+        String spinnerText;
+        String value;
+    }
+	
+	//Populate Time Spinner
+	public void populateSpinnerTime(Dialog dialog){
+		
+		spinnerSortTime = (Spinner) dialog.findViewById(R.id.spinnerTimeSort);
+        
+       	final MyData items1[] = new MyData[5];
+
+       	//Populate times in spinner
+       	items1[0] = new MyData("Morning: (6AM - 11:30AM)","Value1");
+       	items1[1] = new MyData("Mid-Day: (11:30AM - 1:30PM)","Value2");
+       	items1[2] = new MyData("Evening: (5:30PM - 7:30PM)","Value3");
+       	items1[3] = new MyData("Night: (8:30PM - 10:30PM)","Value4");
+       	items1[4] = new MyData("Late Night: (11:30PM - 2:00AM)","Value5");
+      	
+           ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
+                   android.R.layout.simple_spinner_item, items1);
+           adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+           spinnerSortTime.setAdapter(adapter1);
+           
+           spinnerSortTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               public void onItemSelected(AdapterView<?> parent, View view,
+                       int position, long id) {
+            	   
+            	   ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+                   MyData d = items1[position];
+
+                   //Get selected value of key 
+                   String value = d.getValue();
+                   String key = d.getSpinnerText();
+                   time = ConvertCode.convertTimeBack(key);
+  			        SharedPreferences.Editor editor = preferences.edit();
+  			        editor.putInt("time",time);
+  			        editor.commit();
+               }
+
+    			@Override
+    			public void onNothingSelected(AdapterView<?> arg0) {
+    			}
+           });
+		
+		
+	}
+	
+	//Populate Time Spinner
+		public void populateSpinnerType(Dialog dialog){
+			
+			spinnerSortType = (Spinner) dialog.findViewById(R.id.spinnerTypeSort);
+	        
+	       	final MyData items2[] = new MyData[6];
+
+	       	//Populate times in spinner
+	       	items2[0] = new MyData("At Airport","Value1");
+	       	items2[1] = new MyData("Concert/Festival","Value2");
+	       	items2[2] = new MyData("Dinner/Meal","Value3");
+	       	items2[3] = new MyData("Drinks","Value4");
+	       	items2[4] = new MyData("Professional/Seminar","Value5");
+	       	items2[5] = new MyData("Sporting Event","Value5");
+	      	
+	           ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
+	                   android.R.layout.simple_spinner_item, items2);
+	           adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	           spinnerSortType.setAdapter(adapter1);
+	           
+	           spinnerSortType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+	               public void onItemSelected(AdapterView<?> parent, View view,
+	                       int position, long id) {
+	            	   
+	            	   ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+	                   MyData d = items2[position];
+
+	                   //Get selected value of key 
+	                   String value = d.getValue();
+	                   String key = d.getSpinnerText();
+	                   type = ConvertCode.convertTypeBack(key); 
+   			        SharedPreferences.Editor editor = preferences.edit();
+   			        editor.putInt("type",type);
+   			        editor.commit();
+	               }
+
+	    			@Override
+	    			public void onNothingSelected(AdapterView<?> arg0) {
+	    			}
+	           });
+			
+			
+		}
+		
+	public int checkEventBySort(Date dateNow, int typeNow, int timeNow){
+		int useNow = 1;
+		
+		//check for checked time
+		if (checkTime.isChecked()){
+			if (!(timeNow == time)){
+				useNow = 0;
+			}
+		}
+		//check for checked type
+		if (checkType.isChecked()){
+			if (!(typeNow == type)){
+				useNow = 0;
+			}
+		}
+		//check for checked date
+		if (checkDate.isChecked()){
+			if (!(dateNow.compareTo(dateStart) >= 0 && (dateNow.compareTo(dateEnd) <= 0))){
+				useNow = 0;
+			}
+		}
+		return useNow;
+	}
 	@Override
 	public void onBackPressed() 
 	{
-		 Intent i=new Intent(AllEvents.this,HomeScreenActivity.class);
+		SharedPreferences.Editor editor = preferences.edit();
+	        editor.putInt("typeCheck",0);
+	        editor.putInt("timeCheck",0);
+	        editor.commit();
+		Intent i=new Intent(AllEvents.this,HomeScreenActivity.class);
 	    startActivity(i);
 	}
 }

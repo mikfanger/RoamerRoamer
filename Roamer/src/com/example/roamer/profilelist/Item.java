@@ -14,7 +14,20 @@ public class Item {
 
         Id = id;
         IconFile = iconFile;
-        Name = name;
+        
+        if (name!=null){
+        	Name = name;
+        }
+        else {
+        	Name = "none";
+        }
+        if (location!=null){
+        	Location = location;
+        }
+        else {
+        	Location = "none";
+        }
+
         Location = location;
         Sex = sex;
         StartDate = startDate;

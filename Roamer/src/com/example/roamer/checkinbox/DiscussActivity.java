@@ -1,16 +1,17 @@
 package com.example.roamer.checkinbox;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.roamer.R;
-import com.google.gson.JsonObject;
-import com.parse.ParseInstallation;
-import com.parse.ParseObject;
 import com.parse.ParsePush;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -18,6 +19,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -41,7 +43,7 @@ public class DiscussActivity extends Activity {
 		setContentView(R.layout.activity_discuss);
 		
 		//Set chat name from Temp Roamer
-		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		final SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		
 		Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
     	cur.moveToFirst();
@@ -72,33 +74,62 @@ public class DiscussActivity extends Activity {
 
 		editText1 = (EditText) findViewById(R.id.editTextMessage);
 		
+		//Scroll to bottom of list
+		lv.smoothScrollToPosition(adapter.getCount());
+
 		ImageButton sendButton = (ImageButton) findViewById(R.id.imageButtonSendMessage);
         sendButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
             	
-            	adapter.add(new OneComment(false, editText1.getText().toString()));
+            	//get username of current user
+            	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
+            	cur.moveToFirst();
+
+            	int indexUser = cur.getColumnIndex("Username");
+            	String currentUsername = cur.getString(indexUser);
+            	
+            	adapter.add(new OneComment(false, editText1.getText().toString(),"Me"));
 
 				String phrase = editText1.getText().toString();
 				writeChatToDb(phrase, 2);
 				editText1.setText("");
 				
-            	ParsePush push = new ParsePush();
-            	
-            	JSONObject data = null;
+				//Scroll to bottom of list
+				lv.smoothScrollToPosition(adapter.getCount());
+				
+				JSONObject data = null; 
+				
 				try {
-					data = new JSONObject(myName);
+					data = new JSONObject();
+					data.put("from", currentUsername);
+					data.put("badge", "Increment");
+					data.put("alert", phrase);
+					
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-
+				} // Set the first name/pair
+				
+				       		
+        		ParsePush push = new ParsePush();
             	push.setChannel(chatName);
-            	//push.setData(data);
             	push.setData(data);
-            	push.setMessage(phrase);
+            	System.out.println("Data of push is: "+data);
+
+            	//push.setMessage(phrase);
             	push.sendInBackground();   
             	
+            	
+            	//update date of latest chat
+            	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+            	String currentDateandTime = sdf.format(new Date());
+            	
+            	
+            	ContentValues values = new ContentValues();
+            	values.put("Field3", currentDateandTime);
+            	
+            	myDB.update("ChatTable", values, "Field1 = '" + chatName +"'", null);
             	
             		  
             }
@@ -115,6 +146,11 @@ public class DiscussActivity extends Activity {
             		  
             }
         });
+        
+        InputMethodManager imm = (InputMethodManager)getSystemService(
+        	      this.INPUT_METHOD_SERVICE);
+        	imm.hideSoftInputFromWindow(editText1.getWindowToken(), 0);
+        lv.smoothScrollToPosition(adapter.getCount());
 	}
 	
 	void writeChatToDb(String phrase, int type) {
@@ -150,19 +186,28 @@ public class DiscussActivity extends Activity {
 		     String Comment = c.getString(Column1);
 		     
 		     int Side = c.getInt(Column2);
+		     
+		     System.out.println("The side is: "+Side);
+		     
 		     if(Side == 1){
 		    	 side = true;
 		     }
-		     else{
+		     if(Side == 2){
 		    	 side = false;
 		     }
 		     
 		     String newComment = Comment.replace("%@%","'");
 		     
-		     adapter.add(new OneComment(side, newComment));
+		     adapter.add(new OneComment(side, newComment, chatName));
 		    }while(c.moveToNext());
 		   }
 		   
 		   myDB.close();
-		}
+		}   
+	
+	public void onBackPressed() 
+	{
+		 Intent i=new Intent(DiscussActivity.this,InboxActivity.class);
+	    startActivity(i);
+	}
 }

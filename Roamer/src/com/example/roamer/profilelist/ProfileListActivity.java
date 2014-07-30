@@ -1,5 +1,8 @@
 package com.example.roamer.profilelist;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +21,9 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -104,7 +110,7 @@ public class ProfileListActivity extends Activity {
   	                newDate = Model.GetbyId(position+1).StartDate;
   	                newIndustry = Model.GetbyId(position+1).Industry;
   	                
-  	                System.out.println("Date from profile is: "+newDate);
+  	                //Add user to temp roamer
   	                addTempRoamer(newIcon,newName,newLocation,newDate,newIndustry);
   	                
 	            }
@@ -185,7 +191,6 @@ public class ProfileListActivity extends Activity {
    		        	
    		        	name = roamerList.get(i).getString("Username");
    		        	
-   		        	System.out.println("Username  of roamer in city is: "+name);
    		        	sex = roamerList.get(i).getBoolean("Sex");
    		        	location = getLocationText(roamerList.get(i).getInt("Location"));
    		        	eventId = roamerList.get(i).getString("objectId");
@@ -196,7 +201,6 @@ public class ProfileListActivity extends Activity {
    		        	int month = date.getMonth();
    		        	int year = date.getYear();
    		        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-   		        	System.out.println("Date before loading is: "+fullDate);
    		        	
    		        	try {
    						pic = roamerList.get(i).getParseFile("Pic").getData();
@@ -204,6 +208,22 @@ public class ProfileListActivity extends Activity {
    						// TODO Auto-generated catch block
    						e1.printStackTrace();
    					}
+   		        	catch (NullPointerException e) {
+   		        		InputStream ims = null;
+   		                try {
+   		                    ims = context.getAssets().open("default_userpic.png");
+   		                } catch (IOException e2) {
+   		                    e.printStackTrace();
+   		                }
+   		                // load image as Drawable
+   		                Drawable d = Drawable.createFromStream(ims, null);
+   		                // set image to ImageView
+   		                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+
+   		                ByteArrayOutputStream out = new ByteArrayOutputStream();
+   		                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+   		                pic= out.toByteArray(); 
+   		        	}
    		        	
    		        	
    		        	if (!name.equals(myName)){
@@ -214,10 +234,9 @@ public class ProfileListActivity extends Activity {
    				}
    	           
    	       	
-   	   		while (i < (roamerList.size())){
+   	   		while (i < (roamerList.size()-1)){
    	   			
    	   			name = roamerList.get(i).getString("Username");
-   	   		    System.out.println("Username  of roamer in city is: "+name);
    	        	sex = roamerList.get(i).getBoolean("Sex");
    	        	location = getLocationText(roamerList.get(i).getInt("Location"));
    	        	eventId = roamerList.get(i).getString("objectId");
@@ -229,14 +248,29 @@ public class ProfileListActivity extends Activity {
    	        	int year = date.getYear();
    	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
    	        	
-   	        	System.out.println("Date before loading is: "+fullDate);
-   	        	
    	        	try {
    					pic = roamerList.get(i).getParseFile("Pic").getData();
    				} catch (ParseException e1) {
    					// TODO Auto-generated catch block
    					e1.printStackTrace();
    				}
+   	        	catch (NullPointerException e) {
+	        		InputStream ims = null;
+	                try {
+	                    ims = context.getAssets().open("default_userpic.png");
+	                } catch (IOException e2) {
+	                    e.printStackTrace();
+	                }
+	                // load image as Drawable
+	                Drawable d = Drawable.createFromStream(ims, null);
+	                // set image to ImageView
+	                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+
+	                ByteArrayOutputStream out = new ByteArrayOutputStream();
+	                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+	                pic= out.toByteArray(); 
+	        	}
+   	        	
    	        	
    	        	if (!name.equals(myName)){
 		        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));

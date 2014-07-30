@@ -111,7 +111,7 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
 	    //Mmap.setMyLocationEnabled(true);
 	    
 	    // Zoom in, animating the camera to current Cred Location
-	    Mmap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(cityLat,cityLong) , 14.0f) );
+	    Mmap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(cityLat,cityLong) , 10.0f) );
 
 	    // Array of place types
         mPlaceType = getResources().getStringArray(R.array.place_type);

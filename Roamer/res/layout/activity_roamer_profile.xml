@@ -55,7 +55,7 @@
         android:textStyle="italic" />
 
     <ImageButton
-        android:id="@+id/imageAddRoamer"
+        android:id="@+id/imageRemoveRoamer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textProfileSex"
@@ -63,16 +63,6 @@
         android:layout_marginRight="18dp"
         android:background="@color/transparent"
         android:src="@drawable/remove_roamer" />
-
-    <TextView
-        android:id="@+id/textCreateType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageProfilePicture"
-        android:layout_alignLeft="@+id/imageAddRoamer"
-        android:layout_marginBottom="14dp"
-        android:text="Roaming Since"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -82,16 +72,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:src="@drawable/roamer" />
-
-    <TextView
-        android:id="@+id/textRoamerDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textCreateType"
-        android:layout_alignBottom="@+id/textCreateType"
-        android:layout_alignRight="@+id/imageAddRoamer"
-        android:text="Date"
-        android:textStyle="italic" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -275,5 +255,34 @@
         android:layout_alignParentBottom="true"
         android:layout_alignTop="@+id/textProfileTravel"
         android:text="Travel Status" />
+
+    <ImageView
+        android:id="@+id/imageButtonLargePicture3"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignTop="@+id/imageProfilePicture"
+        android:layout_centerHorizontal="true"
+        android:background="@color/NewBlack"
+        android:src="@drawable/default_userpic"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/textCreateType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageProfilePicture"
+        android:layout_alignLeft="@+id/imageRemoveRoamer"
+        android:layout_marginBottom="18dp"
+        android:text="Roaming Since"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textRoamerDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageProfilePicture"
+        android:layout_alignRight="@+id/imageButtonLargePicture3"
+        android:text="Date"
+        android:textStyle="italic" />
 
 </RelativeLayout>

@@ -2,7 +2,6 @@ package com.example.roamer.profilelist;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +34,7 @@ public class RoamerProfileShortActivity extends Activity {
 	
 	private String nameString = "";
 	private String myName = "";
+	private ImageView largeImage;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +81,7 @@ public class RoamerProfileShortActivity extends Activity {
 	   	TextView sexView = (TextView) findViewById(R.id.textProfileSex);
 	   	ImageView picView = (ImageView) findViewById(R.id.imageProfilePicture);
 	   	TextView industryView = (TextView) findViewById(R.id.textRoamerDate);
+	   	largeImage = (ImageView) findViewById(R.id.imageButtonLargePicture);
 	   	
 	   	nameView.setText(nameString);
 	   	sexView.setText(sex);
@@ -92,6 +93,9 @@ public class RoamerProfileShortActivity extends Activity {
         	Bitmap bmp = BitmapFactory.decodeByteArray(picByte, 0, picByte.length);
     	    picView.setBackgroundResource(0);
     	    picView.setImageBitmap(bmp);
+    	    
+    	    largeImage.setBackgroundResource(0);
+    	    largeImage.setImageBitmap(bmp);
         }
         if(picByte == null){
         	InputStream ims = null;
@@ -103,7 +107,9 @@ public class RoamerProfileShortActivity extends Activity {
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView
+            largeImage.setImageDrawable(d);
             picView.setImageDrawable(d);
+            
         }
 	   	
 		
@@ -118,7 +124,25 @@ public class RoamerProfileShortActivity extends Activity {
 	            		  
 	            }
 	        });
+	       
 	        
+	        picView.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+	               largeImage.setVisibility(View.VISIBLE);
+	               
+	            }
+	        });
+	        
+	        largeImage.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+	            	
+	            	if(largeImage.getVisibility() == View.VISIBLE){
+	            		largeImage.setVisibility(View.INVISIBLE);
+	            	}
+	               
+	            }
+	        });
+	        	        
 	        ImageButton addButton = (ImageButton) findViewById(R.id.imageAddRoamer);
 	        addButton.setOnClickListener(new OnClickListener() {
 	            @Override

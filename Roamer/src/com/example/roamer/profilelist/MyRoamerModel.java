@@ -20,7 +20,9 @@ public class MyRoamerModel {
 	        } 
         
         for (MyRoamerItem item: allItems){        	
-
+        		
+        		
+        		System.out.println("Roamer in model is: "+item);
         		int idTemp = item.Id;
         		byte[] iconTemp = item.IconFile;
         		String nameTemp = item.Name;

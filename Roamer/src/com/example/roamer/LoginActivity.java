@@ -1,13 +1,16 @@
 package com.example.roamer;
 
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.example.roamer.checkinbox.InboxActivity;
 import com.example.roamer.network.GMailSender;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseException;
@@ -16,6 +19,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.PushService;
+import com.parse.RequestPasswordResetCallback;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,6 +29,7 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -73,6 +78,7 @@ public class LoginActivity extends Activity {
 
 	// UI references.
 	private EditText mEmailView;
+	private ImageButton mLogin;
 	private EditText mPasswordView;
 	//private View mLoginFormView;
 	private View mLoginStatusView;
@@ -110,6 +116,7 @@ public class LoginActivity extends Activity {
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.fillLocation);
+		mLogin = (ImageButton) findViewById(R.id.login);
 		mEmailView.setText(mEmail);
 
 		mPasswordView = (EditText) findViewById(R.id.passwordLogin);	
@@ -119,6 +126,8 @@ public class LoginActivity extends Activity {
 					public boolean onEditorAction(TextView textView, int id,
 							KeyEvent keyEvent) {
 						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+							
+							mLogin.setEnabled(false);
 							attemptLogin();
 							return true;
 						}
@@ -143,7 +152,7 @@ public class LoginActivity extends Activity {
 					public void onClick(View view) {
 
 						final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
-						query.whereEqualTo("Email", mEmailView.getText().toString());
+						query.whereEqualTo("Email", "jon@roamer.com");
 
 						query.getFirstInBackground(new GetCallback<ParseObject>() {
 
@@ -155,9 +164,9 @@ public class LoginActivity extends Activity {
 							    	attemptLogin();
 
 							    } else {
-
+							    	
 									 //Show toast of lacking network connection
-									 Toast.makeText(getApplicationContext(), "No network connection!",
+									 Toast.makeText(context, "No network connection!",
 			    							   Toast.LENGTH_LONG).show();
 
 									 System.out.println("Network error is: "+e);
@@ -197,25 +206,25 @@ public class LoginActivity extends Activity {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
-
-								final String newpassword = password;
-								final GMailSender sender = new GMailSender("roamerroamer1@gmail.com", "Roamer1234");
-							    new AsyncTask<Void, Void, Void>() {
-							        @Override public Void doInBackground(Void... arg) {
-							            try {   
-							                sender.sendMail("Password Retrieval",   
-							                    "Hello!  Your current password is: "+ newpassword,   
-							                    "noreply@roamer.com",   
-							                    emailText.getText().toString());   
-							                dialog.dismiss();
-							                Toast.makeText(getApplicationContext(), "An email has been sent with your password.",
+								
+								//Request password reset
+								ParseUser.requestPasswordResetInBackground(emailText.getText().toString(),
+									new RequestPasswordResetCallback() {
+									public void done(ParseException e) {
+										if (e == null) {
+											// An email was successfully sent with reset instructions.
+											Toast.makeText(getApplicationContext(), "An email has been sent with your password.",
 							                		   Toast.LENGTH_LONG).show();
-							            } catch (Exception e) {   
-							                Log.e("SendMail", e.getMessage(), e);   
-							            }
-										return null; 
-							        }
-							    }.execute();
+											
+											dialog.dismiss();
+										} else {
+											// Something went wrong. Look at the ParseException to see what's up.
+											
+											Toast.makeText(getApplicationContext(), "Could not find the email address!",
+							                		   Toast.LENGTH_LONG).show();
+										}
+									}
+								});      		   
 		    				}
 		    			});
 
@@ -283,10 +292,9 @@ public class LoginActivity extends Activity {
 		// Store values at the time of the login attempt.
 		mEmail = mEmailView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
-		System.out.println("Email from login is: "+mEmail);
-		System.out.println("Password from login is: "+ mPassword);
 
 		boolean cancel = false;
+		final View focusViewFinal = mEmailView;
 		View focusView = null;
 
 		//Check for email and password in database
@@ -297,7 +305,7 @@ public class LoginActivity extends Activity {
 		mAuthTask = null;
 		showProgress(false);
 
-
+		
 		// Check for a valid password.
 		if (TextUtils.isEmpty(mPassword)) {
 			mPasswordView.setError(getString(R.string.error_field_required));
@@ -319,6 +327,25 @@ public class LoginActivity extends Activity {
 			focusView = mEmailView;
 			cancel = true;
 		}
+		
+		ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
+			  public void done(ParseUser user, ParseException e) {
+			    if (user != null) {
+			    	System.out.println("User found!  Nice job!");
+			    	mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+					showProgress(true);
+					mAuthTask = new UserLoginTask();
+					mAuthTask.execute((Void) null);
+			    	
+			      // Hooray! The user is logged in.
+			    } else {
+			      // Signup failed. Look at the ParseException to see what happened.
+			    	mEmailView.setError(getString(R.string.error_invalid_email_or_password));
+			    	focusViewFinal.requestFocus();
+					mLogin.setEnabled(true);
+			    }
+			  }
+			});
 
 		//Check that email address match
 			if (!userName.equals(mEmail)) {
@@ -336,11 +363,13 @@ public class LoginActivity extends Activity {
 			focusView = mPasswordView;
 			cancel = true;
 			}
-
+		
+		/*
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
 			// form field with an error.
 			focusView.requestFocus();
+			mLogin.setEnabled(true);
 		} else {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
@@ -349,6 +378,7 @@ public class LoginActivity extends Activity {
 			mAuthTask = new UserLoginTask();
 			mAuthTask.execute((Void) null);
 		}
+		*/
 	}
 
 	/**
@@ -450,6 +480,8 @@ public class LoginActivity extends Activity {
 		int credSave = 0;
 
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+		myDB.delete("MyRoamers", null, null);
+		
 
 
 		if(credSave == 1){
@@ -541,15 +573,27 @@ public class LoginActivity extends Activity {
 		final ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
 		query.whereEqualTo("Email", mEmail);
 		
+		Cursor checkEmail = myDB.rawQuery("SELECT * FROM " + "MyCred ", null);
+		checkEmail.moveToFirst();
+
+		int user = checkEmail.getColumnIndex("Email");
+
+		String userEmailNew = checkEmail.getString(user);
+		
+		if (!mEmail.equals(userEmailNew)){
+			myDB.delete("ChatTable", null, null);
+		}
 		
 		
 		ParseObject object;
 		
 		object = query.getFirst();
 				 //Get Data from Parse
-				 JSONArray  roamerList = object.getJSONArray("MyRoamers");
 				 JSONArray  requestList = object.getJSONArray("SentRequests");
 				 JSONArray  eventList = object.getJSONArray("MyEvents");
+				 
+				 myDB.delete("MyRoamers", null, null);  
+				 myDB.delete("MyEvents", null, null); 
 
 			    	String sentList = "none,none";
 			    	int newIndex = 0;
@@ -601,14 +645,10 @@ public class LoginActivity extends Activity {
 				 if (eventList != null){
 					 eventListCount = eventList.length();
 				 }
-				 if (roamerList != null){
-					 roamerListCount = roamerList.length();
-				 }
 				 
 				 ContentValues args = new ContentValues();
 					args.put("Email", pEmail);
-					args.put("CountR", eventListCount);
-					args.put("CountM", roamerListCount);
+					args.put("CountR", roamerListCount);
 					args.put("Username", pUsername);
 					args.put("Password", pPassword);
 					args.put("Industry", pIndustry);
@@ -625,12 +665,12 @@ public class LoginActivity extends Activity {
 					myDB.update("MyCred", args, "rowid" + "=" + 1, null);
 
 				    //Load MyRoamers
-					ArrayList<String> newList = new ArrayList();
-					myDB.delete("MyRoamers", null, null);  
+					//ArrayList<String> newList = new ArrayList();
 
 					if(eventList!=null){
 						
-						int i = 0;			
+						int i = 0;	
+						int countM = 0;
 						while(i < eventList.length()){
 							//Get events, noted as 'MyEvents'
 							final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
@@ -641,6 +681,7 @@ public class LoginActivity extends Activity {
 								e1.printStackTrace();
 							}
 							
+							
 							ParseObject object1 = query1.getFirst();
 
 										 byte[] picFile = null;
@@ -650,9 +691,19 @@ public class LoginActivity extends Activity {
 											// TODO Auto-generated catch block
 											e1.printStackTrace();
 										}
-
-										int day = object1.getDate("Date").getDay();
-							        	int month = object1.getDate("Date").getMonth();
+										
+										//Check that event date is today or earlier
+										Date currentDate = new Date(System.currentTimeMillis());
+							        	int dateCompare = object1.getDate("Date").compareTo(currentDate);
+							        	
+							        	System.out.println("Current Date is: "+currentDate);
+							        	System.out.println("Date of event is: "+object1.getDate("Date"));
+							        	System.out.println("Datecompare is: "+dateCompare);
+							        	
+							        	if (dateCompare > 0 || dateCompare == 0){
+		
+										int day = object1.getDate("Date").getDate()+1;
+							        	int month = object1.getDate("Date").getMonth()+1;
 							        	int year = object1.getDate("Date").getYear();
 							        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
 							        		
@@ -662,7 +713,7 @@ public class LoginActivity extends Activity {
 									        insertStmt.clearBindings();
 									        insertStmt.bindString(1,ConvertCode.convertType(object1.getInt("Type")));
 									        insertStmt.bindString(2,ConvertCode.convertLocation(object1.getInt("Location")));
-									        insertStmt.bindString(3,ConvertCode.convertType(object1.getInt("Time")));
+									        insertStmt.bindString(3,ConvertCode.convertTime(object1.getInt("Time")));
 									        insertStmt.bindString(4, fullDate);
 									        insertStmt.bindString(5, object1.getString("Host"));
 									        insertStmt.bindLong(6, object1.getLong("Attend")); 
@@ -672,63 +723,16 @@ public class LoginActivity extends Activity {
 									        insertStmt.executeInsert();
 									        
 									        myDB3.close();
+									        countM++;
+							        	}
 									        i++;
 						}
+			        	SQLiteDatabase myDB4 = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+			        	ContentValues args1 = new ContentValues();
+			        	args1.put("CountM", countM);
+			        	myDB4.update("MyCred", args1, "rowid" + "=" + 1, null);
+			        	myDB4.close();
 						
-					}
-
-					//If you have Roamers, populate that list
-					if( roamerList!=null ){
-						int i = 0;			
-						while(i < roamerList.length()){
-							//Get roamer, noted as 'MyRoamer'
-							final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
-							try {
-								query1.whereEqualTo("Username", roamerList.get(i).toString());
-							} catch (JSONException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							
-							ParseObject object1 = query1.getFirst();
-							
-							int sex = 0;
-							 if(object1.getBoolean("Sex") == true){
-								 sex = 1;
-							 }
-							 byte[] picFile = null;
-							try {
-								picFile = object1.getParseFile("Pic").getData();
-							} catch (ParseException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							
-							//Convert Start date to actual string
-							int day = object1.getCreatedAt().getDay();
-				        	int month = object1.getCreatedAt().getMonth();
-				        	int year = object1.getCreatedAt().getYear();
-				        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-							
-								SQLiteDatabase myDB2 = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-						       	String sql =   "INSERT INTO MyRoamers(Pic,Username,Loc,Start,Industry,Sex,Job,Travel,Hotel,Air) VALUES(?,?,?,?,?,?,?,?,?,?)";
-						        SQLiteStatement insertStmt      =   myDB2.compileStatement(sql);
-						        insertStmt.clearBindings();
-						        insertStmt.bindBlob(1,picFile);
-						        insertStmt.bindString(2,object1.getString("Username"));
-						        insertStmt.bindLong(3, object1.getInt("CurrentLocation"));
-						        insertStmt.bindString(4, fullDate);
-						        insertStmt.bindLong(5, object1.getInt("Industry"));
-						        insertStmt.bindLong(6, sex);
-						        insertStmt.bindLong(7, object1.getInt("Job"));
-						        insertStmt.bindLong(8, object1.getInt("Travel"));
-						        insertStmt.bindLong(9, object1.getInt("Hotel"));
-						        insertStmt.bindLong(10, object1.getInt("Air"));
-						        insertStmt.executeInsert();
-								
-						        myDB2.close();
-							i++;
-						}
 					}
 			
 	 myDB.close();
@@ -795,5 +799,13 @@ public void updateLoginCount(){
 	}
 
 
+	public void onBackPressed() 
+	{
+		finish();
+		Intent homeIntent= new Intent(Intent.ACTION_MAIN);
+		homeIntent.addCategory(Intent.CATEGORY_HOME);
+		homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(homeIntent);
+	}
 
 }

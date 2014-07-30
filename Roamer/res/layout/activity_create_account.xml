@@ -126,7 +126,7 @@
         android:background="@drawable/field_entry"
         android:ems="10"
         android:inputType="textEmailAddress"
-        android:maxLength="20"
+        android:maxLength="30"
         android:textColor="@color/DarkWhite" />
 
     <EditText
@@ -246,5 +246,29 @@
         android:layout_toRightOf="@+id/mapImage"
         android:background="@color/transparent"
         android:src="@drawable/selector_terms_conditions" />
+
+
+        <ImageView
+            android:id="@+id/imageTermsAndConditions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/Grey"
+            android:scaleType="center"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="vertical|horizontal"
+            android:src="@drawable/terms"
+            android:visibility="invisible" />
+
+    <ImageButton
+        android:id="@+id/imageFinishTerms1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/checkFemale"
+        android:layout_below="@+id/agreeCheck"
+        android:background="@color/transparent"
+        android:src="@drawable/x"
+        android:visibility="invisible" />
 
 </RelativeLayout>

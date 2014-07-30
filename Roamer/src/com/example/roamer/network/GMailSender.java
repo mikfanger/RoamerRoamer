@@ -17,6 +17,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import android.widget.Toast;
+
 public class GMailSender extends javax.mail.Authenticator {   
     private String mailhost = "smtp.gmail.com";   
     private String user;   
@@ -66,6 +68,7 @@ public class GMailSender extends javax.mail.Authenticator {
         Transport transport = session.getTransport("smtp");
         transport.connect("smtp.gmail.com", 587, this.user, this.password);
         transport.sendMessage(message, message.getAllRecipients());  
+        
         }catch(Exception e){
         	System.out.println("Mail not being sent!");
         	System.out.println("Exception is: "+e.toString());
