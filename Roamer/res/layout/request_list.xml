@@ -44,7 +44,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="20dp"
                 android:cacheColorHint="@color/DarkWhite"
-                android:divider="@drawable/hr"
+                android:divider="@color/transparent"
                 android:dividerHeight="5.0sp"
                 android:paddingBottom="5dp"
                 android:paddingLeft="30dp"

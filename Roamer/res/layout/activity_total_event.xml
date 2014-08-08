@@ -11,10 +11,11 @@
 
     <TextView
         android:id="@+id/textChildType"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView3"
-        android:layout_alignLeft="@+id/textChildDate"
+        android:layout_alignLeft="@+id/textChildLocation"
+        android:layout_alignRight="@+id/textChildDesc"
         android:layout_alignTop="@+id/textView3"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/Red" />
@@ -68,22 +69,11 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textChildDate"
+        android:layout_alignLeft="@+id/textChildType"
         android:layout_alignRight="@+id/textChildDesc"
         android:layout_marginBottom="15dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/DarkWhite" />
-
-    <TextView
-        android:id="@+id/textProfileAir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textChildDate"
-        android:layout_alignTop="@+id/imageChildImage"
-        android:layout_marginTop="16dp"
-        android:text="Attending"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/imageBackFromMyEvent"
@@ -110,7 +100,7 @@
 
     <TextView
         android:id="@+id/textChildDesc"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="45dp"
         android:layout_below="@+id/textChildLocation"
         android:layout_centerHorizontal="true"
@@ -121,10 +111,11 @@
 
     <TextView
         android:id="@+id/textChildLocation"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textChildType"
+        android:layout_alignRight="@+id/textChildDesc"
         android:layout_below="@+id/textView3"
+        android:layout_toRightOf="@+id/imageChildImage"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/Red" />
 
@@ -134,7 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textProfileTravel"
         android:layout_alignBottom="@+id/textProfileTravel"
-        android:layout_alignLeft="@+id/textChildDate"
+        android:layout_alignLeft="@+id/textChildType"
         android:layout_alignRight="@+id/textChildDate"
         android:textColor="@color/Red" />
 
@@ -143,7 +134,8 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textChildType"
-        android:layout_alignLeft="@+id/textChildHost"
+        android:layout_alignLeft="@+id/textChildType"
+        android:layout_alignRight="@+id/textChildHost"
         android:layout_marginBottom="39dp"
         android:textColor="@color/Red" />
 
@@ -184,9 +176,20 @@
         android:id="@+id/imageButtonUnattendEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/imageButtonJoin"
         android:layout_below="@+id/textChildDesc"
-        android:layout_toLeftOf="@+id/textChildLocation"
         android:background="@color/transparent"
         android:src="@drawable/unattend" />
+
+    <TextView
+        android:id="@+id/textProfileAir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageBackFromMyEvent"
+        android:layout_toRightOf="@+id/imageButtonJoin"
+        android:text="Attending"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
 </RelativeLayout>

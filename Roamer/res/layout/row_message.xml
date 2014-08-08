@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:layout_height="match_parent"
     android:layout_marginLeft="2dp"
     android:gravity="center_vertical"
@@ -56,5 +56,16 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/DarkWhite"
         android:textStyle="italic" />
+
+    <ImageView
+        android:id="@+id/imageViewNewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textRecentDate"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp"
+        android:background="@color/transparent"
+        android:src="@drawable/honeycomb_mail"
+        android:visibility="invisible" />
 
 </RelativeLayout>

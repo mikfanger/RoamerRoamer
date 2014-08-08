@@ -173,4 +173,25 @@
         android:src="@drawable/selector_new_mail"
         android:visibility="invisible" />
 
+    <TextView
+        android:id="@+id/textViewWelcom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkEventsButton"
+        android:layout_below="@+id/roamerCreateTag"
+        android:text="Welcome back, "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/textViewUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/getMyRoamersButton"
+        android:layout_below="@+id/roamerCreateTag"
+        android:text="userName"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/NewBlack"
+        android:textSize="15sp" />
+
 </RelativeLayout>

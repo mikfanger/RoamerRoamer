@@ -16,7 +16,7 @@
 
 package graphics;
 
-import com.example.roamer.R;
+import com.roamer.R;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;

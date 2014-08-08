@@ -49,18 +49,29 @@
             android:text="Your Roamers"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/DarkWhite" />
+        
+        <ProgressBar
+        	android:id="@+id/progressBarMyRoamers"
+        	style="?android:attr/progressBarStyleLarge"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_centerHorizontal="true"
+        	android:layout_centerVertical="true"
+        	android:layout_marginBottom="16dp"
+        	android:visibility="gone" />
+        
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/imageView2"
+            android:cacheColorHint="@color/DarkWhite"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            tools:listitem="@android:layout/simple_expandable_list_item_1" />
 
     </RelativeLayout>
-
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:cacheColorHint="@color/DarkWhite"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        android:paddingLeft="30dp"
-        android:paddingTop="10dp"
-        tools:listitem="@android:layout/simple_expandable_list_item_1" />
 
 </LinearLayout>

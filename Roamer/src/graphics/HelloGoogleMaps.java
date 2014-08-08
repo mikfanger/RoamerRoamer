@@ -36,8 +36,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.roamer.R;
-import com.example.roamer.events.CreateEventActivity;
+import com.roamer.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,6 +56,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.roamer.events.CreateEventActivity;
 
 public class HelloGoogleMaps extends FragmentActivity implements LocationListener,
 OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClickListener{

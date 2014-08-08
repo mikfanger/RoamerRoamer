@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.roamer"
+    package="com.roamer"
     android:configChanges="keyboardHidden|orientation|screenSize"
     android:screenOrientation="portrait"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <permission
-        android:name="com.example.roamer.permission.C2D_MESSAGE"
+        android:name="com.roamer.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -29,7 +29,7 @@
         android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.roamer.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.roamer.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -45,7 +45,7 @@
         android:targetSdkVersion="19" />
 
     <application
-        android:name="com.example.roamer.ParseApplication"
+        android:name="com.roamer.ParseApplication"
         android:allowBackup="true"
         android:icon="@drawable/logo_no_text"
         android:label="@string/app_name"
@@ -53,7 +53,7 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name="com.example.roamer.IntroActivity"
+            android:name="com.roamer.IntroActivity"
             android:allowBackup="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -65,36 +65,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.roamer.HomeScreenActivity"
+            android:name="com.roamer.HomeScreenActivity"
             android:label="@string/home_title_string"
-            android:parentActivityName="com.example.roamer.HomeScreenActivity"
+            android:parentActivityName="com.roamer.HomeScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.checkinbox.InboxActivity"
-            android:label="@string/title_inbox"
-            android:parentActivityName="com.example.roamer.HomeScreenActivity"
+            android:name="com.roamer.checkinbox.InboxActivity"
+            android:parentActivityName="com.roamer.HomeScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.SendMessage"
+            android:name="com.roamer.SendMessage"
             android:label="@string/title_send_message"
-            android:parentActivityName="com.example.roamer.HomeScreenActivity"
+            android:parentActivityName="com.roamer.HomeScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.PersonListActivity"
+            android:name="com.roamer.PersonListActivity"
             android:label="@string/title_person_list"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.PersonDetailActivity"
+            android:name="com.roamer.PersonDetailActivity"
             android:label="@string/title_person_detail"
-            android:parentActivityName="com.example.roamer.PersonListActivity"
+            android:parentActivityName="com.roamer.PersonListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
             <meta-data
@@ -106,136 +105,126 @@
         </service>
 
         <activity
-            android:name="com.example.roamer.LoginActivity"
+            android:name="com.roamer.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
-            android:name="com.example.roamer.ExplainationActivity"
+            android:name="com.roamer.ExplainationActivity"
             android:label="@string/title_activity_explaination"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.CreateAccountActivity"
+            android:name="com.roamer.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.CreateAccountActivity2"
+            android:name="com.roamer.CreateAccountActivity2"
             android:label="@string/title_activity_create_account_activity2"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.NoTitleBar.WithColoredSpinners" >
         </activity>
         <activity
-            android:name="com.example.roamer.CreateAccountActivityPic"
+            android:name="com.roamer.CreateAccountActivityPic"
             android:label="@string/title_activity_create_account_activity_pic"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.NoTitleBar.WithColoredSpinners" >
         </activity>
         <activity
-            android:name="com.example.roamer.profilelist.ProfileListActivity"
+            android:name="com.roamer.profilelist.ProfileListActivity"
             android:label="@string/title_profile_list_activity"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.SettingsActivity"
+            android:name="com.roamer.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.example.roamer.HomeScreenActivity"
+            android:parentActivityName="com.roamer.HomeScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.SettingsActivity2"
+            android:name="com.roamer.SettingsActivity2"
             android:label="@string/title_activity_settings_activity2"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.NoTitleBar.WithColoredSpinners" >
         </activity>
         <activity
-            android:name="com.example.roamer.profilelist.MyRoamersListActivity"
+            android:name="com.roamer.profilelist.MyRoamersListActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.example.roamer.HomeScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.events.EventsActivity"
+            android:name="com.roamer.events.EventsActivity"
+            android:label="@string/title_activity_events"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity
+            android:name="com.roamer.events.AllEvents"
+            android:label="@string/title_activity_events"
+            android:theme="@android:style/Theme.NoTitleBar" >
+		</activity>
+		<activity
+            android:name="com.roamer.events.MyEvents"
             android:label="@string/title_activity_events"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.events.AllEvents"
-            android:label="@string/title_activity_events"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.example.roamer.events.MyEvents"
-            android:label="@string/title_activity_events"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.example.roamer.events.TotalEventActivity"
+            android:name="com.roamer.events.TotalEventActivity"
             android:label="@string/title_activity_total_event"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
-        <activity
-            android:name="com.example.roamer.checkinbox.DiscussActivity"
+		<activity
+            android:name="com.roamer.checkinbox.DiscussActivity"
             android:label="@string/title_activity_total_event"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
         <activity
-            android:name="com.example.roamer.profilelist.RoamerProfileActivity"
+            android:name="com.roamer.profilelist.RoamerProfileActivity"
             android:label="@string/title_activity_roamer_profile"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.events.CreateEventActivity"
+            android:name="com.roamer.events.CreateEventActivity"
             android:label="@string/title_activity_create_event"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
         <activity
-            android:name="com.example.roamer.checkinbox.ChatsAndRequestsActivity"
+            android:name="com.roamer.checkinbox.ChatsAndRequestsActivity"
             android:label="@string/title_activity_chats_and_requests"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-
+            android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		
         <service android:name="com.parse.PushService" />
 
         <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.RECEIVE_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        
-        <receiver android:name="com.example.roamer.checkinbox.InboxActivity.ParseBroadcastReceiver" android:exported="false">
-  			<intent-filter>
-    			<action android:name="com.example.Roamer.UPDATE_STATUS" />
-  		</intent-filter>
-		</receiver>
-		
-        <receiver
-            android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+        <receiver android:name="com.checkinbox.ParseBroadcastReceiver" >
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="com.example.roamer" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="UPDATE_STATUS" />
             </intent-filter>
         </receiver>
 
+
         <activity
-            android:name="com.example.roamer.profilelist.RoamerProfileShortActivity"
+            android:name="com.roamer.profilelist.RoamerProfileShortActivity"
             android:label="@string/title_activity_roamer_profile_short"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.example.roamer.checkinbox.RequestsActivity"
+       		android:name="com.roamer.checkinbox.RequestsActivity"
             android:label="@string/title_activity_roamer_profile_short"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
@@ -253,7 +242,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.example.roamer.ForgotPasswordActivity"
+            android:name="com.roamer.ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password" >
         </activity>
     </application>
