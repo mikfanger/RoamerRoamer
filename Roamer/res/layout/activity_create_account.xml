@@ -3,7 +3,7 @@
     style="@style/generalnotitle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/DarkGrey" >
+    android:background="@color/RoamerGrey" >
 
     <ImageView
         android:id="@+id/imageChildImage"

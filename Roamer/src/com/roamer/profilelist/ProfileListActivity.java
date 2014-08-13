@@ -9,12 +9,16 @@ import java.util.Date;
 import java.util.List;
 
 import com.roamer.R;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.roamer.ConvertCode;
 import com.roamer.HomeScreenActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +29,9 @@ import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -45,6 +51,7 @@ public class ProfileListActivity extends Activity {
     ListView listView;
     final Context context = this;
     private ArrayList<Item> roamersArray;
+    private View roamersProgressView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class ProfileListActivity extends Activity {
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.roamers_list);
        
+        roamersProgressView = findViewById(R.id.progressBarFindRoamers);
               
         TextView currentText = (TextView) findViewById(R.id.currentLocation);
         
@@ -81,20 +89,12 @@ public class ProfileListActivity extends Activity {
     public void createListView(String Location)
     {
     	
+    	
+    	 listView = (ListView) findViewById(R.id.listView);
+    	 
+    	 //Load all roamers in area
     	 loadArray();
-    	 Model.LoadModel(roamersArray);
-         
-         listView = (ListView) findViewById(R.id.listView);
-         String[] ids = new String[Model.Items.size()];
-         for (int i= 0; i < ids.length; i++){
-        	 
-        	 
-             ids[i] = Integer.toString(i+1);
-         }
-
-         ItemAdapter adapter = new ItemAdapter(this,R.layout.row_roamer, ids);
-         listView.setAdapter(adapter);
-         
+    	 
          //Add Roamer if selected
 		 listView.setOnItemClickListener(new OnItemClickListener() {
 	            public void onItemClick(AdapterView<?> parent, View view,
@@ -158,6 +158,9 @@ public class ProfileListActivity extends Activity {
    }
    
    public void loadArray(){
+	   
+	showProgress(true);
+	
    	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
    	
    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid "+"= "+1, null);
@@ -165,50 +168,102 @@ public class ProfileListActivity extends Activity {
    	int index, indexName;
    	index = cur.getColumnIndex("CurrentLocation");
    	indexName = cur.getColumnIndex("Username");
-   	String myName = cur.getString(indexName);
+   	final String myName = cur.getString(indexName);
    	
    	int locationInt = cur.getInt(index);
    	roamersArray = new ArrayList<Item>();
    	
    	//Only proceed if a location is not 'Not Selected'
    	if (locationInt != 0){
-   	   	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
-   	   	query.whereEqualTo("CurrentLocation", locationInt);
-   	   	try {
-   	   		
-   				List<ParseObject> roamerList = query.find();
-   				int i = 0;
-   			
-   	       	String name;
-   	       	boolean sex;
-   	       	byte[] pic = null;
-   	       	String location;
-   	       	String eventId;
-   	       	Date date;
-   	       	int industry;
-   	       	
-   				if(roamerList.size()>0){
-   					
-   		        	name = roamerList.get(i).getString("Username");
-   		        	
-   		        	sex = roamerList.get(i).getBoolean("Sex");
-   		        	location = getLocationText(roamerList.get(i).getInt("Location"));
-   		        	eventId = roamerList.get(i).getString("objectId");
-   		        	date = roamerList.get(i).getCreatedAt();
-   		        	industry = roamerList.get(i).getInt("Industry");
-   		        	
-   		        	int day = date.getDay();
-   		        	int month = date.getMonth();
-   		        	int year = date.getYear();
-   		        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-   		        	
-   		        	try {
-   						pic = roamerList.get(i).getParseFile("Pic").getData();
-   					} catch (ParseException e1) {
-   						// TODO Auto-generated catch block
-   						e1.printStackTrace();
-   					}
-   		        	catch (NullPointerException e) {
+   	 ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
+   	 query.whereEqualTo("CurrentLocation", locationInt);
+   	   	
+   	 query.findInBackground(new FindCallback<ParseObject>() {
+   	    public void done(List<ParseObject> roamerList, ParseException e) {
+   	    	
+   	    	
+   	        if (e == null) {
+   	        	
+   	    	   	try {
+   	    	   		
+   	   			int i = 0;
+   	   			
+   	   	       	String name;
+   	   	       	boolean sex;
+   	   	       	byte[] pic = null;
+   	   	       	String location;
+   	   	       	String eventId;
+   	   	       	Date date;
+   	   	       	int industry;
+   	   	       	
+   	   				if(roamerList.size()>0){
+   	   					
+   	   		        	name = roamerList.get(i).getString("Username");
+   	   		        	
+   	   		        	sex = roamerList.get(i).getBoolean("Sex");
+   	   		        	location = getLocationText(roamerList.get(i).getInt("Location"));
+   	   		        	eventId = roamerList.get(i).getString("objectId");
+   	   		        	date = roamerList.get(i).getCreatedAt();
+   	   		        	industry = roamerList.get(i).getInt("Industry");
+   	   		        	
+   	   		        	int day = date.getDay();
+   	   		        	int month = date.getMonth();
+   	   		        	int year = date.getYear();
+   	   		        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+   	   		        	
+   	   		        	try {
+   	   						pic = roamerList.get(i).getParseFile("Pic").getData();
+   	   					} catch (ParseException e1) {
+   	   						// TODO Auto-generated catch block
+   	   						e1.printStackTrace();
+   	   					}
+   	   		        	catch (NullPointerException e2) {
+   	   		        		InputStream ims = null;
+   	   		                try {
+   	   		                    ims = context.getAssets().open("default_userpic.png");
+   	   		                } catch (IOException e3) {
+   	   		                    e.printStackTrace();
+   	   		                }
+   	   		                // load image as Drawable
+   	   		                Drawable d = Drawable.createFromStream(ims, null);
+   	   		                // set image to ImageView
+   	   		                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+
+   	   		                ByteArrayOutputStream out = new ByteArrayOutputStream();
+   	   		                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+   	   		                pic= out.toByteArray(); 
+   	   		        	}
+   	   		        	
+   	   		        	
+   	   		        	if (!name.equals(myName)){
+   	   		        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
+   	   	   		    		
+   	   		        	}
+   	   		    		i++;
+   	   				}
+   	   	           
+   	   	       	
+   	   	   		while (i < (roamerList.size())){
+   	   	   			
+   	   	   			name = roamerList.get(i).getString("Username");
+   	   	        	sex = roamerList.get(i).getBoolean("Sex");
+   	   	        	location = getLocationText(roamerList.get(i).getInt("Location"));
+   	   	        	eventId = roamerList.get(i).getString("objectId");
+   	   	        	date = roamerList.get(i).getCreatedAt();
+   	   	        	industry = roamerList.get(i).getInt("Industry");
+   	   	        	
+   	   	        	int day = date.getDay();
+   	   	        	int month = date.getMonth();
+   	   	        	int year = date.getYear();
+   	   	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+   	   	        	
+   	   	        	try {
+   	   					pic = roamerList.get(i).getParseFile("Pic").getData();
+   	   				} catch (ParseException e1) {
+   	   					// TODO Auto-generated catch block
+   	   					e1.printStackTrace();
+   	   				}
+   	   	        	catch (NullPointerException e4) {
    		        		InputStream ims = null;
    		                try {
    		                    ims = context.getAssets().open("default_userpic.png");
@@ -224,65 +279,38 @@ public class ProfileListActivity extends Activity {
    		                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
    		                pic= out.toByteArray(); 
    		        	}
-   		        	
-   		        	
-   		        	if (!name.equals(myName)){
-   		        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
-   	   		    		
-   		        	}
-   		    		i++;
-   				}
-   	           
-   	       	
-   	   		while (i < (roamerList.size())){
-   	   			
-   	   			name = roamerList.get(i).getString("Username");
-   	        	sex = roamerList.get(i).getBoolean("Sex");
-   	        	location = getLocationText(roamerList.get(i).getInt("Location"));
-   	        	eventId = roamerList.get(i).getString("objectId");
-   	        	date = roamerList.get(i).getCreatedAt();
-   	        	industry = roamerList.get(i).getInt("Industry");
-   	        	
-   	        	int day = date.getDay();
-   	        	int month = date.getMonth();
-   	        	int year = date.getYear();
-   	        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-   	        	
-   	        	try {
-   					pic = roamerList.get(i).getParseFile("Pic").getData();
-   				} catch (ParseException e1) {
-   					// TODO Auto-generated catch block
-   					e1.printStackTrace();
-   				}
-   	        	catch (NullPointerException e) {
-	        		InputStream ims = null;
-	                try {
-	                    ims = context.getAssets().open("default_userpic.png");
-	                } catch (IOException e2) {
-	                    e.printStackTrace();
-	                }
-	                // load image as Drawable
-	                Drawable d = Drawable.createFromStream(ims, null);
-	                // set image to ImageView
-	                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
-
-	                ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-	                pic= out.toByteArray(); 
-	        	}
-   	        	
-   	        	
-   	        	if (!name.equals(myName)){
-		        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
-	   		    		
-		        }
-   	        	i++;
-   	   		}
-   			} catch (ParseException e2) {
-   				// TODO Auto-generated catch block
-   				e2.printStackTrace();
-   			}
+   	   	        	
+   	   	        	
+   	   	        	if (!name.equals(myName)){
+   			        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
+   		   		    		
+   			        }
+   	   	        	i++;
+   	   	   		}
+   	   	   		
+   	   			} 
+   	    	   	finally{
+   	    	   		
+   	    	   	Model.LoadModel(roamersArray);
+   	         
+   	    	   	String[] ids = new String[Model.Items.size()];
+   	    	   	for (int i= 0; i < ids.length; i++){
+   	    	   		ids[i] = Integer.toString(i+1);
+   	    	   	}
+   	    	   	
+   	    	   	ItemAdapter adapter = new ItemAdapter(context,R.layout.row_roamer, ids);
+   	    	   	listView.setAdapter(adapter);
+   	    	   		
+   	    	   	showProgress(false);
+   	    	   	}
+   	    	   	
+   	        } else {
+   	            System.out.println("Error: " + e.getMessage());
+   	        }
+   	    }
+   	});
    	}
+
    	else{
    		
    		Toast toast = Toast.makeText(context, "Need to set your location!",
@@ -290,8 +318,37 @@ public class ProfileListActivity extends Activity {
    		toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0, 0);
    		toast.show();
    	}
-	
    }
+   
+   /**
+	 * Shows the progress UI and hides the form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int mediumAnimTime = getResources().getInteger(
+					android.R.integer.config_mediumAnimTime);
+
+			roamersProgressView.setVisibility(View.VISIBLE);
+			roamersProgressView.animate().setDuration(mediumAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							roamersProgressView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			roamersProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+		}
+	}
    
    @Override
    public void onBackPressed() 

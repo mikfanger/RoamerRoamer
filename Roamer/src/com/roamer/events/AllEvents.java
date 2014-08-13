@@ -134,6 +134,14 @@ public class AllEvents extends Activity {
 		checkTime = (CheckBox) findViewById(R.id.checkBoxType);
 		checkType = (CheckBox) findViewById(R.id.checkBoxTime);
 		
+		ImageView timeImage = (ImageView) findViewById(R.id.imageViewTime);
+		ImageView dateImage = (ImageView) findViewById(R.id.imageViewDate);
+		ImageView typeImage = (ImageView) findViewById(R.id.imageViewType);
+		
+		timeImage.bringToFront();
+		dateImage.bringToFront();
+		typeImage.bringToFront();
+		
 		type = preferences.getInt("type",1);;
 		time = preferences.getInt("time",1);;
 		

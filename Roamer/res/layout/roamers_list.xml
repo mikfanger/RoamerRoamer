@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/DarkGrey"
+    android:layout_height="match_parent"
+    android:background="@color/RoamerGrey"
     android:orientation="vertical"
     tools:context=".ProfileListActivity" >
 
@@ -49,19 +49,36 @@
             android:text="Find roamers near you!"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/DarkWhite" />
-
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/listView"
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:orientation="horizontal" >
+        
+        <ProgressBar
+        android:id="@+id/progressBarFindRoamers"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
-        android:layout_height="430dp"
-        android:cacheColorHint="@color/DarkWhite"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"
-        android:paddingLeft="30dp"
-        android:paddingTop="10dp"
-        tools:listitem="@android:layout/simple_expandable_list_item_1" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
+        
+    	<ListView
+    	    android:id="@+id/listView"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="match_parent"
+    	    android:cacheColorHint="@color/DarkWhite"
+    	    android:divider="@android:color/transparent"
+    	    android:dividerHeight="10.0sp"
+    	    android:paddingLeft="30dp"
+    	    android:paddingTop="10dp"
+    	    tools:listitem="@android:layout/simple_expandable_list_item_1" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -112,7 +129,6 @@
             android:layout_alignTop="@+id/locationName"
             android:background="@color/transparent"
             android:src="@drawable/buildings" />
-
     </RelativeLayout>
 
 </LinearLayout>

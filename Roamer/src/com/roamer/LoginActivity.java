@@ -705,10 +705,6 @@ public class LoginActivity extends Activity {
 										Date currentDate = new Date(System.currentTimeMillis());
 							        	int dateCompare = object1.getDate("Date").compareTo(currentDate);
 							        	
-							        	System.out.println("Current Date is: "+currentDate);
-							        	System.out.println("Date of event is: "+object1.getDate("Date"));
-							        	System.out.println("Datecompare is: "+dateCompare);
-							        	
 							        	if (dateCompare > 0 || dateCompare == 0){
 		
 										int day = object1.getDate("Date").getDate()+1;

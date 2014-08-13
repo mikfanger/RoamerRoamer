@@ -11,6 +11,7 @@ import android.app.FragmentTransaction;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -77,6 +78,9 @@ tabHost.addTab(tabSpecApple);
 //set Windows tab as default (zero based)
 tabHost.setCurrentTab(2);
 
+tabHost.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.tab_selector);
+tabHost.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.tab_selector);
+
 }
 
 @Override
@@ -100,14 +104,14 @@ TabHost tabHost = getTabHost();
 Intent intentAndroid = new Intent().setClass(this, InboxActivity.class);
 TabSpec tabSpecAndroid = tabHost
   .newTabSpec("Inbox")
-  .setIndicator("", ressources.getDrawable(R.drawable.inbox_dark))
+  .setIndicator("", ressources.getDrawable(R.drawable.inbox_light))
   .setContent(intentAndroid);
 
 // All Events tab
 Intent intentApple = new Intent().setClass(this, RequestsActivity.class);
 TabSpec tabSpecApple = tabHost
   .newTabSpec("Requests")
-  .setIndicator("", ressources.getDrawable(R.drawable.requests_dark))
+  .setIndicator("", ressources.getDrawable(R.drawable.requests_light))
   .setContent(intentApple);
 
 

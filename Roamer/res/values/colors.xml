@@ -10,5 +10,7 @@
     <color name="DarkGrey">#354343</color>
     <color name="DarkWhite">#f3f2f3</color>
     <color name="Red">#e83a35</color>
+    <color name="RoamerGrey">#313234</color>
+    <color name="LightGray">#ffcccccc</color>
 
 </resources>

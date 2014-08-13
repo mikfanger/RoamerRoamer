@@ -4,7 +4,7 @@ import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseUser;
 import com.parse.PushService;
-import com.roamer.checkinbox.InboxActivity;
+import com.roamer.checkinbox.ChatsAndRequestsActivity;
 
 import android.app.Application;
 
@@ -25,7 +25,7 @@ public class ParseApplication extends Application {
 	ParseACL.setDefaultACL(defaultACL, true);
 
 	// Specify an Activity to handle all pushes by default.
-	PushService.setDefaultPushCallback(this, InboxActivity.class);
+	PushService.setDefaultPushCallback(this, ChatsAndRequestsActivity.class);
 			
 	
   }

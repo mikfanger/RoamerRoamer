@@ -14,6 +14,8 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.parse.FindCallback;
+import com.parse.ParseObject;
 import com.roamer.R;
 
 public class ItemAdapter extends ArrayAdapter<String> {
@@ -32,7 +34,7 @@ public class ItemAdapter extends ArrayAdapter<String> {
 
     }
 
-    @Override
+	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -48,14 +48,10 @@ public class MyRoamerItemAdapter extends ArrayAdapter<String> {
         
         
   
-        byte[] imageFile = MyRoamerModel.GetbyId(id).IconFile;
-        
+        byte[] imageFile = MyRoamerModel.GetbyId(id).IconFile;   
         textView.setText(MyRoamerModel.GetbyId(id).Name);
-        
         textViewLocation.setText(MyRoamerModel.GetbyId(id).Location);
-        
-        System.out.println("The location is: "+MyRoamerModel.GetbyId(id).Location);
-        
+
       //Set images either from database or default user.
         if(imageFile != null){
         	Bitmap bmp = BitmapFactory.decodeByteArray(imageFile, 0, imageFile.length);

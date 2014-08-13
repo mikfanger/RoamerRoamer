@@ -59,7 +59,6 @@ public class HomeScreenActivity extends Activity {
     private TextView textCity;
     private ImageButton newMailButton;
     private ImageButton sendButton;
-    private TextView currentUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +68,14 @@ public class HomeScreenActivity extends Activity {
     	SharedPreferences.Editor editor = preferences.edit();
 	    editor.putInt("typeCheck",0);
 	    editor.putInt("timeCheck",0);
+	    
+		editor.putString("location", "");
+		editor.putLong("eventType", 0);
+		editor.putLong("eventTime", 0);
+		editor.putLong("eventDay", 1);
+		editor.putLong("eventMonth", 1);
+		editor.putLong("eventYear", 2014);
+		editor.putString("eventComment", "");
 	    editor.commit();
 	    
         super.onCreate(savedInstanceState);
@@ -81,11 +88,9 @@ public class HomeScreenActivity extends Activity {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-        location = (TextView) findViewById(R.id.textCurLocation);
+        location = (TextView) findViewById(R.id.textCurLocations);
         textCity = (TextView) findViewById(R.id.textProfileTravel);
-        currentUserName = (TextView) findViewById(R.id.textViewUserName);
         location.setText(curLocation);
-        currentUserName.setText(username);
         
         sendButton = (ImageButton) findViewById(R.id.checkInboxButton);
         sendButton.setOnClickListener(new OnClickListener() {

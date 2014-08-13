@@ -12,7 +12,7 @@
         android:layout_above="@+id/form"
         android:layout_below="@+id/imageProfilePicture"
         android:layout_marginBottom="5dp"
-        android:background="@color/DarkGrey" >
+        android:background="@color/RoamerGrey" >
 
     </ListView>
 

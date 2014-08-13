@@ -20,11 +20,13 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 public class EventsActivity extends TabActivity implements
-		ActionBar.TabListener {
+		//ActionBar.TabListener, 
+		OnTabChangeListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -40,6 +42,7 @@ public class EventsActivity extends TabActivity implements
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	TabHost tabHost;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,21 +50,21 @@ public class EventsActivity extends TabActivity implements
 		setContentView(R.layout.activity_events);
  
 		Resources ressources = getResources(); 
-		TabHost tabHost = getTabHost(); 
+		tabHost = getTabHost(); 
 		
 		
 		// My Events tab
 		Intent intentAndroid = new Intent().setClass(this, MyEvents.class);
 		TabSpec tabSpecAndroid = tabHost
 		  .newTabSpec("My Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_light))
+		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_dark))
 		  .setContent(intentAndroid);
  
 		// All Events tab
 		Intent intentApple = new Intent().setClass(this, AllEvents.class);
 		TabSpec tabSpecApple = tabHost
 		  .newTabSpec("All Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_light))
+		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_dark))
 		  .setContent(intentApple);
 		
  
@@ -72,10 +75,10 @@ public class EventsActivity extends TabActivity implements
 		
  
 		//set Windows tab as default (zero based)
-		tabHost.setCurrentTab(2);
+		tabHost.setCurrentTab(1);
 		
-		tabHost.getTabWidget().getChildAt(1).setBackgroundColor(Color.DKGRAY);
-		tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.DKGRAY);
+		tabHost.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.tab_selector);
+		tabHost.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.tab_selector);
 				
 	}
 
@@ -84,83 +87,6 @@ public class EventsActivity extends TabActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.events, menu);
 		return true;
-	}
-
-	@Override
-	public void onTabSelected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
-		// When the given tab is selected, switch to the corresponding page in
-		// the ViewPager.
-		
-
-		mViewPager.setCurrentItem(tab.getPosition());
-		
-		Resources ressources = getResources(); 
-		TabHost tabHost = getTabHost(); 
- 
-		// My Events tab
-		Intent intentAndroid = new Intent().setClass(this, MyEvents.class);
-		TabSpec tabSpecAndroid = tabHost
-		  .newTabSpec("My Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_dark))
-		  .setContent(intentAndroid.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
- 
-		// All Events tab
-		Intent intentApple = new Intent().setClass(this, AllEvents.class);
-		TabSpec tabSpecApple = tabHost
-		  .newTabSpec("All Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_dark))
-		  .setContent(intentApple.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
- 
- 
-		// add all tabs 
-		tabHost.addTab(tabSpecAndroid);
-		tabHost.addTab(tabSpecApple);
- 
-		//set Windows tab as default (zero based)
-		tabHost.setCurrentTab(2);
-		onResume();
-	}
-
-	@Override
-	public void onTabUnselected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
-		
-mViewPager.setCurrentItem(tab.getPosition());
-		
-		Resources ressources = getResources(); 
-		TabHost tabHost = getTabHost(); 
- 
-		// My Events tab
-		Intent intentAndroid = new Intent().setClass(this, MyEvents.class);
-		TabSpec tabSpecAndroid = tabHost
-		  .newTabSpec("My Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_light))
-		  .setContent(intentAndroid.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
- 
-		// All Events tab
-		Intent intentApple = new Intent().setClass(this, AllEvents.class);
-		TabSpec tabSpecApple = tabHost
-		  .newTabSpec("All Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_light))
-		  .setContent(intentApple.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
- 
- 
-		// add all tabs 
-		tabHost.addTab(tabSpecAndroid);
-		tabHost.addTab(tabSpecApple);
- 
-		//set Windows tab as default (zero based)
-		tabHost.setCurrentTab(2);
-		finish();
-
-	}
-
-	@Override
-	public void onTabReselected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
-		finish();
-		
 	}
 
 	/**
@@ -231,6 +157,14 @@ mViewPager.setCurrentItem(tab.getPosition());
 					ARG_SECTION_NUMBER)));
 			return rootView;
 		}
+	}
+
+	@Override
+	public void onTabChanged(String tabId) {
+		// TODO Auto-generated method stub
+		
+		tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.parseColor("#313234"));
+		
 	}
 
 }

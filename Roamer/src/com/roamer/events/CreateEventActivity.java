@@ -14,7 +14,9 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.roamer.ConvertCode;
+import com.roamer.ExplainationActivity;
 import com.roamer.HomeScreenActivity;
+import com.roamer.LoginActivity;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -60,6 +62,15 @@ public class CreateEventActivity extends Activity {
 	public int currentLocation;
 	private SharedPreferences preferences;
 	
+	private long defaultType;
+	private long defaultTime;
+	private long defaultDay;
+	private long defaultMonth;
+	private long defaultYear;
+	private String defaultLocation;
+	private String defaultComment;
+	private DatePicker datePicker;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +80,22 @@ public class CreateEventActivity extends Activity {
 		
 		 blurbText = (EditText)findViewById(R.id.editText2);
 		 eventLocationPost = (TextView)findViewById(R.id.textEventLocationPost);
+     	 datePicker = (DatePicker) findViewById(R.id.datePicker1);
 		 
 		 preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		 location = preferences.getString("location","");
-		 eventLocationPost.setText(location);
+		 
+		 
+	     defaultComment = preferences.getString("eventComment", ""); 
+	     defaultDay = preferences.getLong("eventDay", 1); 
+	     defaultMonth = preferences.getLong("eventMonth", 1); 
+	     defaultYear = preferences.getLong("eventYear", 2014); 
+	     defaultType = preferences.getLong("eventType", 0); 
+	     defaultTime = preferences.getLong("eventTime", 0); 
+	     
+	     blurbText.setText(defaultComment);
+	     eventLocationPost.setText(location);
+     	 datePicker.updateDate((int)defaultYear, (int)defaultDay, (int)defaultMonth);
 		 
 		 ImageButton postButton = (ImageButton) findViewById(R.id.imageButtonPostEvent);
 	        postButton.setOnClickListener(new OnClickListener() {
@@ -82,10 +105,7 @@ public class CreateEventActivity extends Activity {
 	            	
 	            	//Add to events
 	            	finish();
-	            	DatePicker datePicker = (DatePicker) findViewById(R.id.datePicker1);
-	            	
-	            	
-	            	
+
 	            	//Save to Calendar
 	            	SimpleDateFormat sdf = new SimpleDateFormat("yy"); // Just the year, with 2 digits
 	            	String formattedDate = sdf.format(Calendar.getInstance().getTime());
@@ -94,8 +114,7 @@ public class CreateEventActivity extends Activity {
 	    	        day = datePicker.getDayOfMonth();
 	    	        month = datePicker.getMonth();
 	    	        
-	    	        System.out.println("day is: "+day);
-	    	        System.out.println("month is: "+month);
+
 	    	        Calendar c = Calendar.getInstance();
 	    	        
 	    	        eventDate.setDate(day);
@@ -187,9 +206,9 @@ public class CreateEventActivity extends Activity {
 		            	
     					Toast.makeText(getApplicationContext(), "Event Posted!", Toast.LENGTH_LONG).show();
 		            	eventLocationPost.setText("");
-		            	SharedPreferences.Editor editor = preferences.edit();
-		                editor.putString("location","");
-		                editor.commit();
+		            	SharedPreferences.Editor editor2 = preferences.edit();
+		                editor2.putString("location","");
+		                editor2.commit();
 		                
 	    	        }
 	    	        if(month - c.get(Calendar.MONTH) > 6){
@@ -220,6 +239,13 @@ public class CreateEventActivity extends Activity {
 	            @Override
 	            public void onClick(View v) {
 	            	
+	    	        //Save to preferences
+	    	        SharedPreferences.Editor editor = preferences.edit();
+	    	        
+	    	        editor.putLong("eventDay", datePicker.getDayOfMonth());
+	    	        editor.putLong("eventMonth", datePicker.getMonth());
+	    	        editor.commit();
+	    	        
 	            	Intent i=new Intent(CreateEventActivity.this,HelloGoogleMaps.class);
 	                startActivity(i);
 	            		  
@@ -251,6 +277,11 @@ public class CreateEventActivity extends Activity {
 	                String value = d.getValue();
 	                String key = d.getSpinnerText();
 	                
+	                //Save to preferences
+	    	        SharedPreferences.Editor editor = preferences.edit();
+	    	        editor.putLong("eventType", position);
+	    	        editor.commit();
+	                
 	                type = position+1;
 	            }
 
@@ -258,6 +289,7 @@ public class CreateEventActivity extends Activity {
 				public void onNothingSelected(AdapterView<?> arg0) {
 				}
 	        });
+	        position.setSelection((int)defaultType);
 	        
 	        //Time of Event
 	        Spinner position1 = (Spinner) findViewById(R.id.spinnerCreateTime);
@@ -282,6 +314,12 @@ public class CreateEventActivity extends Activity {
 	                //Get selected value of key 
 	                String value = d.getValue();
 	                String[] splitter = d.getSpinnerText().toString().split(":");
+	                
+	                //Save to preferences
+	    	        SharedPreferences.Editor editor = preferences.edit();
+	    	        editor.putLong("eventTime", position);
+	    	        editor.commit();
+	    	        
 	                time = position+1;
 	                
 	            }
@@ -290,8 +328,7 @@ public class CreateEventActivity extends Activity {
 				public void onNothingSelected(AdapterView<?> arg0) {
 				}
 	        });
-	        
-	        
+	        position1.setSelection((int)defaultTime);	        
 	}
 	
 	class MyData {
@@ -412,5 +449,22 @@ public class CreateEventActivity extends Activity {
 	    roamer.saveInBackground();
     	
     }
+    
+    @Override
+	public void onBackPressed() 
+	{
+    	SharedPreferences.Editor editor = preferences.edit();
+    	editor.putString("location", "");
+		editor.putLong("eventType", 0);
+		editor.putLong("eventTime", 0);
+		editor.putLong("eventDay", 1);
+		editor.putLong("eventMonth", 1);
+		editor.putLong("eventYear", 2014);
+		editor.putString("eventComment", "");
+	    editor.commit();
+	    
+		Intent i=new Intent(CreateEventActivity.this,HomeScreenActivity.class);
+	    startActivity(i);
+	}
 
 }
