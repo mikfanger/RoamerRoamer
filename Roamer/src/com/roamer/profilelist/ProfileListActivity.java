@@ -62,7 +62,7 @@ public class ProfileListActivity extends Activity {
        
         roamersProgressView = findViewById(R.id.progressBarFindRoamers);
               
-        TextView currentText = (TextView) findViewById(R.id.currentLocation);
+        TextView currentText = (TextView) findViewById(R.id.locationName);
         
         SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);
@@ -177,7 +177,7 @@ public class ProfileListActivity extends Activity {
    	if (locationInt != 0){
    	 ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
    	 query.whereEqualTo("CurrentLocation", locationInt);
-   	   	
+   	 query.orderByAscending("Username");  	
    	 query.findInBackground(new FindCallback<ParseObject>() {
    	    public void done(List<ParseObject> roamerList, ParseException e) {
    	    	

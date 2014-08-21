@@ -11,6 +11,7 @@
     <color name="DarkWhite">#f3f2f3</color>
     <color name="Red">#e83a35</color>
     <color name="RoamerGrey">#313234</color>
-    <color name="LightGray">#ffcccccc</color>
+    <color name="LightGray">#313234</color>
+    <color name="LightGray_Event">#262626</color>
 
 </resources>

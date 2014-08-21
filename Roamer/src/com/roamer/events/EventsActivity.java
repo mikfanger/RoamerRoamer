@@ -57,14 +57,14 @@ public class EventsActivity extends TabActivity implements
 		Intent intentAndroid = new Intent().setClass(this, MyEvents.class);
 		TabSpec tabSpecAndroid = tabHost
 		  .newTabSpec("My Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_dark))
+		  .setIndicator("", ressources.getDrawable(R.drawable.my_events_light))
 		  .setContent(intentAndroid);
  
 		// All Events tab
 		Intent intentApple = new Intent().setClass(this, AllEvents.class);
 		TabSpec tabSpecApple = tabHost
 		  .newTabSpec("All Events")
-		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_dark))
+		  .setIndicator("", ressources.getDrawable(R.drawable.all_events_light))
 		  .setContent(intentApple);
 		
  

@@ -12,6 +12,7 @@ import java.util.List;
 import graphics.FlyOutContainer;
 
 import com.roamer.R;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -44,8 +45,11 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
@@ -105,8 +109,12 @@ public class AllEvents extends Activity {
      private int month;
      private int year;
      private String parseEventId;
+     private String startingEventId = "";
 
      private SharedPreferences preferences;
+     
+     private boolean loadingMore = true;
+     
      
      
     FlyOutContainer root;
@@ -247,32 +255,30 @@ public class AllEvents extends Activity {
 		});
 		//show progress spinner
 		showProgress(true);
+		listView = (ListView) findViewById(R.id.listViewEvents);
 		
 		loadArray(type,dateStart,dateEnd,time);
-		listView = (ListView) findViewById(R.id.listViewEvents);
-		System.out.println("Amount of events is: "+eventsArray.size());
-		if (eventsArray.size() > 0){
-			
-			
-			Model.LoadModel(eventsArray);
-	        
-	        final String[] ids = new String[Model.Items.size()];
-	        for (int i= 0; i < ids.length; i++){
+		
+		/*
+		//If scolled to bottom, check to see if there are more events.
+		listView.setOnScrollListener(new OnScrollListener(){
 
-	            ids[i] = Integer.toString(i+1);
-	        }
-	        
-	        //hide progress spinner
-	        
-	        
-	        ItemAdapter adapter = new ItemAdapter(this,R.layout.row, ids);
-	        //final ItemAdapter adapter1 = new ItemAdapter(this,R.layout.row, ids);
-	        listView.setAdapter(adapter);
-	        
-	        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		}
-		showProgress(false);
-        
+			   @Override
+			   public void onScrollStateChanged(AbsListView view, int scrollState) {}
+
+			   @Override
+			   public void onScroll(AbsListView view, int firstVisibleItem,
+			     int visibleItemCount, int totalItemCount) {
+
+			   int lastInScreen = firstVisibleItem + visibleItemCount;    
+			   if((lastInScreen == totalItemCount) && (loadingMore)){     
+				   
+				   System.out.println("Loading more items!");
+				   loadArray(type,dateStart,dateEnd,time);
+			   }
+			}
+		});
+        */
         
         ImageButton sortButton = (ImageButton) findViewById(R.id.sortButton);
         sortButton.bringToFront();
@@ -495,194 +501,231 @@ public class AllEvents extends Activity {
     	int index;
     	index = cur.getColumnIndex("CurrentLocation");
     	int indexName = cur.getColumnIndex("Username");
+    	
+    	myDB.close();
+    	
     	usernameArray = new ArrayList<String>();
     	
     	usernameArray.add(cur.getString(indexName));
-    	int locationInt = cur.getInt(index);
+    	final int locationInt = cur.getInt(index);
     	eventsArray = new ArrayList<Item>();
     	
+    	Date dateToday = new Date(System.currentTimeMillis());
+    	
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
-    	query.whereEqualTo("Location", locationInt);
-    	try {
-    		
-			List<ParseObject> eventList = query.find();
-			int i = 0;
-			int nextEvent = 1;
-        	int typeNow;
-        	int location;
-        	int timeNow;
-        	int attend;
-        	String place;
-        	String desc;
-        	String host;
-        	Date date;
-        	byte[] pic = null;
-        	String eventId;
-        	
-			if(eventList.size()!=0 && locationInt != 0){
-				
-	        	
-	        	typeNow = eventList.get(i).getInt("Type");
-	        	host = eventList.get(i).getString("Host");
-	        	location = eventList.get(i).getInt("Location");
-	        	timeNow = eventList.get(i).getInt("Time");
-	        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
-	        	attend = eventList.get(i).getInt("Attend");
-	        	place = eventList.get(i).getString("Place");
-	        	date = eventList.get(i).getDate("Date");
-	        	eventId = eventList.get(i).getObjectId();
-	        	
-	        	try {
-					pic = eventList.get(i).getParseFile("Pic").getData();
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        	catch (NullPointerException e) {
-	        		InputStream ims = null;
-	                try {
-	                    ims = context.getAssets().open("default_userpic.png");
-	                } catch (IOException e2) {
-	                    e.printStackTrace();
-	                }
-	                // load image as Drawable
-	                Drawable d = Drawable.createFromStream(ims, null);
-	                // set image to ImageView
-	                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+		query.whereEqualTo("Location", locationInt);
+		query.whereGreaterThan("Date", dateToday);
+		query.findInBackground(new FindCallback<ParseObject>() {
+		    public void done(List<ParseObject> eventList, ParseException e) {
+		        if (e == null) {
+		        	int i = 0;
+					
+					
+					if (!startingEventId.equals("")){
+						while(!eventList.get(i).getObjectId().equals(startingEventId)){
+							i++;
+						}
+						i++;
+					}
 
-	                ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-	                pic= out.toByteArray(); 
-	        	}
-	        	
-	        	String timeString = "";
-	        	if (timeNow == 1){
-	        		timeString = "Mid-Day";
-	        	}
-	        	if (timeNow == 2){
-	        		timeString = "Evening";
-	        	}
-	        	if (timeNow == 3){
-	        		timeString = "Night";
-	        	}
-	        	
-	        	day = date.getDate();
-	        	month = date.getMonth();
-	        	year = date.getYear();
-	        	String fullDate = Integer.toString(month+1)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+					int finishI = i+30;
+					int nextEvent = 1;
+		        	int typeNow;
+		        	int location;
+		        	int timeNow;
+		        	int attend;
+		        	String place;
+		        	String desc;
+		        	String host;
+		        	Date date;
+		        	byte[] pic = null;
+		        	String eventId;
+		        	
+					if(eventList.size()!=0 && locationInt != 0){
+						
+						System.out.println("Event number is: "+i);
+			        	startingEventId = eventList.get(i).getObjectId();
+			        	typeNow = eventList.get(i).getInt("Type");
+			        	host = eventList.get(i).getString("Host");
+			        	location = eventList.get(i).getInt("Location");
+			        	timeNow = eventList.get(i).getInt("Time");
+			        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
+			        	attend = eventList.get(i).getInt("Attend");
+			        	place = eventList.get(i).getString("Place");
+			        	date = eventList.get(i).getDate("Date");
+			        	eventId = eventList.get(i).getObjectId();
+			        	
+			        	try {
+							pic = eventList.get(i).getParseFile("Pic").getData();
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+			        	catch (NullPointerException e1) {
+			        		InputStream ims = null;
+			                try {
+			                    ims = context.getAssets().open("default_userpic.png");
+			                } catch (IOException e2) {
+			                    e1.printStackTrace();
+			                }
+			                // load image as Drawable
+			                Drawable d = Drawable.createFromStream(ims, null);
+			                // set image to ImageView
+			                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
 
-	        	//Check that the date of the event is after or equal to today.
-	        	Date currentDate = new Date(System.currentTimeMillis());
-	        	
-	        	int currentDay = currentDate.getDate();
-	        	currentDate.setDate(currentDay-1);
-	        	int dateCompare = date.compareTo(currentDate);
+			                ByteArrayOutputStream out = new ByteArrayOutputStream();
+			                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			                pic= out.toByteArray(); 
+			        	}
+			        	
+			        	String timeString = "";
+			        	if (timeNow == 1){
+			        		timeString = "Mid-Day";
+			        	}
+			        	if (timeNow == 2){
+			        		timeString = "Evening";
+			        	}
+			        	if (timeNow == 3){
+			        		timeString = "Night";
+			        	}
+			        	
+			        	day = date.getDate();
+			        	month = date.getMonth();
+			        	year = date.getYear();
+			        	String fullDate = Integer.toString(month+1)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+			        	
+			        	//Check that the date of the event is after or equal to today.
+			        	Date currentDate = new Date(System.currentTimeMillis());
+			        	
+			        	int currentDay = currentDate.getDate();
+			        	currentDate.setDate(currentDay-1);
+			        	int dateCompare = date.compareTo(currentDate);
 
-	        	if (dateCompare > 0 || dateCompare == 0){
-	        		if (checkEventBySort(date,typeNow,timeNow) > 0){
-	        	 		eventsArray.add(new Item(nextEvent, 
-			    				pic, 
-			    				host, 
-			    				fullDate, 
-			    				ConvertCode.convertType(typeNow), 
-			    				Integer.toString(attend),
-			    				place,
-			    				desc,
-			    				eventId,
-			    				timeString));
-	        	 		nextEvent++;
-	        		}		    		
-	        	}
-	        	i++;
-            
-        	
-    		while (i < (eventList.size())){
-    			
-    			typeNow = eventList.get(i).getInt("Type");
-	        	host = eventList.get(i).getString("Host");
-	        	location = eventList.get(i).getInt("Location");
-	        	date = eventList.get(i).getDate("Date");
-	        	timeNow = eventList.get(i).getInt("Time");
-	        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
-	        	attend = eventList.get(i).getInt("Attend");
-	        	place = eventList.get(i).getString("Place");
-	        	eventId = eventList.get(i).getObjectId();
-	        	
-	        	try {
-					pic = eventList.get(i).getParseFile("Pic").getData();
-				} 
-	        	catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        	catch (NullPointerException e) {
-	        		InputStream ims = null;
-	                try {
-	                    ims = context.getAssets().open("default_userpic.png");
-	                } catch (IOException e2) {
-	                    e.printStackTrace();
-	                }
-	                // load image as Drawable
-	                Drawable d = Drawable.createFromStream(ims, null);
-	                // set image to ImageView
-	                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+			        	if (dateCompare > 0 || dateCompare == 0){
+			        		if (checkEventBySort(date,typeNow,timeNow) > 0){
+			        	 		eventsArray.add(new Item(nextEvent, 
+					    				pic, 
+					    				host, 
+					    				fullDate, 
+					    				ConvertCode.convertType(typeNow), 
+					    				Integer.toString(attend),
+					    				place,
+					    				desc,
+					    				eventId,
+					    				timeString));
+			        	 		nextEvent++;
+			        		}		    		
+			        	}
+			        	i++;
+		            
+		        	
+		    		while ((i < eventList.size()) && (i < finishI)){
+		    			
+		    			startingEventId = eventList.get(i).getObjectId();
+		    			typeNow = eventList.get(i).getInt("Type");
+			        	host = eventList.get(i).getString("Host");
+			        	location = eventList.get(i).getInt("Location");
+			        	date = eventList.get(i).getDate("Date");
+			        	timeNow = eventList.get(i).getInt("Time");
+			        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
+			        	attend = eventList.get(i).getInt("Attend");
+			        	place = eventList.get(i).getString("Place");
+			        	eventId = eventList.get(i).getObjectId();
+			        	
+			        	try {
+							pic = eventList.get(i).getParseFile("Pic").getData();
+						} 
+			        	catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+			        	catch (NullPointerException e1) {
+			        		InputStream ims = null;
+			                try {
+			                    ims = context.getAssets().open("default_userpic.png");
+			                } catch (IOException e2) {
+			                    e1.printStackTrace();
+			                }
+			                // load image as Drawable
+			                Drawable d = Drawable.createFromStream(ims, null);
+			                // set image to ImageView
+			                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
 
-	                ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-	                pic= out.toByteArray(); 
-	        	}
-	        	
-	        	timeString = ConvertCode.convertTime(timeNow);
-	        	
-	        	day = date.getDate();
-	        	month = date.getMonth();
-	        	year = date.getYear();
-	        	fullDate = Integer.toString(month+1)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-	        	System.out.println("fulldate is: "+fullDate);
-	        	
-	        	//Check that the event is equal to or after the current date
-	        	
-	        	currentDate = new Date(System.currentTimeMillis());
-	        	
-	        	currentDay = currentDate.getDate();
-	        	currentDate.setDate(currentDay-1);
-	        	
-	        	dateCompare = date.compareTo(currentDate);
+			                ByteArrayOutputStream out = new ByteArrayOutputStream();
+			                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			                pic= out.toByteArray(); 
+			        	}
+			        	
+			        	timeString = ConvertCode.convertTime(timeNow);
+			        	
+			        	day = date.getDate();
+			        	month = date.getMonth();
+			        	year = date.getYear();
+			        	fullDate = Integer.toString(month+1)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
 
-	        	if (dateCompare > 0 || dateCompare == 0){
-	        		if (checkEventBySort(date,typeNow,timeNow) > 0){
-	        			eventsArray.add(new Item(nextEvent, 
-	    	    				pic, 
-	    	    				host, 
-	    	    				fullDate, 
-	    	    				ConvertCode.convertType(typeNow), 
-	    	    				Integer.toString(attend),
-	    	    				place,
-	    	    				desc,
-	    	    				eventId,
-	    	    				timeString));
-	        			nextEvent++;
-	        		}
-	        	}
-	        	i++;
-    		}
-		  } 
-    	
-    	else{
-    		
-    		if (locationInt == 0){
-    			Toast toast = Toast.makeText(context, "Need to set your location!",
-     	 			   Toast.LENGTH_LONG);
-     	   		toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0, 0);
-     	   		toast.show();
-    		}
-    	}
-    	}
-    	catch (ParseException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-    	
+			        		if (checkEventBySort(date,typeNow,timeNow) > 0){
+			        			eventsArray.add(new Item(nextEvent, 
+			    	    				pic, 
+			    	    				host, 
+			    	    				fullDate, 
+			    	    				ConvertCode.convertType(typeNow), 
+			    	    				Integer.toString(attend),
+			    	    				place,
+			    	    				desc,
+			    	    				eventId,
+			    	    				timeString));
+			        			nextEvent++;
+			        		}
+
+			        	i++;
+			        	
+			        	
+			        	if (!(i < eventList.size()-1)){
+			        		
+			        		System.out.println("We have reached the end of the line!");
+			        		loadingMore = false;
+			        	}
+			        	
+		    		}
+		    		//Load array into Adapter
+		        	if (eventsArray.size() > 0){
+		    			
+		    			Model.LoadModel(eventsArray);
+		    	        
+		    	        final String[] ids = new String[Model.Items.size()];
+		    	        for (i= 0; i < ids.length; i++){
+
+		    	            ids[i] = Integer.toString(i+1);
+		    	        }
+		    	        
+		    	        ItemAdapter adapter = new ItemAdapter(context,R.layout.row, ids);
+		    	        listView.setAdapter(adapter);
+		    	        
+		    	        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		    	        
+		    	        showProgress(false);
+		    		}
+		    		
+		    		
+				  } 
+		    	
+		    	else{
+		    		
+		    		if (locationInt == 0){
+		    			Toast toast = Toast.makeText(context, "Need to set your location!",
+		     	 			   Toast.LENGTH_LONG);
+		     	   		toast.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL, 0, 0);
+		     	   		showProgress(false);
+		     	   		toast.show();
+		    		}
+		    		
+		    	}
+		        } else {
+		        	showProgress(false);
+		        }
+		    }
+		});
+
     }
     
     public void updateEventInParse(){

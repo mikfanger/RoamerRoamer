@@ -58,7 +58,7 @@
         android:layout_alignLeft="@+id/textProfileLocation"
         android:text="at"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/DarkGrey"
+        android:textColor="@color/LightGray"
         android:textStyle="italic" />
 
     <TextView
@@ -79,7 +79,7 @@
         android:layout_alignLeft="@+id/imageHostPicture"
         android:text="Date"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/DarkGrey" />
+        android:textColor="@color/LightGray" />
 
     <TextView
         android:id="@+id/textAttendScript"
@@ -89,7 +89,7 @@
         android:layout_below="@+id/imageHostPicture"
         android:text="Goin so far: "
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/DarkGrey"
+        android:textColor="@color/LightGray"
         android:textStyle="italic" />
 
     <TextView

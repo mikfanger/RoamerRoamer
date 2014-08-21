@@ -108,7 +108,7 @@ public class DiscussActivity extends Activity{
 				try {
 					data = new JSONObject();
 					data.put("from", currentUsername);
-					data.put("badge", "Increment");
+					//data.put("badge", "Increment");
 					data.put("alert", phrase);
 					data.put("action", "UPDATE_STATUS");
 					
