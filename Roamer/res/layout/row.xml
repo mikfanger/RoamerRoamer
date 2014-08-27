@@ -20,30 +20,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/DarkWhite" />
 
-    <TextView
-        android:id="@+id/textProfileLocation"
-        android:layout_width="100dp"
-        android:layout_height="32dp"
-        android:layout_alignBottom="@+id/textViewAttend"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/textViewAttend"
-        android:gravity="center_vertical"
-        android:textColor="@color/Red" />
-
-    <TextView
-        android:id="@+id/textViewHost"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageHostPicture"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="37dp"
-        android:layout_toLeftOf="@+id/textProfileHotel"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/Red"
-        android:textColorHint="@color/DarkWhite" />
-
     <ImageView
-        android:id="@+id/imageHostPicture"
+        android:id="@+id/imageHostPictures"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_above="@+id/textProfileHotel"
@@ -51,46 +29,15 @@
         android:contentDescription="@string/app_name" />
 
     <TextView
-        android:id="@+id/textProfileHotel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textProfileLocation"
-        android:layout_alignLeft="@+id/textProfileLocation"
-        android:text="at"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/LightGray"
-        android:textStyle="italic" />
-
-    <TextView
-        android:id="@+id/textEventType"
-        android:layout_width="97dp"
-        android:layout_height="20dp"
-        android:layout_alignBaseline="@+id/textViewHost"
-        android:layout_alignBottom="@+id/textViewHost"
-        android:layout_alignLeft="@+id/textProfileHotel"
-        android:textColor="@color/Red" />
-
-    <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
         android:layout_alignBaseline="@+id/textViewAttend"
         android:layout_alignBottom="@+id/textViewAttend"
-        android:layout_alignLeft="@+id/imageHostPicture"
+        android:layout_alignLeft="@+id/imageHostPictures"
         android:text="Date"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/LightGray" />
-
-    <TextView
-        android:id="@+id/textAttendScript"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/imageHostPicture"
-        android:layout_below="@+id/imageHostPicture"
-        android:text="Goin so far: "
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/LightGray"
-        android:textStyle="italic" />
+        android:textColor="@color/Grey" />
 
     <TextView
         android:id="@+id/textViewAttend"
@@ -105,13 +52,67 @@
         android:textStyle="italic" />
 
     <TextView
-        android:id="@+id/textAttendNumber"
+        android:id="@+id/textAttendNumbers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textEventDate"
         android:layout_alignRight="@+id/textEventDate"
         android:text="8"
         android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite"
         android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textProfileLocation"
+        android:layout_width="150dp"
+        android:layout_height="31dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textAttendNumbers"
+        android:gravity="center_vertical"
+        android:textColor="@color/Red" />
+
+    <TextView
+        android:id="@+id/textAttendScript"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textAttendNumbers"
+        android:layout_alignBottom="@+id/textAttendNumbers"
+        android:layout_alignLeft="@+id/textView3"
+        android:text="Goin so far: "
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/Grey"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textProfileHotel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textProfileLocation"
+        android:layout_alignLeft="@+id/textProfileLocation"
+        android:layout_marginLeft="135dp"
+        android:text="at"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/Grey"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textViewHost"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageHostPictures"
+        android:layout_marginLeft="5dp"
+        android:layout_toLeftOf="@+id/textProfileHotel"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/Red"
+        android:textColorHint="@color/DarkWhite" />
+
+    <TextView
+        android:id="@+id/textEventType"
+        android:layout_width="97dp"
+        android:layout_height="20dp"
+        android:layout_alignBaseline="@+id/textViewHost"
+        android:layout_alignBottom="@+id/textViewHost"
+        android:layout_alignRight="@+id/textProfileLocation"
+        android:textColor="@color/Red" />
 
 </RelativeLayout>

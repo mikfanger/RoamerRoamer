@@ -53,6 +53,7 @@ public class EventsActivity extends TabActivity implements
 		tabHost = getTabHost(); 
 		
 		
+		
 		// My Events tab
 		Intent intentAndroid = new Intent().setClass(this, MyEvents.class);
 		TabSpec tabSpecAndroid = tabHost
@@ -79,6 +80,8 @@ public class EventsActivity extends TabActivity implements
 		
 		tabHost.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.tab_selector);
 		tabHost.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.tab_selector);
+		
+		tabHost.getTabWidget().setStripEnabled(false);
 				
 	}
 

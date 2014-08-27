@@ -81,6 +81,8 @@ tabHost.setCurrentTab(2);
 tabHost.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.tab_selector);
 tabHost.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.tab_selector);
 
+tabHost.getTabWidget().setStripEnabled(false);
+
 }
 
 @Override

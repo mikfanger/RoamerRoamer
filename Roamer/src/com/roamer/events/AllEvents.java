@@ -9,6 +9,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import graphics.FlyOutContainer;
 
 import com.roamer.R;
@@ -104,6 +107,7 @@ public class AllEvents extends Activity {
      private Date dateEnd;
      private int time = 0;
      private int type = 0;
+     private int date = 0;
      
      private int day;
      private int month;
@@ -152,12 +156,16 @@ public class AllEvents extends Activity {
 		
 		type = preferences.getInt("type",1);;
 		time = preferences.getInt("time",1);;
+		date = preferences.getInt("date",1);;
 		
 		if (preferences.getInt("timeCheck",0) > 0){
 			checkTime.setChecked(true);
 		}
 		if (preferences.getInt("typeCheck",0) > 0){
 			checkType.setChecked(true);
+		}
+		if (preferences.getInt("dateCheck",0) > 0){
+			checkDate.setChecked(true);
 		}
 
 		//Bring sort dialog for type if checked
@@ -237,11 +245,11 @@ public class AllEvents extends Activity {
 	    				@Override
 	    				public void onClick(View v) {
 	    					
-	    					dateStart.setYear(datePickerStart.getYear());
+	    					dateStart.setYear(datePickerStart.getYear()-1900);
 	    					dateStart.setMonth(datePickerStart.getMonth());
 	    					dateStart.setDate(datePickerStart.getDayOfMonth());
 	    					
-	    					dateEnd.setYear(datePickerEnd.getYear());
+	    					dateEnd.setYear(datePickerEnd.getYear()-1900);
 	    					dateEnd.setMonth(datePickerEnd.getMonth());
 	    					dateEnd.setDate(datePickerEnd.getDayOfMonth());
 	    					
@@ -253,11 +261,17 @@ public class AllEvents extends Activity {
 				
 			}
 		});
-		//show progress spinner
-		showProgress(true);
-		listView = (ListView) findViewById(R.id.listViewEvents);
+		listView = (ListView) findViewById(R.id.listViewEvent);
 		
-		loadArray(type,dateStart,dateEnd,time);
+		try {
+			loadArray(type,date,time);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		/*
 		//If scolled to bottom, check to see if there are more events.
@@ -288,9 +302,6 @@ public class AllEvents extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				finish();
-				startActivity(getIntent());
-				
 				if(checkTime.isChecked()){
 					SharedPreferences.Editor editor = preferences.edit();
   			        editor.putInt("timeCheck",1);
@@ -300,6 +311,22 @@ public class AllEvents extends Activity {
 					SharedPreferences.Editor editor = preferences.edit();
   			        editor.putInt("typeCheck",1);
   			        editor.commit();
+				}
+				if(checkDate.isChecked()){
+					SharedPreferences.Editor editor = preferences.edit();
+  			        editor.putInt("dateCheck",1);
+  			        editor.commit();
+				}
+				
+				startingEventId = "";
+				try {
+					loadArray(type,date,time);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 
 			}
@@ -491,9 +518,12 @@ public class AllEvents extends Activity {
     	myDB.close();
     }
     
-    public void loadArray(int sortType, Date sortDateStart, Date sortDateEnd, int sortTime){
+    public void loadArray(int sortType,int date, int sortTime) throws ParseException, JSONException{
     	
-    	
+		//show progress spinner
+		showProgress(true);
+		
+		//Get username from database
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
     	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid "+"= "+1, null);
@@ -507,14 +537,34 @@ public class AllEvents extends Activity {
     	usernameArray = new ArrayList<String>();
     	
     	usernameArray.add(cur.getString(indexName));
+    	
+    	String userName = cur.getString(indexName);
     	final int locationInt = cur.getInt(index);
     	eventsArray = new ArrayList<Item>();
     	
     	Date dateToday = new Date(System.currentTimeMillis());
     	
+    	//Get MyEvents List
+    	ParseQuery<ParseObject> queryMyEvents = ParseQuery.getQuery("Roamer");
+    	queryMyEvents.whereEqualTo("Username", userName);
+    	ParseObject Roamer = queryMyEvents.getFirst();
+    	
+    	JSONArray myEventsList = Roamer.getJSONArray("MyEvents");
+    	
+    	int newIndex = 0;
+       	
+       	ArrayList newAttend = new ArrayList<String>();
+       	
+       	while(myEventsList != null && newIndex < myEventsList.length()){
+       		newAttend.add(myEventsList.get(newIndex).toString());
+       		newIndex++;
+       	}
+    	
+    	
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
 		query.whereEqualTo("Location", locationInt);
 		query.whereGreaterThan("Date", dateToday);
+		query.whereNotContainedIn("objectId", newAttend);
 		query.findInBackground(new FindCallback<ParseObject>() {
 		    public void done(List<ParseObject> eventList, ParseException e) {
 		        if (e == null) {
@@ -541,9 +591,8 @@ public class AllEvents extends Activity {
 		        	byte[] pic = null;
 		        	String eventId;
 		        	
-					if(eventList.size()!=0 && locationInt != 0){
+					if(eventList.size()!=0 && locationInt != 0 && i < eventList.size()){
 						
-						System.out.println("Event number is: "+i);
 			        	startingEventId = eventList.get(i).getObjectId();
 			        	typeNow = eventList.get(i).getInt("Type");
 			        	host = eventList.get(i).getString("Host");
@@ -579,15 +628,7 @@ public class AllEvents extends Activity {
 			        	}
 			        	
 			        	String timeString = "";
-			        	if (timeNow == 1){
-			        		timeString = "Mid-Day";
-			        	}
-			        	if (timeNow == 2){
-			        		timeString = "Evening";
-			        	}
-			        	if (timeNow == 3){
-			        		timeString = "Night";
-			        	}
+			        	timeString = ConvertCode.convertTime(timeNow);
 			        	
 			        	day = date.getDate();
 			        	month = date.getMonth();
@@ -928,7 +969,7 @@ public class AllEvents extends Activity {
 		}
 		//check for checked date
 		if (checkDate.isChecked()){
-			if (!(dateNow.compareTo(dateStart) >= 0 && (dateNow.compareTo(dateEnd) <= 0))){
+			if ((dateNow.compareTo(dateStart) < 0) || ((dateNow.compareTo(dateEnd) > 0))){
 				useNow = 0;
 			}
 		}

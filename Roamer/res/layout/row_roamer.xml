@@ -9,7 +9,7 @@
     android:paddingLeft="10dp" >
 
     <ImageView
-        android:id="@+id/imageHostPicture"
+        android:id="@+id/imageHostPictures"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentLeft="true"
@@ -21,9 +21,9 @@
         android:id="@+id/textViewName"
         android:layout_width="97dp"
         android:layout_height="32dp"
-        android:layout_alignTop="@+id/imageHostPicture"
+        android:layout_alignTop="@+id/imageHostPictures"
         android:layout_marginLeft="26dp"
-        android:layout_toRightOf="@+id/imageHostPicture"
+        android:layout_toRightOf="@+id/imageHostPictures"
         android:gravity="center_vertical" />
 
     <TextView

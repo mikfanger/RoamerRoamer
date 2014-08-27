@@ -39,12 +39,12 @@ public class ItemAdapter extends ArrayAdapter<String> {
 
         View rowView = inflater.inflate(rowResourceId, parent, false);
         
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.imageHostPicture);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.imageHostPictures);
         TextView textView = (TextView) rowView.findViewById(R.id.textViewHost);
         
         TextView textViewEventType = (TextView) rowView.findViewById(R.id.textEventType);
         TextView textViewDate = (TextView) rowView.findViewById(R.id.textEventDate);
-        TextView textViewAttend = (TextView) rowView.findViewById(R.id.textAttendNumber);
+        TextView textViewAttend = (TextView) rowView.findViewById(R.id.textAttendNumbers);
         TextView textViewLocation = (TextView) rowView.findViewById(R.id.textProfileLocation);
 
         int id = Integer.parseInt(Ids[position]);

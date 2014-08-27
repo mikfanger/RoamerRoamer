@@ -1,30 +1,41 @@
 package com.roamer.events;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.roamer.ConvertCode;
 import com.roamer.R;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.roamer.HomeScreenActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -46,7 +57,13 @@ public class MyEvents extends Activity {
      TextView textViewDesc;
      TextView textViewTime;
      int count;
-     ArrayList<ItemMyEvents> loadArray;
+     ArrayList<ItemMyEvents> eventsArray;
+     
+     private int day;
+     private int month;
+     private int year;
+     private String parseEventId;
+     private String startingEventId = "";
      
 	final Context context = this;
 	
@@ -59,30 +76,17 @@ public class MyEvents extends Activity {
         TextView textview = new TextView(this);
         textview.setText("This is the list of your events");
         setContentView(R.layout.my_events_list);
-        
 
-		
         listView = (ListView) findViewById(R.id.listView);
         
-        loadArray();
-        
-        //Check if there are any events, if so load them
-        if(count > 0)
-        {
-        ModelMyEvents.LoadModel(loadArray);
-        
-        String[] ids = new String[ModelMyEvents.ItemsMyEvents.size()];
-        for (int i= 0; i < ids.length; i++){
-
-            ids[i] = Integer.toString(i+1);
-        }
-
-        ItemAdapterMyEvents adapter = new ItemAdapterMyEvents(this,R.layout.row, ids);
-        listView.setAdapter(adapter);
-        
-        }
-               
-        
+        try {
+ 
+			loadArray();
+		} catch (ParseException | JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+      
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                 int position, long id) {
@@ -117,7 +121,7 @@ public class MyEvents extends Activity {
                  //imageView.setBackgroundResource(Model.GetbyId(position+1).IconFile);
                  textViewLocation.setText(correctStringPlace);
                  textViewEventType.setText(ModelMyEvents.GetbyId(position+1).EventType);
-            	 final int myId = ModelMyEvents.GetbyId(position+1).Id;
+            	 final String myId = ModelMyEvents.GetbyId(position+1).EventId;
             	 byte[] picByte = ModelMyEvents.GetbyId(position+1).IconFile;
             	 
             	 if(picByte != null){
@@ -157,16 +161,36 @@ public class MyEvents extends Activity {
     				@Override
     				public void onClick(View v) {
     					
-    					try {
-							removeEvent(myId);
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-    					dialog.dismiss();
+    					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+    					    @Override
+    					    public void onClick(DialogInterface dialog, int which) {
+    					        switch (which){
+    					        case DialogInterface.BUTTON_POSITIVE:
+    					            
+    					        	try {
+    									removeEvent(myId);
+    									dialog.dismiss();
+    								} catch (ParseException e) {
+    									// TODO Auto-generated catch block
+    									e.printStackTrace();
+    								} catch (JSONException e) {
+    									// TODO Auto-generated catch block
+    									e.printStackTrace();
+    								}
+    		    					
+    					        	
+    					            break;
+
+    					        case DialogInterface.BUTTON_NEGATIVE:
+    					            //No button clicked
+    					            break;
+    					        }
+    					    }
+    					};
+
+    					AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    					builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+    					    .setNegativeButton("No", dialogClickListener).show();
     				}
     			});
 
@@ -177,21 +201,16 @@ public class MyEvents extends Activity {
           });
     }
     
-    public void removeEvent(int eventId) throws ParseException, JSONException{
+    public void removeEvent(String eventId) throws ParseException, JSONException{
     	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-    	
-    	myDB.execSQL("DELETE FROM MyEvents WHERE rowid="+eventId);
-    	
-    	//Update count of events in Credentials
-    	ContentValues args = new ContentValues();
+   
+    	//Get current username
     	Cursor c = myDB.rawQuery("SELECT * FROM " + "MyCred" , null);
     	c.moveToFirst();
-    	int index = c.getColumnIndex("CountM");
     	int indexUser = c.getColumnIndex("Username");
     	String userName = c.getString(indexUser);
     	
-    	args.put("CountM",c.getInt(index)-1);
-    	myDB.update("MyCred", args, "rowid"+"="+1, null);
+    	myDB.close();
     	
     	//Remove from Parse Event
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
@@ -241,11 +260,11 @@ public class MyEvents extends Activity {
        	Roamer.save();
        	
     	
-    	myDB.close();
+    	
     	
     	 loadArray();
          
-         ModelMyEvents.LoadModel(loadArray);
+         ModelMyEvents.LoadModel(eventsArray);
          
          listView = (ListView) findViewById(R.id.listView);
          String[] ids = new String[ModelMyEvents.ItemsMyEvents.size()];
@@ -259,76 +278,215 @@ public class MyEvents extends Activity {
     	
     }
     
-    public void loadArray(){
-    	SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
+    public void loadArray() throws ParseException, JSONException{
+    	final SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
-    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred", null);
-    	
-    	Cursor curCount = myDB.rawQuery("SELECT COUNT(*) FROM MyEvents", null);
+    	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid "+"= "+1, null);
     	cur.moveToFirst();
-    	int index;
-    	index = cur.getColumnIndex("CountM");
-    	count = cur.getInt(index);
+    	int index = cur.getColumnIndex("Username"); 
+    	String myName = cur.getString(index);
     	
-    	int isNotEmpty = 0;
-    	if (curCount != null){
-    		curCount.moveToFirst();
-    		if (curCount.getInt(0) != 0){
-    			isNotEmpty = 1;
-    		}
-    		System.out.println("Int at 0 = "+curCount.getInt(0));
-    	}
-    	if (isNotEmpty == 1) {
-    		
-    		
-    	loadArray = new ArrayList<ItemMyEvents>();
-    	int i = 1;
-
-		Cursor c = myDB.rawQuery("SELECT * FROM " + "MyEvents ", null);
-		c.moveToFirst();
+    	myDB.close();
+    	
+    	ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
+      	query1.whereEqualTo("Username", myName);
+      	
+      	ParseObject object = query1.getFirst();
+      	JSONArray roamerList = object.getJSONArray("MyEvents");
+      	
+      	ArrayList<String> eventsList = new ArrayList();
 		
-		 int C1 = c.getColumnIndex("Type");
-		 int C2 = c.getColumnIndex("Location");
-		 int C3 = c.getColumnIndex("Date");
-		 int C4 = c.getColumnIndex("Host");
-		 int C5 = c.getColumnIndex("HostPic");
-		 int C6 = c.getColumnIndex("Blurb");
-		 int C7 = c.getColumnIndex("Attend");
-		 int C8 = c.getColumnIndex("rowid");
-		 int C9 = c.getColumnIndex("EventId");
-		 int C10 = c.getColumnIndex("Time");
-		 
-		 System.out.println("value is: " +c.getString(C1));
-
-		 String correctLocation = c.getString(C2).replace("*/", "'");
-		 String correctDesc = c.getString(C6).replace("*/", "'");
-		 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9), c.getString(C10)));
+		int i = 0;
+		System.out.println("About to change from JSON to MyEvents");
 		
-		while(c.moveToNext()){
+		while (i < roamerList.length()){
+			eventsList.add(roamerList.get(i).toString());
 			i++;
-			
-			  C1 = c.getColumnIndex("Type");
-			  C2 = c.getColumnIndex("Location");
-			  C3 = c.getColumnIndex("Date");
-			  C4 = c.getColumnIndex("Host");
-			  C5 = c.getColumnIndex("HostPic");
-			  C6 = c.getColumnIndex("Blurb");
-			  C7 = c.getColumnIndex("Attend");
-			  C8 = c.getColumnIndex("rowid");
-			  C9 = c.getColumnIndex("EventId");
-			  C10 = c.getColumnIndex("Time");
-			  
-				 correctLocation = c.getString(C2).replace("&amp&", "'");
-				 correctDesc = c.getString(C6).replace("&amp&", "'");
-			 
-			 loadArray.add(new ItemMyEvents(i, c.getBlob(C5), c.getString(C3), c.getString(C1), c.getString(C4), c.getString(C7),correctDesc,correctLocation,c.getString(C9),c.getString(C10)));			
 		}
 		
-		myDB.close();
-    }
-    	else{
-    		 System.out.println("Row Count is: " + 1);
-    	}
+		Date dateToday = new Date(System.currentTimeMillis());
+		
+		System.out.println("About to search for My Events!");
+      	
+    	ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+    	query.whereContainedIn("objectId", eventsList);
+    	query.whereGreaterThan("Date", dateToday);
+    	query.findInBackground(new FindCallback<ParseObject>() {
+    	    public void done(List<ParseObject> eventList, ParseException e) {
+    	        if (e == null) {
+    	            
+    	        	System.out.println("Found some in MyEvents!");
+    	        	
+    	        	eventsArray = new ArrayList<ItemMyEvents>();
+    	        	
+    	        	int typeNow;
+		        	int location;
+		        	int timeNow;
+		        	int attend;
+		        	String place;
+		        	String desc;
+		        	String host;
+		        	Date date;
+		        	byte[] pic = null;
+		        	String eventId;
+		        	String timeString = "";
+
+    	    			int i = 0;	
+    	    			
+    	    			if (eventList != null){
+    	    				typeNow = eventList.get(i).getInt("Type");
+    			        	host = eventList.get(i).getString("Host");
+    			        	location = eventList.get(i).getInt("Location");
+    			        	timeNow = eventList.get(i).getInt("Time");
+    			        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
+    			        	attend = eventList.get(i).getInt("Attend");
+    			        	place = eventList.get(i).getString("Place");
+    			        	date = eventList.get(i).getDate("Date");
+    			        	eventId = eventList.get(i).getObjectId();
+    			        	
+    			        	try {
+    							pic = eventList.get(i).getParseFile("Pic").getData();
+    						} catch (ParseException e1) {
+    							// TODO Auto-generated catch block
+    							e1.printStackTrace();
+    						}
+    			        	catch (NullPointerException e1) {
+    			        		InputStream ims = null;
+    			                try {
+    			                    ims = context.getAssets().open("default_userpic.png");
+    			                } catch (IOException e2) {
+    			                    e1.printStackTrace();
+    			                }
+    			                // load image as Drawable
+    			                Drawable d = Drawable.createFromStream(ims, null);
+    			                // set image to ImageView
+    			                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+
+    			                ByteArrayOutputStream out = new ByteArrayOutputStream();
+    			                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+    			                pic= out.toByteArray(); 
+    			        	}
+    			        	timeString = ConvertCode.convertTime(timeNow);
+    			        	
+    			        	day = date.getDate();
+    			        	month = date.getMonth();
+    			        	year = date.getYear();
+    			        	String fullDate = Integer.toString(month+1)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+    			        	
+    			        	//Check that the date of the event is after or equal to today.
+    			        	Date currentDate = new Date(System.currentTimeMillis());
+    			        	
+    			        	int currentDay = currentDate.getDate();
+    			        	currentDate.setDate(currentDay-1);
+    			        	int dateCompare = date.compareTo(currentDate);
+
+    			        	if (dateCompare > 0 || dateCompare == 0){
+    			        		
+    			        		System.out.println("Event is: "+eventList.get(i).getString("Place"));
+    			        		System.out.println("Event date is: "+eventList.get(i).getDate("Date"));
+
+    			        	 		eventsArray.add(new ItemMyEvents(i+1, 
+    					    				pic, 
+    					    				fullDate, 
+    					    				ConvertCode.convertType(typeNow), 
+    					    				host, 
+    					    				Integer.toString(attend),
+    					    				desc,
+    					    				place,
+    					    				eventId,
+    					    				timeString));   		
+    			        	}
+    			        	i++;
+    			        	while(i < eventList.size()){
+        	    				typeNow = eventList.get(i).getInt("Type");
+        			        	host = eventList.get(i).getString("Host");
+        			        	location = eventList.get(i).getInt("Location");
+        			        	timeNow = eventList.get(i).getInt("Time");
+        			        	desc = eventList.get(i).getString("Desc").replace("*/", "'");
+        			        	attend = eventList.get(i).getInt("Attend");
+        			        	place = eventList.get(i).getString("Place");
+        			        	date = eventList.get(i).getDate("Date");
+        			        	eventId = eventList.get(i).getObjectId();
+        			        	
+        			        	try {
+        							pic = eventList.get(i).getParseFile("Pic").getData();
+        						} catch (ParseException e1) {
+        							// TODO Auto-generated catch block
+        							e1.printStackTrace();
+        						}
+        			        	catch (NullPointerException e1) {
+        			        		InputStream ims = null;
+        			                try {
+        			                    ims = context.getAssets().open("default_userpic.png");
+        			                } catch (IOException e2) {
+        			                    e1.printStackTrace();
+        			                }
+        			                // load image as Drawable
+        			                Drawable d = Drawable.createFromStream(ims, null);
+        			                // set image to ImageView
+        			                Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+
+        			                ByteArrayOutputStream out = new ByteArrayOutputStream();
+        			                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        			                pic= out.toByteArray(); 
+        			        	}
+        			        	timeString = "";
+        			        	timeString = ConvertCode.convertTime(timeNow);
+        			        	
+        			        	day = date.getDate();
+        			        	month = date.getMonth();
+        			        	year = date.getYear();
+        			        	fullDate = Integer.toString(month+1)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
+        			        	
+        			        	//Check that the date of the event is after or equal to today.
+        			        	currentDate = new Date(System.currentTimeMillis());
+        			        	
+        			        	currentDay = currentDate.getDate();
+        			        	currentDate.setDate(currentDay-1);
+        			        	dateCompare = date.compareTo(currentDate);
+
+        			        	if (dateCompare > 0 || dateCompare == 0){
+        			        		System.out.println("Event is: "+eventList.get(i).getString("Place"));
+        			        		System.out.println("Event date is: "+eventList.get(i).getDate("Date"));
+        			        		eventsArray.add(new ItemMyEvents(i+1, 
+    					    				pic, 
+    					    				fullDate, 
+    					    				ConvertCode.convertType(typeNow), 
+    					    				host, 
+    					    				Integer.toString(attend),
+    					    				desc,
+    					    				place,
+    					    				eventId,
+    					    				timeString));   		
+        			        	}
+        			        	i++;
+       
+        	    			}
+    	    			}
+    	    			
+    	    		
+    	            //Check if there are any events, if so load them
+    	    		System.out.println("Finished with loading events");
+    	            ModelMyEvents.LoadModel(eventsArray);
+    	            
+    	            System.out.println(eventsArray);
+    	            
+    	            String[] ids = new String[ModelMyEvents.ItemsMyEvents.size()];
+    	            for (i= 0; i < ids.length; i++){
+
+    	                ids[i] = Integer.toString(i+1);
+    	            }
+
+    	            ItemAdapterMyEvents adapter = new ItemAdapterMyEvents(context,R.layout.row, ids);
+    	            listView.setAdapter(adapter);
+    	        	
+    	        } else {
+    	            System.out.println("No events in My Events!");
+    	        }
+    	    }
+    	});
+    		
+
     }
     
     @Override

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.roamer.R;
+import com.roamer.profilelist.Model;
 
 public class ItemAdapterMyEvents extends ArrayAdapter<String> {
 
@@ -41,26 +42,56 @@ public class ItemAdapterMyEvents extends ArrayAdapter<String> {
         
         //rowView.setBackgroundResource(R.drawable.btn_gray);
         
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.imageHostPicture);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.imageHostPictures);
         TextView textView = (TextView) rowView.findViewById(R.id.textViewHost);
         
         TextView textViewEventType = (TextView) rowView.findViewById(R.id.textEventType);
         TextView textViewDate = (TextView) rowView.findViewById(R.id.textEventDate);
-        TextView textViewAttend = (TextView) rowView.findViewById(R.id.textAttendNumber);
+        TextView textViewAttend = (TextView) rowView.findViewById(R.id.textAttendNumbers);
         TextView textViewLocation = (TextView) rowView.findViewById(R.id.textProfileLocation);
 
         int id = Integer.parseInt(Ids[position]);
-        byte[] imageFile = ModelMyEvents.GetbyId(id).IconFile;
-
-        textView.setText(ModelMyEvents.GetbyId(id).Host);
-        textViewEventType.setText(ModelMyEvents.GetbyId(id).EventType);
-        textViewDate.setText(ModelMyEvents.GetbyId(id).Date);
-        textViewAttend.setText(ModelMyEvents.GetbyId(id).Attend);
-        textViewLocation.setText(ModelMyEvents.GetbyId(id).Location);
+        byte[] imageFile = null;
         
-      //Set images either from database or default user.
-        
-        
+        int noPic = 0;
+        try{
+        	imageFile = ModelMyEvents.GetbyId(id).IconFile;
+        }
+        catch (NullPointerException e){
+        	noPic = 1;
+        }
+        try{
+        	textView.setText(ModelMyEvents.GetbyId(id).Host);
+        }
+        catch (NullPointerException e){
+        	textView.setText("None");
+        }
+        try{
+        	textViewEventType.setText(ModelMyEvents.GetbyId(id).EventType);
+        }
+        catch (NullPointerException e){
+        	textViewEventType.setText("none");
+        }
+        try{
+        	textViewDate.setText(ModelMyEvents.GetbyId(id).Date);
+        }
+        catch (NullPointerException e){
+        	textViewDate.setText("none");
+        }
+        try{
+        	textViewLocation.setText(ModelMyEvents.GetbyId(id).Location);
+        }
+        catch (NullPointerException e){
+        	textViewLocation.setText("none");
+        }
+        try{
+        	textViewAttend.setText(ModelMyEvents.GetbyId(id).Attend);
+        }
+        catch (NullPointerException e){
+        	textViewAttend.setText("1");
+        }
+ 
+        //Set images either from database or default user.
         if(imageFile != null){
         	Bitmap bmp = BitmapFactory.decodeByteArray(imageFile, 0, imageFile.length);
     	    imageView.setBackgroundResource(0);

@@ -62,7 +62,7 @@ public class ProfileListActivity extends Activity {
        
         roamersProgressView = findViewById(R.id.progressBarFindRoamers);
               
-        TextView currentText = (TextView) findViewById(R.id.locationName);
+        TextView currentText = (TextView) findViewById(R.id.locationNames);
         
         SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	Cursor cur = myDB.rawQuery("SELECT * FROM MyCred WHERE rowid = "+ 1, null);

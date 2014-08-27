@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageChildImage"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="6dp"
                 android:text="Find roamers near you!"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/DarkWhite" />
@@ -95,8 +95,21 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="14dp"
         android:layout_marginLeft="24dp"
+        android:layout_marginTop="10dp"
         android:background="@color/transparent"
         android:src="@drawable/buildings" />
+
+    <TextView
+        android:id="@+id/locationNames"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/createAccountBottom"
+        android:layout_alignRight="@+id/currentLocation"
+        android:text="location"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/DarkWhite"
+        android:textSize="20sp"
+        android:textStyle="italic" />
 
     <ImageView
         android:id="@+id/backFromEvents"
@@ -104,7 +117,6 @@
         android:layout_height="5dp"
         android:layout_above="@+id/createAccountBottom"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="19dp"
         android:scaleType="centerCrop"
         android:src="@drawable/gray_gradient" />
 
@@ -112,21 +124,12 @@
         android:id="@+id/currentLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/createAccountBottom"
-        android:layout_toRightOf="@+id/createAccountBottom"
+        android:layout_above="@+id/locationNames"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="18dp"
         android:text="Roamers located in: "
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/DarkWhite" />
-
-    <TextView
-        android:id="@+id/locationName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/createAccountBottom"
-        android:layout_centerHorizontal="true"
-        android:text="location"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/DarkWhite"
-        android:textStyle="italic" />
+        android:textSize="20sp" />
 
 </RelativeLayout>

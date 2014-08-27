@@ -211,9 +211,6 @@ public class MyRoamersListActivity extends Activity {
         				i++;
         			}
         			
-        			//sort the collection by name
-        			//Collections.sort(nameList);
-        			
                	
         			if( roamerList!=null && roamerList.length()!=0){
    

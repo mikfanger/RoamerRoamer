@@ -59,11 +59,11 @@ public class DiscussArrayAdapter extends ArrayAdapter<OneComment> {
 		countryName.setText(coment.comment);
 
 		if (coment.left == true){
-			senderName.setText(coment.chatName);
+			senderName.setText(coment.chatName+":");
 			senderName.setTextColor(Color.YELLOW);
 		}
 		if (coment.left == false){
-			senderName.setText("Me");
+			senderName.setText("Me"+":");
 			senderName.setTextColor(Color.RED);
 		}
 		

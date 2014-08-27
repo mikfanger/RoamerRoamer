@@ -40,7 +40,7 @@ public class MyRoamerItemAdapter extends ArrayAdapter<String> {
 
         View rowView = inflater.inflate(rowResourceId, parent, false);
         
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.imageHostPicture);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.imageHostPictures);
         TextView textView = (TextView) rowView.findViewById(R.id.textViewName);
         TextView textViewLocation = (TextView) rowView.findViewById(R.id.textViewPosition);
 

@@ -68,6 +68,7 @@ public class HomeScreenActivity extends Activity {
     	SharedPreferences.Editor editor = preferences.edit();
 	    editor.putInt("typeCheck",0);
 	    editor.putInt("timeCheck",0);
+	    editor.putInt("dateCheck",0);
 	    
 		editor.putString("location", "");
 		editor.putLong("eventType", 0);
@@ -270,7 +271,15 @@ public class HomeScreenActivity extends Activity {
     			query = ParseQuery.getQuery("Roamer");
     	       	query.whereEqualTo("Email", email);
     	       	
-    	       	ParseObject Roamer = query.getFirst();
+    	       	System.out.println("Email is: "+email);
+    	       	
+    	       	ParseObject Roamer = null;
+    	       	try{
+    	       	Roamer = query.getFirst();
+    	       	}
+    	       	catch (NullPointerException e ) {
+    	       		
+    	       	}
     	       		
     	       	  
     	       	    if (Roamer == null) {

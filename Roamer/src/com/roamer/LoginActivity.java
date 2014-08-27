@@ -339,6 +339,9 @@ public class LoginActivity extends Activity {
 			    if (user != null) {
 			    	System.out.println("User found!  Nice job!");
 			    	mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+			    	
+			    	userName = mEmail;
+			    	passWord = mPassword;
 					showProgress(true);
 					mAuthTask = new UserLoginTask();
 					mAuthTask.execute((Void) null);
@@ -434,12 +437,12 @@ public class LoginActivity extends Activity {
 				return false;
 			}
 
-
+				System.out.println("Username and email are: "+userName+", "+mEmail);
 				if (userName.equals(mEmail)) {
 					// Account exists, return true if the password matches.
 					return passWord.equals(mPassword);
 				}
-
+			
 			// TODO: register the new account here.
 			return true;
 		}
@@ -594,169 +597,106 @@ public class LoginActivity extends Activity {
 		}
 		
 		
-		ParseObject object;
-		
-		object = query.getFirst();
-				 //Get Data from Parse
-				 JSONArray  requestList = object.getJSONArray("SentRequests");
-				 JSONArray  eventList = object.getJSONArray("MyEvents");
-				 
-				 myDB.delete("MyRoamers", null, null);  
-				 myDB.delete("MyEvents", null, null); 
+		ParseObject object = query.getFirst();
 
-			    	String sentList = "none,none";
-			    	int newIndex = 0;
-			    	if(requestList != null){
-			    		while (newIndex < requestList.length()){
-				    		try {
-								sentList = sentList+","+requestList.get(newIndex).toString();
-							} catch (JSONException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-				    		newIndex++;
+			      //Get data from Parse
+			    	JSONArray  requestList = object.getJSONArray("SentRequests");
+					 JSONArray  eventList = object.getJSONArray("MyEvents");
+					 
+					 myDB.delete("MyRoamers", null, null);  
+					 myDB.delete("MyEvents", null, null); 
+
+				    	String sentList = "none,none";
+				    	int newIndex = 0;
+				    	if(requestList != null){
+				    		while (newIndex < requestList.length()){
+					    		try {
+									sentList = sentList+","+requestList.get(newIndex).toString();
+								} catch (JSONException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+					    		newIndex++;
+					    	}
 				    	}
-			    	}
 
 
-				 String pEmail = object.getString("Email");
-				 String pUsername = object.getString("Username");
-				 System.out.println("Username is: "+ pUsername);
-				 String pPassword = object.getString("Password");
-				 int pIndustry = object.getInt("Industry");
-				 int pJob = object.getInt("Job");
-				 int pAirline = object.getInt("Airline");
-				 int pHotel = object.getInt("Hotel");
-				 int pTravel = object.getInt("Travel");
-				 int pLocation = object.getInt("Location");
-				 int pCurrentLocation = object.getInt("CurrentLocation");
-				 boolean pSex = object.getBoolean("Sex");
-				 byte[] picByte = null;
-				 try {
-					picByte = object.getParseFile("Pic").getData();
-				} catch (ParseException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-
-				 
-
-
-				 int pSex1 = 1;
-
-				 if (!pSex){
-					 pSex1 = 0;
-				 }
-
-				 int eventListCount = 0;
-				 int roamerListCount = 0;
-				 
-				 if (eventList != null){
-					 eventListCount = eventList.length();
-				 }
-				 
-				 ContentValues args = new ContentValues();
-					args.put("Email", pEmail);
-					args.put("CountR", roamerListCount);
-					args.put("Username", pUsername);
-					args.put("Password", mPassword);
-					args.put("Industry", pIndustry);
-					args.put("Sex", pSex1);
-					args.put("Job", pJob);
-					args.put("Travel", pTravel);
-					args.put("Hotel", pHotel);
-					args.put("Air", pAirline);
-					args.put("Loc", pLocation);
-					args.put("CurrentLocation", pCurrentLocation);
-					args.put("SentRequests", sentList);
-					args.put("Pic", picByte);
-
-					myDB.update("MyCred", args, "rowid" + "=" + 1, null);
-
-				    //Load MyRoamers
-					//ArrayList<String> newList = new ArrayList();
-
-					if(eventList!=null){
-						
-						int i = 0;	
-						int countM = 0;
-						while(i < eventList.length()){
-							//Get events, noted as 'MyEvents'
-							final ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Event");
-							try {
-								query1.whereEqualTo("objectId", eventList.get(i).toString());
-							} catch (JSONException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							
-							
-							ParseObject object1 = query1.getFirst();
-
-										 byte[] picFile = null;
-										try {
-											picFile = object1.getParseFile("Pic").getData();
-										} catch (ParseException e1) {
-											// TODO Auto-generated catch block
-											e1.printStackTrace();
-										}
-										
-										//Check that event date is today or earlier
-										Date currentDate = new Date(System.currentTimeMillis());
-							        	int dateCompare = object1.getDate("Date").compareTo(currentDate);
-							        	
-							        	if (dateCompare > 0 || dateCompare == 0){
-		
-										int day = object1.getDate("Date").getDate()+1;
-							        	int month = object1.getDate("Date").getMonth()+1;
-							        	int year = object1.getDate("Date").getYear();
-							        	String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
-							        		
-							        	SQLiteDatabase myDB3 = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-									       	String sql =   "INSERT INTO MyEvents(Type,Location,Time,Date,Host,Attend,EventId,HostPic,Blurb) VALUES(?,?,?,?,?,?,?,?,?)";
-									        SQLiteStatement insertStmt      =   myDB3.compileStatement(sql);
-									        insertStmt.clearBindings();
-									        insertStmt.bindString(1,ConvertCode.convertType(object1.getInt("Type")));
-									        insertStmt.bindString(2,ConvertCode.convertLocation(object1.getInt("Location")));
-									        insertStmt.bindString(3,ConvertCode.convertTime(object1.getInt("Time")));
-									        insertStmt.bindString(4, fullDate);
-									        insertStmt.bindString(5, object1.getString("Host"));
-									        insertStmt.bindLong(6, object1.getLong("Attend")); 
-									        insertStmt.bindString(7, object1.getObjectId());
-									        insertStmt.bindBlob(8, picFile);
-									        insertStmt.bindString(9, object1.getString("Desc"));
-									        insertStmt.executeInsert();
-									        
-									        myDB3.close();
-									        countM++;
-							        	}
-									        i++;
-						}
-			        	SQLiteDatabase myDB4 = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
-			        	ContentValues args1 = new ContentValues();
-			        	args1.put("CountM", countM);
-			        	myDB4.update("MyCred", args1, "rowid" + "=" + 1, null);
-			        	myDB4.close();
-						
+					 String pEmail = object.getString("Email");
+					 String pUsername = object.getString("Username");
+					 System.out.println("Username is: "+ pUsername);
+					 String pPassword = object.getString("Password");
+					 int pIndustry = object.getInt("Industry");
+					 int pJob = object.getInt("Job");
+					 int pAirline = object.getInt("Airline");
+					 int pHotel = object.getInt("Hotel");
+					 int pTravel = object.getInt("Travel");
+					 int pLocation = object.getInt("Location");
+					 int pCurrentLocation = object.getInt("CurrentLocation");
+					 boolean pSex = object.getBoolean("Sex");
+					 byte[] picByte = null;
+					 try {
+						picByte = object.getParseFile("Pic").getData();
+					} catch (ParseException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
 					}
-			
-	 myDB.close();
-	
-	 //Set push notification to this installation
-	 ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+
+					 
+
+
+					 int pSex1 = 1;
+
+					 if (!pSex){
+						 pSex1 = 0;
+					 }
+
+					 int eventListCount = 0;
+					 int roamerListCount = 0;
+					 
+					 if (eventList != null){
+						 eventListCount = eventList.length();
+					 }
+					 
+					 ContentValues args = new ContentValues();
+						args.put("Email", pEmail);
+						args.put("CountR", roamerListCount);
+						args.put("Username", pUsername);
+						args.put("Password", mPassword);
+						args.put("Industry", pIndustry);
+						args.put("Sex", pSex1);
+						args.put("Job", pJob);
+						args.put("Travel", pTravel);
+						args.put("Hotel", pHotel);
+						args.put("Air", pAirline);
+						args.put("Loc", pLocation);
+						args.put("CurrentLocation", pCurrentLocation);
+						args.put("SentRequests", sentList);
+						args.put("Pic", picByte);
+
+						myDB.update("MyCred", args, "rowid" + "=" + 1, null);
+
+						myDB.close();
 		
-	 ArrayList<String> channelList = new ArrayList();
-	 
-	 channelList.add("none");
-	 installation.put("channels", channelList);
-	 installation.save();
-	 
-	 ParseInstallation installation2 = ParseInstallation.getCurrentInstallation();
-	 installation2.addUnique("channels", pUsername);
-	 installation2.saveInBackground();
-	 
-	 PushService.subscribe(this, pUsername, InboxActivity.class);
-	 
+		 //Set push notification to this installation
+		 ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+			
+		 ArrayList<String> channelList = new ArrayList();
+		 
+		 channelList.add("none");
+		 installation.put("channels", channelList);
+		 try {
+			installation.save();
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		 
+		 ParseInstallation installation2 = ParseInstallation.getCurrentInstallation();
+		 installation2.addUnique("channels", pUsername);
+		 installation2.saveInBackground();
+		 
+		 PushService.subscribe(context, pUsername, InboxActivity.class);
+
 	}
 
 public void checkEmailandPassword(){

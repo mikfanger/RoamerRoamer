@@ -160,13 +160,21 @@
         android:paddingLeft="20dp"
         android:text="Currently In: " />
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textCurLocations"
+        android:layout_toRightOf="@+id/textCurLocations"
+        android:src="@drawable/edit_2" />
+
     <TextView
         android:id="@+id/textCurLocations"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textProfileTravel"
         android:layout_alignBottom="@+id/textProfileTravel"
-        android:layout_alignRight="@+id/roamerCreateTag"
+        android:layout_alignRight="@+id/imageChildImage"
         android:gravity="left"
         android:text="CurLocation"
         android:textStyle="bold" />
