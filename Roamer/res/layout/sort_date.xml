@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@color/DarkGrey" >
+
+    <ImageButton
+        android:id="@+id/imageBackFromSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="21dp"
+        android:background="@color/transparent"
+        android:src="@drawable/x" />
+
+    <DatePicker
+        android:id="@+id/datePickerStart1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageBackFromSort"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="62dp" />
+
+    <TextView
+        android:id="@+id/textViewWelcom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageBackFromSort"
+        android:layout_centerHorizontal="true"
+        android:text="Start Date"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textViewUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewWelcom"
+        android:layout_below="@+id/datePickerStart1"
+        android:layout_marginTop="29dp"
+        android:text="End Date"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <DatePicker
+        android:id="@+id/datePickerEnd2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/datePickerStart1"
+        android:layout_below="@+id/textViewUserName"
+        android:layout_marginTop="30dp" />
+    
+</RelativeLayout>

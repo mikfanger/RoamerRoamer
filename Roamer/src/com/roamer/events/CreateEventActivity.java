@@ -264,7 +264,7 @@ public class CreateEventActivity extends Activity {
 	        items1[4] = new MyData("Professional/Seminar", "value5");
 	        items1[5] = new MyData("Sporting Event", "value6");
 	        ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
-	                android.R.layout.simple_spinner_item, items1);
+	                R.layout.spinner_item, items1);
 	        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	        position.setAdapter(adapter1);
 	        
@@ -302,7 +302,7 @@ public class CreateEventActivity extends Activity {
 	        items2[3] = new MyData("Night:      (8:30PM - 10:30PM)", "value4");
 	        items2[4] = new MyData("Late Night: (11:30PM - 2:00AM)", "value5");
 	        ArrayAdapter<MyData> adapter2 = new ArrayAdapter<MyData>(this,
-	                android.R.layout.simple_spinner_item, items2);
+	        		R.layout.spinner_item, items2);
 	        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	        position1.setAdapter(adapter2);
 	        

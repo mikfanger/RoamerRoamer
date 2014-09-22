@@ -50,6 +50,7 @@ import android.provider.CalendarContract.Events;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -339,6 +340,7 @@ public class AllEvents extends Activity {
             	
               // When clicked, show a dialog with event information
             	final Dialog dialog = new Dialog(context);
+            	dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             	
     			dialog.setContentView(R.layout.activity_total_event);
     			dialog.setTitle("Event");
@@ -543,6 +545,7 @@ public class AllEvents extends Activity {
     	eventsArray = new ArrayList<Item>();
     	
     	Date dateToday = new Date(System.currentTimeMillis());
+    	
     	
     	//Get MyEvents List
     	ParseQuery<ParseObject> queryMyEvents = ParseQuery.getQuery("Roamer");

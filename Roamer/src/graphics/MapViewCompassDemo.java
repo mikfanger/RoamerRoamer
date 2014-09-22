@@ -59,6 +59,13 @@ import javax.microedition.khronos.opengles.GL;
  */
 public class MapViewCompassDemo extends MapActivity {
 
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+/*
     private static final String TAG = "MapViewCompassDemo";
     private SensorManager mSensorManager;
     private RotateView mRotateView;
@@ -178,6 +185,10 @@ public class MapViewCompassDemo extends MapActivity {
 
 
     static final class SmoothCanvas extends Canvas {
+public class EdgeType {
+}
+public class VertexMode {
+}
         Canvas delegate;
 
         private final Paint mSmooth = new Paint(Paint.FILTER_BITMAP_FLAG);
@@ -542,4 +553,5 @@ public class MapViewCompassDemo extends MapActivity {
             delegate.drawPicture(picture, dst);
         }
     }
+    */
 }

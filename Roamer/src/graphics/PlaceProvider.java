@@ -96,6 +96,7 @@ public class PlaceProvider extends ContentProvider {
 				
 				// Finding latitude and longitude for each places using Google Places Details API
 				for(int i=0;i<list.size();i++){
+					
 					HashMap<String, String> hMap = (HashMap<String, String>) list.get(i);
 					
 					detailsParser =new PlaceDetailsJSONParser();
@@ -165,6 +166,7 @@ public class PlaceProvider extends ContentProvider {
 			}
 			
 			for(int j=0;j<detailsList.size();j++){
+				
 				HashMap<String, String> hMapDetails = detailsList.get(j);				
 				mCursor.addRow(new String[]{ hMapDetails.get("formatted_address") , hMapDetails.get("lat") , hMapDetails.get("lng") });
 			}

@@ -44,22 +44,54 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HomeScreenActivity.
+ */
 public class HomeScreenActivity extends Activity {
 	
+	/** The p. */
 	Point p;
-	private String curLocation;
+	
+	/** The cur location. */
+	private String curLocation = "";
+	
+	/** The username. */
 	private String username;
+	
+	/** The email. */
 	private String email;
+	
+	/** The dialog. */
 	private Dialog dialog;
+	
+	/** The context. */
 	private Context context = this;
+    
+    /** The selected name. */
     private int selectedName;
+    
+    /** The position. */
     private Spinner position;
+    
+    /** The location. */
     private TextView location;
+    
+    /** The locations. */
     private ArrayList<String> locations;
+    
+    /** The text city. */
     private TextView textCity;
+    
+    /** The new mail button. */
     private ImageButton newMailButton;
+    
+    /** The send button. */
     private ImageButton sendButton;
 
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	
@@ -91,7 +123,14 @@ public class HomeScreenActivity extends Activity {
 		}
         location = (TextView) findViewById(R.id.textCurLocations);
         textCity = (TextView) findViewById(R.id.textProfileTravel);
-        location.setText(curLocation);
+        
+        if (curLocation.equals("")){
+        	location.setText("None Selected");
+        }
+        if (!curLocation.equals("")){
+        	location.setText(curLocation);
+        }
+        
         
         sendButton = (ImageButton) findViewById(R.id.checkInboxButton);
         sendButton.setOnClickListener(new OnClickListener() {
@@ -232,6 +271,12 @@ public class HomeScreenActivity extends Activity {
         
     }
     
+    /**
+     * Gets the current location.
+     *
+     * @return the current location
+     * @throws ParseException the parse exception
+     */
     public void getCurrentLocation() throws ParseException{
     	
     	locations = new ArrayList();
@@ -265,8 +310,10 @@ public class HomeScreenActivity extends Activity {
     	email = cur.getString(indexUsername);
     	int locNum = cur.getInt(index);
     	
-    	curLocation = locations.get(locNum);
-    	
+    	if (locations.size() > 0){
+    		curLocation = locations.get(locNum);
+    	}
+    		
     	//Add tables for MyRoamers
     			query = ParseQuery.getQuery("Roamer");
     	       	query.whereEqualTo("Email", email);
@@ -311,6 +358,9 @@ public class HomeScreenActivity extends Activity {
     			
     }
      
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -318,6 +368,11 @@ public class HomeScreenActivity extends Activity {
         return true;
     }
     
+    /**
+     * Populate cities.
+     *
+     * @param dialog the dialog
+     */
     public void populateCities(Dialog dialog){
     	
         
@@ -358,6 +413,13 @@ public class HomeScreenActivity extends Activity {
            });
             
         }
+    
+    /**
+     * Sets the city.
+     *
+     * @param name the new city
+     * @throws ParseException the parse exception
+     */
     public void setCity(int name) throws ParseException{
     	
     	final int name1 = name;
@@ -387,34 +449,66 @@ public class HomeScreenActivity extends Activity {
     	myDB.close();	
     }
     
+    /**
+     * The Class MyData.
+     */
     class MyData {
+        
+        /**
+         * Instantiates a new my data.
+         *
+         * @param spinnerText the spinner text
+         * @param value the value
+         */
         public MyData(String spinnerText, String value) {
             this.spinnerText = spinnerText;
             this.value = value;
         }
 
+        /**
+         * Gets the spinner text.
+         *
+         * @return the spinner text
+         */
         public String getSpinnerText() {
             return spinnerText;
         }
 
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
         public String getValue() {
             return value;
         }
 
+        /* (non-Javadoc)
+         * @see java.lang.Object#toString()
+         */
         public String toString() {
             return spinnerText;
         }
 
+        /** The spinner text. */
         String spinnerText;
+        
+        /** The value. */
         String value;
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onBackPressed()
+     */
     @Override
 	public void onBackPressed()
     {
     	//Do nothing
 	}
     
+    /**
+     * Check for requests.
+     */
     public void checkForRequests(){
     	//Update database with current location
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");

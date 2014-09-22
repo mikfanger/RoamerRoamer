@@ -39,6 +39,44 @@
     android:layout_alignParentLeft="true"
     android:layout_marginBottom="35dp"
     android:layout_marginLeft="5dp"
-    android:background="@color/DarkWhite" />
+    android:background="@color/DarkWhite"
+    android:visibility="invisible" />
+
+<ImageView
+    android:id="@+id/imageView1"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:background="@color/transparent"
+    android:src="@drawable/abc_ic_clear_search_api_holo_light" />
+
+<EditText
+    android:id="@+id/editTextMap"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/imageButtonSearchMap"
+    android:layout_alignLeft="@+id/spr_place_type"
+    android:layout_alignTop="@+id/spr_place_type"
+    android:layout_toLeftOf="@+id/imageButtonSearchMap"
+    android:background="@color/DarkWhite"
+    android:ems="10"
+    android:gravity="center_vertical|center_horizontal"
+    android:lines="1"
+    android:maxLength="20"
+    android:maxLines="1"
+    android:textColor="@color/DarkGrey" />
+
+    <requestFocus />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_alignBottom="@+id/spr_place_type"
+        android:layout_alignLeft="@+id/imageBackFromMap"
+        android:layout_alignRight="@+id/imageView1"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hr" />
 
 </RelativeLayout> 

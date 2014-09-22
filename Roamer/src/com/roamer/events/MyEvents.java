@@ -37,6 +37,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -93,6 +94,8 @@ public class MyEvents extends Activity {
             	
                 // When clicked, show a dialog with event information
             	final Dialog dialog = new Dialog(context);
+            	
+            	dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             	
     			dialog.setContentView(R.layout.activity_total_event);
     			dialog.setTitle("My Event");

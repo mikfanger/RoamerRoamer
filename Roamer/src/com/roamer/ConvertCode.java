@@ -2,19 +2,35 @@ package com.roamer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import android.widget.Toast;
+
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ConvertCode.
+ */
 public class ConvertCode{
 	
 
+	/**
+	 * Instantiates a new convert code.
+	 */
 	public ConvertCode(){
 		
 	}
 	
 
 
+/**
+ * Convert location.
+ *
+ * @param location the location
+ * @return the string
+ */
 public static String convertLocation(int location){
 	
 	String curLocation = "";
@@ -36,11 +52,19 @@ public static String convertLocation(int location){
 		e.printStackTrace();
 	}
 	
-	curLocation = locations.get(location);
+	if (locations.size() > 0) {
+		curLocation = locations.get(location);
+	}
 	return curLocation;
 	
 }
 
+/**
+ * Conver sex.
+ *
+ * @param sex the sex
+ * @return the string
+ */
 public static String converSex(int sex){
 	
 	String stringSex = "";
@@ -56,6 +80,12 @@ public static String converSex(int sex){
 	return stringSex;
 }
 
+/**
+ * Convert from sex.
+ *
+ * @param sex the sex
+ * @return the int
+ */
 public static int convertFromSex(String sex){
 	
 	int stringSex = 0;
@@ -69,6 +99,12 @@ public static int convertFromSex(String sex){
 	return stringSex;
 }
 
+/**
+ * Convert industry.
+ *
+ * @param industry the industry
+ * @return the string
+ */
 public static String convertIndustry(int industry){
 	
 	String stringIndustry = "";
@@ -122,6 +158,12 @@ public static String convertIndustry(int industry){
 	
 }
 
+/**
+ * Convert job.
+ *
+ * @param job the job
+ * @return the string
+ */
 public static String convertJob(int job){
 	
 	String stringJob = "";
@@ -156,6 +198,12 @@ public static String convertJob(int job){
 	
 }
 
+/**
+ * Convert travel.
+ *
+ * @param travel the travel
+ * @return the string
+ */
 public static String convertTravel(int travel){
 	
 	String stringTravel = "";
@@ -185,6 +233,12 @@ public static String convertTravel(int travel){
 	
 }
 
+/**
+ * Convert from travel.
+ *
+ * @param travel the travel
+ * @return the int
+ */
 public static int convertFromTravel(String travel){
 	
 	int stringTravel = 0;
@@ -214,6 +268,12 @@ public static int convertFromTravel(String travel){
 	
 }
 
+/**
+ * Convert from location.
+ *
+ * @param location the location
+ * @return the string
+ */
 public static String convertFromLocation(int location){
 	
 	String stringTravel = "";
@@ -243,6 +303,12 @@ public static String convertFromLocation(int location){
 
 
 
+/**
+ * Convert airline.
+ *
+ * @param air the air
+ * @return the string
+ */
 public static String convertAirline(int air){
 	
 	String stringAir = "";
@@ -287,6 +353,12 @@ public static String convertAirline(int air){
 	
 }
 
+/**
+ * Convert hotel.
+ *
+ * @param hotel the hotel
+ * @return the string
+ */
 public static String convertHotel(int hotel){
 	
 	String stringHotel = "";
@@ -323,6 +395,12 @@ public static String convertHotel(int hotel){
 
 }
 
+/**
+ * Convert type.
+ *
+ * @param type the type
+ * @return the string
+ */
 public static String convertType(int type){
 	
 	String stringHotel = "";
@@ -354,6 +432,12 @@ public static String convertType(int type){
 
 }
 
+/**
+ * Convert type back.
+ *
+ * @param type the type
+ * @return the int
+ */
 public static int convertTypeBack(String type){
 	
 	int stringType = 0;
@@ -384,6 +468,12 @@ public static int convertTypeBack(String type){
 	return stringType;
 }
 
+/**
+ * Convert time back.
+ *
+ * @param time the time
+ * @return the int
+ */
 public static int convertTimeBack(String time){
 	
 	int stringTime = 0;
@@ -409,6 +499,12 @@ public static int convertTimeBack(String time){
 	return stringTime;
 }
 
+/**
+ * Convert time.
+ *
+ * @param time the time
+ * @return the string
+ */
 public static String convertTime(int time){
 	
 	String stringHotel = "";

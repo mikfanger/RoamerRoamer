@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory.Options;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -31,7 +32,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -47,11 +50,12 @@ import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.maps.GeoPoint;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -65,11 +69,13 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
 	private double cityLat;
 	private double cityLong;
 	private int credLocation;
+	private EditText searchText;
 	
     private Spinner mSprPlaceType;
     
     private String[] mPlaceType=null;
     private String[] mPlaceTypeName=null;
+    private List<HashMap<String, String>> places = null;
  
     double mLatitude=0;
     double mLongitude=0;
@@ -79,6 +85,8 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
 	public void onCreate(Bundle savedInstanceState) {
 	    
 	    super.onCreate(savedInstanceState);
+	    
+	    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    setContentView(R.layout.map);
 	    
 	 // Getting Google Play availability status
@@ -97,7 +105,10 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
 
         // Getting Google Map
         Mmap = fragment.getMap();
-	    
+        
+        searchText = (EditText) findViewById(R.id.editTextMap);
+        
+        
 	    //Get lat long for current set location
 	    getCredLocation();
 	    try {
@@ -112,6 +123,7 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
 	    
 	    // Zoom in, animating the camera to current Cred Location
 	    Mmap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(cityLat,cityLong) , 10.0f) );
+	    
 
 	    // Array of place types
         mPlaceType = getResources().getStringArray(R.array.place_type);
@@ -147,35 +159,53 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
 	    .rotateGesturesEnabled(false)
 	    .tiltGesturesEnabled(false);
 	    
+		//Set marker on current location
+		
+		//LatLng newPosition = new LatLng(cityLat, cityLong);
+    	//cityLat = Mmap.getCameraPosition().target.latitude;
+    	//cityLong = Mmap.getCameraPosition().target.longitude;
+	    //Mmap.addMarker(new MarkerOptions().position(newPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker_pin_map_gps)));
+	    
+	    
 	    ImageButton searchButton = (ImageButton) findViewById(R.id.imageButtonSearchMap);
         searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
             	
-            	//String checkLocation = searchText.getText().toString();
+            	places = null;
             	
+            	//Get keyword text and replace with |
+            	String searchKeyword = searchText.getText().toString().trim();
+            	String newWord;
+            	
+            	newWord = searchKeyword.replaceAll("\\s+","+");
+
             	int selectedPosition = mSprPlaceType.getSelectedItemPosition();
             	String type = mPlaceType[selectedPosition];
             	
+        		LatLng newPosition = new LatLng(cityLat, cityLong);
+            	cityLat = Mmap.getCameraPosition().target.latitude;
+            	cityLong = Mmap.getCameraPosition().target.longitude;
+        	    Mmap.addMarker(new MarkerOptions().position(newPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker_pin_map_gps)));
+        	   
             	
-            	StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-            	sb.append("location="+cityLat+","+cityLong);
-            	sb.append("&radius=10000");
-            	sb.append("&types="+type);
-            	//sb.append("&types=airport");
-            	//sb.append("&name="+checkLocation);
-            	sb.append("&sensor=false");
+            	
+            	StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/search/json?");
+            	
+            	//sb.append("keyword="+newWord.trim());
+            	//sb.append("types=newWord");
+            	sb.append("name="+newWord.trim());
+            	sb.append("&location="+cityLat+","+cityLong);
+            	sb.append("&radius=2000");
             	sb.append("&key=AIzaSyCMO_9EWAfU83za9plSDNxBaUSd_o0R0og");
             	
+            	System.out.println("Request is: "+sb);
             	// Creating a new non-ui thread task to download json data
             	PlacesTask placesTask = new PlacesTask();
             	
             	// Invokes the "doInBackground()" method of the class PlaceTask
             	placesTask.execute(sb.toString());
-            	
-            	System.out.println(sb.toString());
-            	//placesTask.doInBackground(sb.toString());
-            	
+  
             }
         });
 
@@ -228,6 +258,7 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
         Mmap.setOnMapClickListener(this);
         Mmap.setOnMapLongClickListener(this);
         Mmap.setOnCameraChangeListener(this);
+        
     }
  
     
@@ -243,7 +274,6 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
     	ParseGeoPoint geo = object.getParseGeoPoint("LatLong");
     	cityLat = geo.getLatitude();
     	cityLong = geo.getLongitude();
-    	System.out.println("City corrdinates are: "+cityLat+","+cityLong);
 
     }
     
@@ -338,19 +368,46 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
         @Override
         protected List<HashMap<String,String>> doInBackground(String... jsonData) {
  
-            List<HashMap<String, String>> places = null;
+            
             PlaceJSONParser placeJsonParser = new PlaceJSONParser();
+            //String nextToken = null;
  
             try{
                 jObject = new JSONObject(jsonData[0]);
- 
-                /** Getting the parsed data as a List construct */
-                places = placeJsonParser.parse(jObject);
+                
+                
+                //nextToken= jObject.getString("next_page_token");
+                
+                /* Getting the parsed data as a List construct 
+                
+                if (places != null){
+                	places.addAll(placeJsonParser.parse(jObject));
+                }
+                */
+                //if (places == null){
+                	places = placeJsonParser.parse(jObject);
+                //}
+                
  
             }catch(Exception e){
                 Log.d("Exception",e.toString());
             }
+            
+            /*
+            if (nextToken != null){
+            	// Creating a new non-ui thread task to download json data
+            	PlacesTask placesTask = new PlacesTask();
+            	
+            	// Invokes the "doInBackground()" method of the class PlaceTask
+            	String sb = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken="+nextToken;
+            	System.out.println("new string to execute = "+sb);
+            	placesTask.execute(sb);
+            }
+            */
+            
+            System.out.println("Places are: "+places);
             return places;
+            
         }
  
         // Executed after the complete execution of doInBackground() method
@@ -359,54 +416,54 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
  
             // Clears all the existing markers
             Mmap.clear();
+            
+        	cityLat = Mmap.getCameraPosition().target.latitude;
+        	cityLong = Mmap.getCameraPosition().target.longitude;
+        	LatLng newPosition = new LatLng(cityLat, cityLong);
+        	
+    	    Mmap.addMarker(new MarkerOptions().position(newPosition).icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker_pin_map_gps)));
+    	    
  
-            for(int i=0;i<list.size();i++){
- 
-                // Creating a marker
-                MarkerOptions markerOptions = new MarkerOptions();
- 
-                // Getting a place from the places list
-                HashMap<String, String> hmPlace = list.get(i);
- 
-                // Getting latitude of the place
-                double lat = Double.parseDouble(hmPlace.get("lat"));
- 
-                // Getting longitude of the place
-                double lng = Double.parseDouble(hmPlace.get("lng"));
- 
-                // Getting name
-                String name = hmPlace.get("place_name");
- 
-                // Getting vicinity
-                String vicinity = hmPlace.get("vicinity");
- 
-                LatLng latLng = new LatLng(lat, lng);
- 
-                // Setting the position for the marker
-                markerOptions.position(latLng);
- 
-                // Setting the title for the marker.
-                //This will be displayed on taping the marker
-                markerOptions.title(name + " : " + vicinity);
- 
-                // Placing a marker on the touched position
-                Mmap.addMarker(markerOptions);
-            }
+    	    if (list != null){
+                for(int i=0;i<list.size();i++){
+                	 
+                    // Creating a marker
+                    MarkerOptions markerOptions = new MarkerOptions();
+     
+                    // Getting a place from the places list
+                    HashMap<String, String> hmPlace = list.get(i);
+     
+                    // Getting latitude of the place
+                    double lat = Double.parseDouble(hmPlace.get("lat"));
+     
+                    // Getting longitude of the place
+                    double lng = Double.parseDouble(hmPlace.get("lng"));
+     
+                    // Getting name
+                    String name = hmPlace.get("place_name");
+     
+                    // Getting vicinity
+                    String vicinity = hmPlace.get("vicinity");
+     
+                    LatLng latLng = new LatLng(lat, lng);
+     
+                    // Setting the position for the marker
+                    markerOptions.position(latLng);
+     
+                    // Setting the title for the marker.
+                    //This will be displayed on taping the marker
+                    markerOptions.title(name + " : " + vicinity);
+     
+                    // Placing a marker on the touched position
+                    Mmap.addMarker(markerOptions);
+                }
+    	    }
         }
     }
  
     @Override
     public void onLocationChanged(Location location) {
     	
-    	/*
-        mLatitude = location.getLatitude();
-        mLongitude = location.getLongitude();
-        LatLng latLng = new LatLng(mLatitude, mLongitude);
- 
-        Mmap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        Mmap.animateCamera(CameraUpdateFactory.zoomTo(12));
-        
-        */
     }
  
    @Override
@@ -426,15 +483,17 @@ OnMapClickListener, OnMapLongClickListener, OnCameraChangeListener, OnMarkerClic
     
     @Override
     public void onMapClick(LatLng point) {
+    	
+    	Mmap.clear();
         System.out.println("Point is: "+ point.toString());
         double lat = point.latitude;
         double longt = point.longitude;
+
     }
 
 	@Override
 	public void onCameraChange(CameraPosition position) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

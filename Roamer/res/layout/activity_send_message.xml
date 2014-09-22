@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/DarkGrey"
+    android:background="@color/RoamerGrey"
     android:orientation="vertical"
     tools:context=".SendMessage" >
 
@@ -19,16 +19,6 @@
             android:adjustViewBounds="true"
             android:scaleType="center"
             android:src="@drawable/gray_gradient" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageChildImage"
-            android:layout_centerHorizontal="true"
-            android:adjustViewBounds="true"
-            android:scaleType="center"
-            android:src="@drawable/red_gradient" />
 
         <ImageView
             android:id="@+id/roamerCreateTag"
@@ -48,17 +38,6 @@
             android:layout_marginLeft="17dp"
             android:background="@color/transparent"
             android:src="@drawable/back" />
-
-        <TextView
-            android:id="@+id/textRecentDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageChildImage"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="3dp"
-            android:text="Find roamers near you!"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/DarkWhite" />
 
     </RelativeLayout>
 

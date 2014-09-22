@@ -49,7 +49,7 @@ public class ProfileListActivity extends Activity {
 	String newLocation;
 	int newIndustry;
     ListView listView;
-    final Context context = this;
+    Context context = this;
     private ArrayList<Item> roamersArray;
     private View roamersProgressView;
 
@@ -70,7 +70,15 @@ public class ProfileListActivity extends Activity {
     	
     	int index;
     	index = cur.getColumnIndex("CurrentLocation");
-    	currentText.setText(getLocationFromText(cur.getInt(index)));
+    	
+    	String myLocation = getLocationFromText(cur.getInt(index));
+    	
+    	if (myLocation.equals("")){
+    					 //Show toast of lacking network connection
+    					 Toast.makeText(context, "No network connection!",
+    							   Toast.LENGTH_LONG).show();
+    	}
+    	currentText.setText(myLocation);
     	
     	myDB.close();
         
@@ -90,36 +98,38 @@ public class ProfileListActivity extends Activity {
     {
     	
     	
-    	 listView = (ListView) findViewById(R.id.listView);
-    	 
-    	 //Load all roamers in area
-    	 loadArray();
-    	 
-         //Add Roamer if selected
-		 listView.setOnItemClickListener(new OnItemClickListener() {
-	            public void onItemClick(AdapterView<?> parent, View view,
-	                int position, long id) {
-	            	
-	              // When clicked, show a dialog with event information
-	            	finish();
-	            	Intent i=new Intent(ProfileListActivity.this,RoamerProfileShortActivity.class);
-	                startActivity(i);
-	            	
-	    			newIcon = Model.GetbyId(position+1).IconFile;
-  	                newName = Model.GetbyId(position+1).Name;
-  	                newLocation = Model.GetbyId(position+1).Location;
-  	                newDate = Model.GetbyId(position+1).StartDate;
-  	                newIndustry = Model.GetbyId(position+1).Industry;
-  	                
-  	                //Add user to temp roamer
-  	                addTempRoamer(newIcon,newName,newLocation,newDate,newIndustry);
-  	                
-	            }
-		
-	            public void onNothingSelected(AdapterView<?> parent){
-				}
-	          });
-		
+    	if (!Location.equals("")){
+    		listView = (ListView) findViewById(R.id.listView);
+       	 
+       	 //Load all roamers in area
+       	 loadArray();
+       	 
+            //Add Roamer if selected
+   		 listView.setOnItemClickListener(new OnItemClickListener() {
+   	            public void onItemClick(AdapterView<?> parent, View view,
+   	                int position, long id) {
+   	            	
+   	              // When clicked, show a dialog with event information
+   	            	finish();
+   	            	Intent i=new Intent(ProfileListActivity.this,RoamerProfileShortActivity.class);
+   	                startActivity(i);
+   	            	
+   	    			newIcon = Model.GetbyId(position+1).IconFile;
+     	                newName = Model.GetbyId(position+1).Name;
+     	                newLocation = Model.GetbyId(position+1).Location;
+     	                newDate = Model.GetbyId(position+1).StartDate;
+     	                newIndustry = Model.GetbyId(position+1).Industry;
+     	                
+     	                //Add user to temp roamer
+     	                addTempRoamer(newIcon,newName,newLocation,newDate,newIndustry);
+     	                
+   	            }
+   		
+   	            public void onNothingSelected(AdapterView<?> parent){
+   				}
+   	          });
+    	}
+    	 		
     }
     
     //Enter Roamer data in to temp table for retrieval by short profile page
@@ -154,6 +164,7 @@ public class ProfileListActivity extends Activity {
 	   String curLocation = "";
 	   
 	   curLocation = ConvertCode.convertLocation(locNum);
+	 
 	   return curLocation;
    }
    

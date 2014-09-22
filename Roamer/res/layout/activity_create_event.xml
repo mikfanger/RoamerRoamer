@@ -37,9 +37,12 @@
         android:id="@+id/spinnerCreateNewType"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
+        android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/textCreateType"
         android:layout_marginLeft="50dp"
-        android:layout_toRightOf="@+id/textCreateType" />
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/textCreateType"
+        android:background="@drawable/field_entry" />
 
     <TextView
         android:id="@+id/textCreateDate"
@@ -66,7 +69,10 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_alignLeft="@+id/spinnerCreateNewType"
-        android:layout_alignTop="@+id/textCreateTime" />
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textCreateTime"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/field_entry" />
 
     <TextView
         android:id="@+id/textProfileTravel"
@@ -103,17 +109,10 @@
         android:layout_alignBottom="@+id/textProfileTravel"
         android:layout_alignLeft="@+id/spinnerCreateTime"
         android:layout_alignParentRight="true"
-        android:text="Select From Map" />
-
-    <ImageButton
-        android:id="@+id/imageButtonPostEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="@color/transparent"
-        android:paddingBottom="10dp"
-        android:src="@drawable/post" />
+        android:layout_marginRight="5dp"
+        android:background="@drawable/btn_black"
+        android:text="Select From Map"
+        android:textColor="@color/DarkWhite" />
 
     <EditText
         android:id="@+id/editText2"
@@ -138,5 +137,15 @@
         android:layout_marginTop="10dp"
         android:text="Final Location"
         android:textColor="@color/DarkWhite" />
+
+    <ImageButton
+        android:id="@+id/imageButtonPostEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textProfileTravel"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent"
+        android:paddingBottom="10dp"
+        android:src="@drawable/post" />
 
 </RelativeLayout>
