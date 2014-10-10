@@ -185,6 +185,7 @@
         android:id="@+id/textProfileLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textProfileJob"
         android:layout_alignRight="@+id/textCreateType"
         android:layout_alignTop="@+id/imageView7"
         android:layout_marginTop="8dp"
@@ -195,7 +196,7 @@
         android:id="@+id/textProfileJob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textProfileLocation"
+        android:layout_alignLeft="@+id/imageRemoveRoamer"
         android:layout_alignTop="@+id/imageView6"
         android:layout_marginTop="8dp"
         android:text="Job Position"
@@ -281,7 +282,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageProfilePicture"
-        android:layout_alignRight="@+id/imageButtonLargePicture3"
+        android:layout_alignRight="@+id/textCreateType"
         android:text="Date"
         android:textStyle="italic" />
 

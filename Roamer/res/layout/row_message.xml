@@ -59,13 +59,13 @@
 
     <ImageView
         android:id="@+id/imageViewNewMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="30dp"
         android:layout_alignBottom="@+id/textRecentDate"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="14dp"
+        android:layout_marginRight="16dp"
         android:background="@color/transparent"
-        android:src="@drawable/honeycomb_mail"
+        android:src="@drawable/message_mail"
         android:visibility="invisible" />
 
 </RelativeLayout>

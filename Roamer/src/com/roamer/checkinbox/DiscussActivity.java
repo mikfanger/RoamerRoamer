@@ -15,7 +15,9 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -36,6 +38,7 @@ public class DiscussActivity extends Activity{
 	private EditText editText1;
 	private String chatName = "none";
 	private String myName = "none";
+	final Context context = this;
 	
 
 
@@ -46,6 +49,10 @@ public class DiscussActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.activity_discuss);
+		
+		//cancel notification
+		NotificationManager notifManager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		notifManager.cancelAll();
 		
 		//Set chat name from Temp Roamer
 		final SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
@@ -180,8 +187,9 @@ public class DiscussActivity extends Activity{
 	void writeChatToDb(String phrase, int type) {
 		SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 		
+		String chatName2 = chatName.replace(" ", "");
 		myDB.execSQL("INSERT INTO "
-			       + chatName
+			       + chatName2
 			       + " (Field1,Field2) "
 			       + "VALUES ('"+phrase.replace("'","%@%")+"',"+type+");");
 			
@@ -195,7 +203,8 @@ public class DiscussActivity extends Activity{
 		
 		   SQLiteDatabase myDB = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
 
-		   Cursor c = myDB.rawQuery("SELECT COUNT(*) FROM "+chatName, null);
+		   String chatName2 = chatName.replace(" ", "");
+		   Cursor c = myDB.rawQuery("SELECT COUNT(*) FROM "+chatName2, null);
 				   
 
 		   int isNotEmpty = 0;
@@ -208,7 +217,7 @@ public class DiscussActivity extends Activity{
 	    	    }
 	    	}
 	    	
-	    	c = myDB.rawQuery("SELECT * FROM " + chatName, null);
+	    	c = myDB.rawQuery("SELECT * FROM " + chatName2, null);
 	    	
 		   int Column1 = c.getColumnIndex("Field1");
 		   
@@ -264,5 +273,20 @@ public class DiscussActivity extends Activity{
     	finish();
 		 Intent i=new Intent(DiscussActivity.this,ChatsAndRequestsActivity.class);
 	    startActivity(i);
+	}
+	
+	@Override
+	protected void onResume() {
+	  super.onResume();
+		//cancel notification
+		NotificationManager notifManager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		notifManager.cancelAll();
+		
+	}
+
+	@Override
+	protected void onPause() {
+	  super.onPause();
+	  
 	}
 }

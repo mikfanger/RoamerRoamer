@@ -19,6 +19,7 @@ import com.roamer.HomeScreenActivity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +63,11 @@ public class InboxActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.inbox_list);
+        
+        //Remove notifications.
+		NotificationManager notifManager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		notifManager.cancelAll();
+		
 
         loadArray();
 
@@ -244,9 +250,11 @@ public class InboxActivity extends Activity {
     	boolean nameExists = false;
     	SQLiteDatabase db = this.openOrCreateDatabase("RoamerDatabase", MODE_PRIVATE, null);
     	
-    	System.out.println("table name will be: "+tableName);
+    	String tableName2 = tableName.replace(" ", "");
+    	System.out.println("table name will be: "+tableName2);
+    	
     	db.execSQL("CREATE TABLE IF NOT EXISTS "
-		          + tableName
+		          + tableName2
 		          + " (Field1 VARCHAR,Field2 VARCHAR);");
     	
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
@@ -481,7 +489,6 @@ public class InboxActivity extends Activity {
 		 int C2 = c.getColumnIndex("Field1");
 		 int C3 = c.getColumnIndex("Field3");
 		 int C4 = c.getColumnIndex("Field4");
-		 System.out.println("The chat name is: "+c.getString(C2));
 		 		 
 		 loadArray.add(new Item(i,c.getBlob(C1), c.getString(C2), c.getString(C3), c.getInt(C4)));
 		
