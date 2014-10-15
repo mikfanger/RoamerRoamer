@@ -141,7 +141,15 @@ public class DiscussActivity extends Activity{
             	ContentValues values = new ContentValues();
             	values.put("Field3", currentDateandTime);
             	
-            	myDB.update("ChatTable", values, "Field1 = '" + chatName +"'", null);            	
+            	myDB.update("ChatTable", values, "Field1 = '" + chatName +"'", null);  
+            	
+            	//Add this new message to the database
+            	ParseObject chat = new ParseObject("Chat");
+            	chat.put("toName", chatName);
+            	chat.put("fromName", currentUsername);
+            	chat.put("message", phrase);
+            	chat.put("read", false);
+            	chat.saveInBackground();
             	            	            		  
             }
         });

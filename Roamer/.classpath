@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/Parse-1.4.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="Parse-1.4.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="/google-play-services_lib/libs/google-play-services.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mail.jar"/>

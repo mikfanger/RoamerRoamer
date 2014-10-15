@@ -48,7 +48,7 @@
         android:adjustViewBounds="true"
         android:background="@color/DarkGrey"
         android:scaleType="center"
-        android:src="@drawable/btn_gray" />
+        android:src="@color/RoamerGrey" />
 
     <ImageView
         android:id="@+id/imageView5"

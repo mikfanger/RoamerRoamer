@@ -1,9 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+<RelativeLayout 
+    
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/RoamerGrey"
     tools:context=".CreateEventActivity" >
+    
 
     <ImageView
         android:id="@+id/imageViewNewMessage"
@@ -147,9 +152,12 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/editText2"
         android:layout_below="@+id/editText2"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:background="@color/transparent"
         android:paddingBottom="10dp"
         android:src="@drawable/post" />
+    
 
 </RelativeLayout>
+
+</ScrollView>

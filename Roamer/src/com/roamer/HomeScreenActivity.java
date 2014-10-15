@@ -269,6 +269,27 @@ public class HomeScreenActivity extends Activity {
             }
         });
         
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Chat");
+    	query.whereEqualTo("toName", username);
+    	
+    	query.findInBackground(new FindCallback<ParseObject>() {
+   		  public void done(List<ParseObject> roamerList, ParseException e) {
+   		    if (roamerList == null) {
+   		    	Log.d("score", "Error: " + e.getMessage()); 
+
+   		    } else {
+   		    	
+   		    	int i = 0;
+   		    	while(i<roamerList.size()){
+   		    		roamerList.get(i).deleteInBackground();
+   		    		i++;
+   		    	}
+   		    }
+   		   }
+    	});
+        
+        
+        
     }
     
     /**

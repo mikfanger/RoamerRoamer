@@ -18,7 +18,9 @@
         android:layout_toRightOf="@+id/textView3"
         android:text="2/15/14"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/DarkWhite" />
+        android:textColor="@color/DarkWhite"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imageHostPictures"
@@ -60,16 +62,8 @@
         android:text="8"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/DarkWhite"
-        android:textStyle="italic" />
-
-    <TextView
-        android:id="@+id/textProfileLocation"
-        android:layout_width="150dp"
-        android:layout_height="31dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textAttendNumbers"
-        android:gravity="center_vertical"
-        android:textColor="@color/Red" />
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textAttendScript"
@@ -88,8 +82,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textProfileLocation"
-        android:layout_alignLeft="@+id/textProfileLocation"
-        android:layout_marginLeft="135dp"
+        android:layout_alignLeft="@+id/textViewAttend"
+        android:layout_alignRight="@+id/textProfileLocation"
+        android:gravity="right"
         android:text="at"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/Grey"
@@ -112,7 +107,17 @@
         android:layout_height="20dp"
         android:layout_alignBaseline="@+id/textViewHost"
         android:layout_alignBottom="@+id/textViewHost"
-        android:layout_alignRight="@+id/textProfileLocation"
+        android:layout_alignRight="@+id/textProfileHotel"
+        android:gravity="right"
+        android:textColor="@color/Red" />
+
+    <TextView
+        android:id="@+id/textProfileLocation"
+        android:layout_width="150dp"
+        android:layout_height="31dp"
+        android:layout_alignLeft="@+id/textViewAttend"
+        android:layout_alignTop="@+id/textEventDate"
+        android:gravity="center_vertical|right"
         android:textColor="@color/Red" />
 
 </RelativeLayout>
