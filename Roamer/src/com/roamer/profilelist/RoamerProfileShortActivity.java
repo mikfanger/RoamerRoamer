@@ -113,8 +113,7 @@ public class RoamerProfileShortActivity extends Activity {
             picView.setImageDrawable(d);
             
         }
-	   	
-		
+	  
 		 ImageButton backButton = (ImageButton) findViewById(R.id.imageButtonOut);
 	        backButton.setOnClickListener(new OnClickListener() {
 	            @Override
@@ -127,7 +126,7 @@ public class RoamerProfileShortActivity extends Activity {
 	            }
 	        });
 	       
-	        
+	       
 	        picView.setOnClickListener(new OnClickListener() {
 	            public void onClick(View v) {
 	               largeImage.setVisibility(View.VISIBLE);

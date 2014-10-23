@@ -3,8 +3,6 @@ package com.roamer;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.widget.Toast;
-
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -35,7 +33,7 @@ public static String convertLocation(int location){
 	
 	String curLocation = "";
 	
-	ArrayList<String> locations = new ArrayList();
+	ArrayList<String> locations = new ArrayList<String>();
 	ParseQuery<ParseObject> query = ParseQuery.getQuery("Cities");
 	query.whereNotEqualTo("Code", 1000);
 
@@ -114,43 +112,101 @@ public static String convertIndustry(int industry){
    		stringIndustry ="Not Selected";
    		break;
    	case 1:
-   		stringIndustry ="Aerospace/Defense";
+   		stringIndustry ="Agriculture";
            break;
    	case 2:
-   		stringIndustry ="Automotive";
+   		stringIndustry ="Accounting";
    		break;
    	case 3:
-   		stringIndustry ="Banking";
+   		stringIndustry ="Advertising";
    		break;
    	case 4:
-   		stringIndustry ="Consumer";
+   		stringIndustry ="Aerospace & Defense";
    		break;
    	case 5:
-   		stringIndustry ="Insurance";
+   		stringIndustry ="Aircraft & Airline";
    		break;
    	case 6:
-   		stringIndustry ="Media & Design";
+   		stringIndustry ="Automotive";
    		break;
    	case 7:
-   		stringIndustry ="Oil & Gas";
+   		stringIndustry ="Banking & Finance";
    		break;
    	case 8:
-   		stringIndustry ="Power & Utilities";
+   		stringIndustry ="Biotechnology";
    		break;
    	case 9:
-   		stringIndustry ="Real Estate";
+   		stringIndustry ="Consumer Products";
    		break;
    	case 10:
-   		stringIndustry ="Government";
+   		stringIndustry ="Chemical";
    		break;
    	case 11:
-   		stringIndustry ="Heathcare";
+   		stringIndustry ="Consulting";
    		break;
    	case 12:
-   		stringIndustry ="Travel/Hospitality";
+   		stringIndustry ="Education";
    		break;
    	case 13:
-   		stringIndustry ="Information Technology";
+   		stringIndustry ="Engineering";
+   		break;
+   	case 14:
+   		stringIndustry ="Entertainment";
+   		break;
+   	case 15:
+   		stringIndustry ="Government";
+   		break;
+   	
+   	case 16:
+   		stringIndustry ="Healthcare";
+           break;
+   	case 17:
+   		stringIndustry ="Insurance";
+   		break;
+   	case 18:
+   		stringIndustry ="Legal";
+   		break;
+   	case 19:
+   		stringIndustry ="Marketing";
+   		break;
+   	case 20:
+   		stringIndustry ="Medical Products";
+   		break;
+   	case 21:
+   		stringIndustry ="Media & Design";
+   		break;
+   	case 22:
+   		stringIndustry ="Oil & Gas";
+   		break;
+   	case 23:
+   		stringIndustry ="Power & Utilities";
+   		break;
+   	case 24:
+   		stringIndustry ="Recruiting";
+   		break;
+   	case 25:
+   		stringIndustry ="Real Estate";
+   		break;
+   	case 26:
+   		stringIndustry ="Retail & Wholesale";
+   		break;
+   	case 27:
+   		stringIndustry ="Service";
+   		break;
+   	case 28:
+   		stringIndustry ="Sports";
+   		break;
+   	case 29:
+   		stringIndustry ="Student";
+   		break;
+   	case 30:
+   		stringIndustry ="Technology";
+   		break;
+   	case 31:
+   		stringIndustry ="Transportation";
+   		break;
+   	case 32:
+   		stringIndustry ="Travel & Hospitality";
    		break;
 	}
 	

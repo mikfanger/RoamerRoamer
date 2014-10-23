@@ -14,7 +14,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.roamer.ConvertCode;
 import com.roamer.HomeScreenActivity;
-import com.roamer.profilelist.MyRoamerItemAdapter;
 import com.roamer.profilelist.ProfileListActivity;
 import com.roamer.profilelist.RoamerProfileShortActivity;
 
@@ -44,6 +43,7 @@ public class RequestsActivity extends Activity {
 	String newLocation;
     final Context context = this;
     ArrayList<ItemRequest> loadArray;
+    public static boolean requestAction = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,31 +59,6 @@ public class RequestsActivity extends Activity {
 			e.printStackTrace();
 		}
         
-        
-    }
-    
-    public void createListView() throws IOException{
-    	
-    	try {
-			loadArray();
-		} catch (JSONException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-        ModelRequest.LoadModel(loadArray);
-        
-        listView = (ListView) findViewById(R.id.listView);
-        String[] ids = new String[ModelRequest.Items.size()];
-        for (int i= 0; i < ids.length; i++){
-
-            ids[i] = Integer.toString(i+1);
-        }
-
-        ItemAdapterRequest adapter = new ItemAdapterRequest(this,R.layout.row_request, ids);
-        listView.setAdapter(adapter);
-        
-  
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                 int position, long id) {
@@ -109,6 +84,32 @@ public class RequestsActivity extends Activity {
             	
             }
         });
+        
+    }
+    
+    public void createListView() throws IOException{
+    	
+    	try {
+			loadArray();
+		} catch (JSONException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        ModelRequest.LoadModel(loadArray);
+        
+        listView = (ListView) findViewById(R.id.listView);
+        String[] ids = new String[ModelRequest.Items.size()];
+        for (int i= 0; i < ids.length; i++){
+
+            ids[i] = Integer.toString(i+1);
+        }
+
+        ItemAdapterRequest adapter = new ItemAdapterRequest(this,R.layout.row_request, ids);
+        listView.setAdapter(adapter);
+        
+  
+        
     }
     
     public int getRowCount(String tableName){
@@ -319,6 +320,7 @@ public class RequestsActivity extends Activity {
 		String fullDate = Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year+1900);
 	
     }
+    
     public void onBackPressed() 
     {
     	 Intent i=new Intent(RequestsActivity.this,HomeScreenActivity.class);

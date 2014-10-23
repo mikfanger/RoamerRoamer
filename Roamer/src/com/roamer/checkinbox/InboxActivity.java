@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -147,9 +148,8 @@ public class InboxActivity extends Activity {
             public void onClick(View v) {
             	
             	setDialog(new Dialog(context));
-            	
+    			getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
     			getDialog().setContentView(R.layout.select_roamer_for_message);
-    			getDialog().setTitle("Select Roamer");
 
     			getDialog().show();
     			
@@ -159,9 +159,6 @@ public class InboxActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-    			
-    			//position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
-    			
     			
     			// if button is clicked, close the custom dialog
     			dialogButton.setOnClickListener(new OnClickListener() {

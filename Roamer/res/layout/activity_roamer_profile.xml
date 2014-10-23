@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content" android:layout_height="wrap_content">
     
-<RelativeLayout 
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="550dp"
     android:background="@color/RoamerGrey"
     tools:context=".RoamerProfileActivity" >
 
@@ -56,16 +56,6 @@
         android:text="Sex"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textStyle="italic" />
-
-    <ImageButton
-        android:id="@+id/imageRemoveRoamer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textProfileSex"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="18dp"
-        android:background="@color/transparent"
-        android:src="@drawable/remove_roamer" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -242,24 +232,6 @@
         android:layout_alignLeft="@+id/textViewUserName"
         android:text="Preferred Hotel" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignParentBottom="true"
-        android:layout_alignTop="@+id/textProfileAir"
-        android:text="Preferred Airline" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignParentBottom="true"
-        android:layout_alignTop="@+id/textProfileTravel"
-        android:text="Travel Status" />
-
     <ImageView
         android:id="@+id/imageButtonLargePicture3"
         android:layout_width="200dp"
@@ -288,6 +260,33 @@
         android:layout_alignRight="@+id/textCreateType"
         android:text="Date"
         android:textStyle="italic" />
+
+    <ImageButton
+        android:id="@+id/imageRemoveRoamer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView4"
+        android:layout_alignRight="@+id/imageView4"
+        android:background="@color/transparent"
+        android:src="@drawable/remove_roamer" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textProfileTravel"
+        android:layout_alignBottom="@+id/textProfileTravel"
+        android:layout_alignLeft="@+id/textView4"
+        android:text="Travel Status" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textProfileAir"
+        android:layout_alignBottom="@+id/textProfileAir"
+        android:layout_alignLeft="@+id/textView3"
+        android:text="Preferred Airline" />
 
 </RelativeLayout>
 

@@ -31,6 +31,7 @@ import com.roamer.HomeScreenActivity;
 import com.roamer.events.AllEvents;
 import com.roamer.events.EventsActivity;
 import com.roamer.profilelist.RoamerProfileShortActivity;
+import com.roamer.checkinbox.RequestsActivity;
 
 public class ItemAdapterRequest extends ArrayAdapter<String> {
 
@@ -105,6 +106,7 @@ public class ItemAdapterRequest extends ArrayAdapter<String> {
 					e.printStackTrace();
 				}
             	
+            	RequestsActivity.requestAction = true;
             	Intent intent = new Intent();
             	
             	

@@ -48,12 +48,9 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
@@ -556,7 +553,7 @@ public class AllEvents extends Activity {
     	
     	int newIndex = 0;
        	
-       	ArrayList newAttend = new ArrayList<String>();
+       	ArrayList<String> newAttend = new ArrayList<String>();
        	
        	while(myEventsList != null && newIndex < myEventsList.length()){
        		newAttend.add(myEventsList.get(newIndex).toString());

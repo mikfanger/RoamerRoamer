@@ -212,7 +212,7 @@ public class MyRoamersListActivity extends Activity {
         			}
         			
                	
-        			if( roamerList!=null && roamerList.length()!=0){
+        			if( nameList!=null && nameList.size()!=0){
    
         	        	ParseQuery<ParseObject> query1 = ParseQuery.getQuery("Roamer");
         	        	query1.whereContainedIn("Username", nameList);

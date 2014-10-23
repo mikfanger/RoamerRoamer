@@ -1,7 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content" android:layout_height="wrap_content">
+    
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="700dp"
     android:background="@color/RoamerGrey"
     tools:context=".SettingsActivity2" >
     
@@ -73,17 +76,6 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/roamer" />
 
-    <TextView
-        android:id="@+id/locationSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/finishProfile"
-        android:layout_alignTop="@+id/mapImage"
-        android:layout_below="@id/imageView5"
-        android:text="Select your industry"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/DarkWhite" />
-
     <ImageButton
         android:id="@+id/backProfile2"
         android:layout_width="wrap_content"
@@ -91,35 +83,37 @@
         android:layout_alignLeft="@+id/mapImage"
         android:layout_alignTop="@+id/imageView2"
         android:background="@color/transparent"
-        android:src="@drawable/back" />
+        android:src="@drawable/back"
+        android:visibility="invisible" />
 
     <Spinner
         android:id="@+id/spinnerIndustryProf"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/locationSpinner"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/locationSpinner"
-        android:background="@drawable/field_entry" 
-        android:textColor="@color/Grey"/>
+        android:background="@drawable/field_entry"
+        android:textColor="@color/Grey" />
 
     <Spinner
         android:id="@+id/spinnerJobProf"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textRecentDate"
+        android:layout_alignRight="@+id/spinnerIndustryProf"
         android:layout_below="@+id/textRecentDate"
-        android:background="@drawable/field_entry" 
-        android:textColor="@color/Grey"/>
+        android:background="@drawable/field_entry"
+        android:textColor="@color/Grey" />
 
     <Spinner
         android:id="@+id/spinnerAirlineProf"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textView3"
+        android:layout_alignRight="@+id/spinnerJobProf"
         android:layout_below="@+id/textView3"
-        android:background="@drawable/field_entry" 
-        android:textColor="@color/Grey"/>
+        android:background="@drawable/field_entry"
+        android:textColor="@color/Grey" />
 
     <TextView
         android:id="@+id/textEventDate"
@@ -130,17 +124,6 @@
         android:layout_marginTop="14dp"
         android:text="Preferred Hotel (opt)"
         android:textColor="@color/DarkWhite" />
-
-    <ImageButton
-        android:id="@+id/finishProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/imageChildImage"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="20dp"
-        android:background="@color/transparent"
-        android:src="@drawable/save" />
 
     <ImageView
         android:id="@+id/backFromProfile"
@@ -155,6 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textEventDate"
+        android:layout_alignRight="@+id/spinnerAirlineProf"
         android:layout_below="@+id/textEventDate"
         android:background="@drawable/field_entry" />
 
@@ -217,7 +201,31 @@
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:layout_alignLeft="@+id/textViewTravelStatus"
+        android:layout_alignRight="@+id/spinnerHotelProf"
         android:layout_below="@+id/textViewTravelStatus"
         android:background="@drawable/field_entry" />
 
+    <TextView
+        android:id="@+id/locationSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/imageView5"
+        android:layout_alignTop="@+id/mapImage"
+        android:layout_marginRight="25dp"
+        android:text="Select your industry"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite" />
+
+    <ImageButton
+        android:id="@+id/finishProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinnerTravelStatus"
+        android:layout_below="@+id/spinnerTravelStatus"
+        android:layout_marginTop="23dp"
+        android:background="@color/transparent"
+        android:src="@drawable/save" />
+
 </RelativeLayout>
+
+</ScrollView>

@@ -14,5 +14,6 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_invalid_email_or_password">Invalid email or password!</string>
+    <string name="error_email_not_verified">Email address not yet Verified!  Please check your inbox for verification email.</string>
 
 </resources>

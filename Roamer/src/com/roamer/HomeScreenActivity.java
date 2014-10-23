@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -235,7 +236,7 @@ public class HomeScreenActivity extends Activity {
             public void onClick(View v) {
             	
             	dialog = new Dialog(context);
-            	
+            	dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
     			dialog.setContentView(R.layout.change_location_dialog);
     			dialog.setTitle("Select your city!");
 

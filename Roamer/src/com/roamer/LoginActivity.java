@@ -1,12 +1,12 @@
 package com.roamer;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.roamer.R;
+
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -31,7 +31,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -288,6 +287,7 @@ public class LoginActivity extends Activity {
 	 * errors are presented and no actual login attempt is made.
 	 * @throws ParseException 
 	 */
+	
 	public void attemptLogin() throws ParseException {
 
 		if (mAuthTask != null) {
@@ -337,58 +337,32 @@ public class LoginActivity extends Activity {
 		ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
 			  public void done(ParseUser user, ParseException e) {
 			    if (user != null) {
-			    	System.out.println("User found!  Nice job!");
-			    	mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			    	
-			    	userName = mEmail;
-			    	passWord = mPassword;
-					showProgress(true);
-					mAuthTask = new UserLoginTask();
-					mAuthTask.execute((Void) null);
-			    	
-			      // Hooray! The user is logged in.
+			    	if(user.getBoolean("emailVerified")){
+				    	mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+				    	
+				    	userName = mEmail;
+				    	passWord = mPassword;
+						showProgress(true);
+						mAuthTask = new UserLoginTask();
+						mAuthTask.execute((Void) null);
+					    // Hooray! The user is logged in.
+			    	}
+			    	else{
+					    // Signup failed. Look at the ParseException to see what happened.
+				    	mEmailView.setError(getString(R.string.error_email_not_verified));
+				    	focusViewFinal.requestFocus();
+						mLogin.setEnabled(true);
+			    	}
+
 			    } else {
-			      // Signup failed. Look at the ParseException to see what happened.
+			        // Signup failed. Look at the ParseException to see what happened.
 			    	mEmailView.setError(getString(R.string.error_invalid_email_or_password));
 			    	focusViewFinal.requestFocus();
 					mLogin.setEnabled(true);
 			    }
 			  }
 			});
-
-		/*
-		//Check that email address match
-			if (!userName.equals(mEmail)) {
-
-				mEmailView.setError("No record of email address");
-				focusView = mEmailView;
-				cancel = true;
-			}
-
-
-		//Check that password matches
-		if (!passWord.equals(mPassword.trim())) {
-
-			mPasswordView.setError("Password does not match");
-			focusView = mPasswordView;
-			cancel = true;
-			}
-		
-		
-		ParseQuery<ParseUser> query = ParseQuery.getQuery("User");
-		query.whereEqualTo("email", userName);
-		
-		ParseUser userObject = query.getFirst();
-		if (userObject != null){
-			System.out.println("Current user is "+userObject);
-			if(userObject.getBoolean("emailVerified") == false){
-				
-				mEmailView.setError("Email not yet verified");
-				focusView = mEmailView;
-				cancel = true;
-			}
-		}
-		*/
 	}
 
 	/**

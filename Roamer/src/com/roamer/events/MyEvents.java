@@ -300,16 +300,17 @@ public class MyEvents extends Activity {
       	ArrayList<String> eventsList = new ArrayList();
 		
 		int i = 0;
-		System.out.println("About to change from JSON to MyEvents");
+		System.out.println("My Event List = "+roamerList);
 		
-		while (i < roamerList.length()){
+		
+		while (roamerList != null && i < roamerList.length()){
 			eventsList.add(roamerList.get(i).toString());
 			i++;
 		}
 		
 		Date dateToday = new Date(System.currentTimeMillis());
 		
-		System.out.println("About to search for My Events!");
+		System.out.println("About to search for My Events!  Events List new = "+eventsList);
       	
     	ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
     	query.whereContainedIn("objectId", eventsList);
@@ -317,10 +318,9 @@ public class MyEvents extends Activity {
     	query.findInBackground(new FindCallback<ParseObject>() {
     	    public void done(List<ParseObject> eventList, ParseException e) {
     	        if (e == null) {
-    	            
-    	        	System.out.println("Found some in MyEvents!");
     	        	
     	        	eventsArray = new ArrayList<ItemMyEvents>();
+    	        	System.out.println("Found some in MyEvents!"+eventsArray);
     	        	
     	        	int typeNow;
 		        	int location;
@@ -336,7 +336,7 @@ public class MyEvents extends Activity {
 
     	    			int i = 0;	
     	    			
-    	    			if (eventList != null){
+    	    			if (eventList != null && eventList.size() != 0 ){
     	    				typeNow = eventList.get(i).getInt("Type");
     			        	host = eventList.get(i).getString("Host");
     			        	location = eventList.get(i).getInt("Location");

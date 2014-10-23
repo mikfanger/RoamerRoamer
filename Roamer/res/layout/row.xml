@@ -8,20 +8,6 @@
     android:padding="10dp"
     android:paddingLeft="10dp" >
 
-    <TextView
-        android:id="@+id/textEventDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView3"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_marginLeft="19dp"
-        android:layout_toRightOf="@+id/textView3"
-        android:text="2/15/14"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/DarkWhite"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
     <ImageView
         android:id="@+id/imageHostPictures"
         android:layout_width="40dp"
@@ -112,11 +98,24 @@
         android:textColor="@color/Red" />
 
     <TextView
+        android:id="@+id/textEventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignLeft="@+id/textViewHost"
+        android:text="2/15/14"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/DarkWhite"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/textProfileLocation"
         android:layout_width="150dp"
         android:layout_height="31dp"
+        android:layout_alignBottom="@+id/textViewAttend"
         android:layout_alignLeft="@+id/textViewAttend"
-        android:layout_alignTop="@+id/textEventDate"
+        android:layout_alignTop="@+id/textViewAttend"
         android:gravity="center_vertical|right"
         android:textColor="@color/Red" />
 

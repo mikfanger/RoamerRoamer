@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +30,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -198,6 +196,7 @@ public class ProfileListActivity extends Activity {
    	    	   	try {
    	    	   		
    	   			int i = 0;
+   	   			int itemSpot = 0;
    	   			
    	   	       	String name;
    	   	       	boolean sex;
@@ -247,8 +246,8 @@ public class ProfileListActivity extends Activity {
    	   		        	
    	   		        	
    	   		        	if (!name.equals(myName)){
-   	   		        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
-   	   	   		    		
+   	   		        		roamersArray.add(new Item(itemSpot+1,pic,name,location,sex,fullDate,industry));
+   	   	   		    		itemSpot++;
    	   		        	}
    	   		    		i++;
    	   				}
@@ -291,10 +290,10 @@ public class ProfileListActivity extends Activity {
    		                pic= out.toByteArray(); 
    		        	}
    	   	        	
-   	   	        	
+   	   	        	System.out.println("Roamer name = "+name);
    	   	        	if (!name.equals(myName)){
-   			        		roamersArray.add(new Item(i+1,pic,name,location,sex,fullDate,industry));
-   		   		    		
+   			        		roamersArray.add(new Item(itemSpot+1,pic,name,location,sex,fullDate,industry));
+   		   		    		itemSpot++;
    			        }
    	   	        	i++;
    	   	   		}

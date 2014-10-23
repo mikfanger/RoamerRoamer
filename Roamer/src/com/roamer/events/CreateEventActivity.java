@@ -14,9 +14,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.roamer.ConvertCode;
-import com.roamer.ExplainationActivity;
 import com.roamer.HomeScreenActivity;
-import com.roamer.LoginActivity;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -39,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -81,7 +80,7 @@ public class CreateEventActivity extends Activity {
 		 blurbText = (EditText)findViewById(R.id.editText2);
 		 eventLocationPost = (TextView)findViewById(R.id.textEventLocationPost);
      	 datePicker = (DatePicker) findViewById(R.id.datePicker1);
-		 
+
 		 preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		 location = preferences.getString("location","");
 		 
@@ -93,9 +92,16 @@ public class CreateEventActivity extends Activity {
 	     defaultType = preferences.getLong("eventType", 0); 
 	     defaultTime = preferences.getLong("eventTime", 0); 
 	     
+	     
 	     blurbText.setText(defaultComment);
 	     eventLocationPost.setText(location);
-     	 datePicker.updateDate((int)defaultYear, (int)defaultDay, (int)defaultMonth);
+     	 //datePicker.updateDate((int)defaultYear, (int)defaultDay, (int)defaultMonth);
+     	 
+     	 
+     	 //initialize datepicker
+	     OnDateChangedListener onDateChangedListener = null;
+	     datePicker.init((int)defaultYear, (int)defaultMonth, (int)defaultDay, onDateChangedListener );
+		 
 		 
 		 ImageButton postButton = (ImageButton) findViewById(R.id.imageButtonPostEvent);
 	        postButton.setOnClickListener(new OnClickListener() {
@@ -113,7 +119,6 @@ public class CreateEventActivity extends Activity {
 	            	Date eventDate = new Date();
 	    	        day = datePicker.getDayOfMonth();
 	    	        month = datePicker.getMonth();
-	    	        
 
 	    	        Calendar c = Calendar.getInstance();
 	    	        
