@@ -28,6 +28,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -126,8 +127,11 @@ public class CreateAccountActivityPic extends Activity {
          				   Toast.LENGTH_LONG).show();
             	}
             	else{
-            		Toast.makeText(getApplicationContext(), "New user created!  An email has been sent.",
-         				   Toast.LENGTH_LONG).show();
+            		
+            		Toast toast = Toast.makeText(getApplicationContext(), "New user created!  An email has been sent.",
+         				   Toast.LENGTH_LONG);
+            		toast.setGravity(Gravity.CENTER, 0, 0);
+            		toast.show();
             		
             		enterInfo();
             		
@@ -141,15 +145,25 @@ public class CreateAccountActivityPic extends Activity {
         Spinner position = (Spinner) findViewById(R.id.spinnerJob);
         //Prepare adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items[] = new MyData[8];
-        items[0] = new MyData("Select Position", "value1");
+        final MyData items[] = new MyData[17];
+        items[0] = new MyData("Not Selected", "value1");
         items[1] = new MyData("Accounting", "value2");
-        items[2] = new MyData("Marketing", "value3");
-        items[3] = new MyData("Consultant", "value4");
-        items[4] = new MyData("Lawyer", "value5");
-        items[5] = new MyData("Sales", "value6");
-        items[6] = new MyData("Doctor", "value7");
-        items[7] = new MyData("Scientist", "value8");
+        items[2] = new MyData("Customer Service", "value3");
+        items[3] = new MyData("Engineering/Manufacturing", "value4");
+        items[4] = new MyData("Finance", "value5");
+        items[5] = new MyData("Health/Human Services", "value6");
+        items[6] = new MyData("IT", "value7");
+        items[7] = new MyData("Legal", "value8");
+        items[8] = new MyData("Maintenance", "value9");        
+        items[9] = new MyData("Management", "value9");
+        items[10] = new MyData("Marketing", "value9");
+        items[11] = new MyData("Operations", "value9");
+        items[12] = new MyData("Research and Development", "value9");
+        items[13] = new MyData("Sales", "value9");
+        items[14] = new MyData("Shipping/Logistics", "value9");
+        items[15] = new MyData("Transportation", "value9");
+        items[16] = new MyData("Other", "value9");
+
         ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -172,7 +186,7 @@ public class CreateAccountActivityPic extends Activity {
         Spinner industry = (Spinner) findViewById(R.id.spinnerIndustry);
         //Prepar adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items2[] = new MyData[33];
+        final MyData items2[] = new MyData[34];
         items2[0] = new MyData("Select Industry", "value1");
         items2[1] = new MyData("Agriculture", "value2");
         items2[2] = new MyData("Accounting", "value3");
@@ -206,7 +220,8 @@ public class CreateAccountActivityPic extends Activity {
         items2[30] = new MyData("Technology", "value11");
         items2[31] = new MyData("Transportation", "value12");
         items2[32] = new MyData("Travel & Hospitality", "value13");
-  
+        items2[33] = new MyData("Other", "value13");
+        
         ArrayAdapter<MyData> adapter2 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items2);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

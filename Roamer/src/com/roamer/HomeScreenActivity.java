@@ -2,6 +2,7 @@ package com.roamer;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -313,6 +314,8 @@ public class HomeScreenActivity extends Activity {
 				locations.add(eventList.get(i).getString("Name"));
 				i++;
 			}
+			
+			Collections.sort(locations, String.CASE_INSENSITIVE_ORDER);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -333,7 +336,7 @@ public class HomeScreenActivity extends Activity {
     	int locNum = cur.getInt(index);
     	
     	if (locations.size() > 0){
-    		curLocation = locations.get(locNum);
+    		curLocation = locations.get(locNum-1);
     	}
     		
     	//Add tables for MyRoamers
@@ -400,14 +403,17 @@ public class HomeScreenActivity extends Activity {
         
         position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
          
-       	final MyData items1[] = new MyData[locations.size()];
+
+        
+        final MyData items1[] = new MyData[locations.size()+1];
 
        	//Populate cities in spinner
-       	int i = 0;
+       	int i = 1;
        	
+       	items1[0] = new MyData("Not Selected", "Value2");
        	while (i < items1.length){
        	
-       		items1[i] = new MyData(locations.get(i),"Value2");
+       		items1[i] = new MyData(locations.get(i-1),"Value2");
        		i++;
        	}
       	

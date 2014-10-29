@@ -208,6 +208,9 @@ public static String convertIndustry(int industry){
    	case 32:
    		stringIndustry ="Travel & Hospitality";
    		break;
+   	case 33:
+   		stringIndustry ="Other";
+   		break;
 	}
 	
 	return stringIndustry;
@@ -229,25 +232,52 @@ public static String convertJob(int job){
    		stringJob ="Not Selected";
    		break;
    	case 1:
-   		stringJob ="Accountant";
+   		stringJob ="Accounting";
            break;
    	case 2:
-   		stringJob ="Marketing";
+   		stringJob ="Customer Service";
    		break;
    	case 3:
-   		stringJob ="Consultant";
+   		stringJob ="Engineering/Manufacturing";
    		break;
    	case 4:
-   		stringJob ="Lawyer";
+   		stringJob ="Finance";
    		break;
    	case 5:
-   		stringJob ="Sales";
+   		stringJob ="Health/Human Services";
    		break;
    	case 6:
-   		stringJob ="Doctor";
+   		stringJob ="IT";
    		break;
    	case 7:
-   		stringJob ="Scientist";
+   		stringJob ="Legal";
+   		break;
+   	case 8:
+   		stringJob ="Maintenance";
+   		break;
+   	case 9:
+   		stringJob ="Management";
+   		break;
+   	case 10:
+   		stringJob ="Marketing";
+   		break;
+   	case 11:
+   		stringJob ="Operations";
+   		break;
+   	case 12:
+   		stringJob ="Research and Development";
+   		break;
+   	case 13:
+   		stringJob ="Sales";
+   		break;
+   	case 14:
+   		stringJob ="Shipping/Losgistics";
+   		break;
+   	case 15:
+   		stringJob ="Transportation";
+   		break;
+   	case 16:
+   		stringJob ="Other";
    		break;
 	}
 	return stringJob;

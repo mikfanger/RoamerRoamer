@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
 import com.roamer.R;
+import com.roamer.CreateAccountActivityPic.MyData;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -16,14 +17,17 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class SettingsActivity2 extends Activity {
 
@@ -44,6 +49,7 @@ public class SettingsActivity2 extends Activity {
 	public String userName = "";
 	public byte[] picBytes;
 	private View mSettingsView;
+	private Context context = this;
 
 	
 	@Override
@@ -55,6 +61,7 @@ public class SettingsActivity2 extends Activity {
 		
 		emailAddress = getEmailAddress();
 		//Recall profile picture
+		
 		ivGalImg     =     (ImageView)findViewById(R.id.mapImage);
 		
 		//Get image from database
@@ -64,9 +71,12 @@ public class SettingsActivity2 extends Activity {
 		  public void done(ParseObject roamer, ParseException e) {
 		    if (roamer == null) {
 		    	Log.d("roamer", "Error: " + e.getMessage()); 
+		    	
+		    	System.out.println("No email address found!");
 
 		    } else {
 		    	 
+		    	 System.out.println("Getting picture");
 		    	 roamer.getParseFile("Pic");
 		    	 try {
 					picBytes = roamer.getParseFile("Pic").getData();
@@ -130,7 +140,7 @@ public class SettingsActivity2 extends Activity {
             	hotel = spinnerPos;
             	
             	Spinner position5 = (Spinner) findViewById(R.id.spinnerTravelStatus);
-            	spinnerPos = position4.getSelectedItemPosition();
+            	spinnerPos = position5.getSelectedItemPosition();
             	travel = spinnerPos;
             	
             	//Save updated data to DB
@@ -149,7 +159,8 @@ public class SettingsActivity2 extends Activity {
          		query.whereEqualTo("Email", emailAddress);
          		
          		query.getFirstInBackground(new GetCallback<ParseObject>() {
-         		  public void done(ParseObject Roamer, ParseException e) {
+         		  @SuppressLint("ShowToast")
+				public void done(ParseObject Roamer, ParseException e) {
          		    if (Roamer == null) {
          		    	Log.d("score", "Error: " + e.getMessage()); 
 
@@ -163,6 +174,11 @@ public class SettingsActivity2 extends Activity {
                   		
                   		showProgress(false);
          			    Roamer.saveInBackground();
+         			    
+         			    Toast toast = Toast.makeText(context, "Changes saved!", Toast.LENGTH_LONG);
+         			    toast.setGravity(Gravity.CENTER, 0, 0);
+         			    toast.show();
+         			    
          		    }
          		  }
          		});
@@ -192,15 +208,24 @@ public class SettingsActivity2 extends Activity {
         Spinner job = (Spinner) findViewById(R.id.spinnerJobProf);
         //Prepare adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData itemss[] = new MyData[8];
-        itemss[0] = new MyData("Select Position", "value1");
+        final MyData itemss[] = new MyData[17];
+        itemss[0] = new MyData("Not Selected", "value1");
         itemss[1] = new MyData("Accounting", "value2");
-        itemss[2] = new MyData("Marketing", "value3");
-        itemss[3] = new MyData("Consultant", "value4");
-        itemss[4] = new MyData("Lawyer", "value5");
-        itemss[5] = new MyData("Sales", "value6");
-        itemss[6] = new MyData("Doctor", "value7");
-        itemss[7] = new MyData("Scientist", "value8");
+        itemss[2] = new MyData("Customer Service", "value3");
+        itemss[3] = new MyData("Engineering/Manufacturing", "value4");
+        itemss[4] = new MyData("Finance", "value5");
+        itemss[5] = new MyData("Health/Human Services", "value6");
+        itemss[6] = new MyData("IT", "value7");
+        itemss[7] = new MyData("Legal", "value8");
+        itemss[8] = new MyData("Maintenance", "value9");        
+        itemss[9] = new MyData("Management", "value9");
+        itemss[10] = new MyData("Marketing", "value9");
+        itemss[11] = new MyData("Operations", "value9");
+        itemss[12] = new MyData("Research and Development", "value9");
+        itemss[13] = new MyData("Sales", "value9");
+        itemss[14] = new MyData("Shipping/Logistics", "value9");
+        itemss[15] = new MyData("Transportation", "value9");
+        itemss[16] = new MyData("Other", "value9");
         ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, itemss);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -208,6 +233,7 @@ public class SettingsActivity2 extends Activity {
         job.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
+            	System.out.println("Array position of Job");
                 MyData d = itemss[position];
 
                 //Get selected value of key 
@@ -223,7 +249,7 @@ public class SettingsActivity2 extends Activity {
         Spinner industry = (Spinner) findViewById(R.id.spinnerIndustryProf);
         //Prepar adapter 
         //HERE YOU CAN ADD ITEMS WHICH COMES FROM SERVER.
-        final MyData items2[] = new MyData[33];
+        final MyData items2[] = new MyData[34];
         items2[0] = new MyData("Select Industry", "value1");
         items2[1] = new MyData("Agriculture", "value2");
         items2[2] = new MyData("Accounting", "value3");
@@ -257,6 +283,7 @@ public class SettingsActivity2 extends Activity {
         items2[30] = new MyData("Technology", "value11");
         items2[31] = new MyData("Transportation", "value12");
         items2[32] = new MyData("Travel & Hospitality", "value13");
+        items2[33] = new MyData("Other", "value13");
         ArrayAdapter<MyData> adapter2 = new ArrayAdapter<MyData>(this,
                 android.R.layout.simple_spinner_item, items2);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -264,6 +291,8 @@ public class SettingsActivity2 extends Activity {
         industry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
+            	
+            	System.out.println("Array position of Industry");
                 MyData d = items2[position];
 
                 //Get selected value of key 
@@ -293,6 +322,8 @@ public class SettingsActivity2 extends Activity {
         travel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
+            	
+            	System.out.println("Array position of Travel");
                 MyData d = items5[position];
 
                 //Get selected value of key 
@@ -327,6 +358,8 @@ public class SettingsActivity2 extends Activity {
         airline.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
+            	
+            	System.out.println("Array position of Airline");
                 MyData d = items3[position];
 
                 //Get selected value of key 
@@ -358,6 +391,8 @@ public class SettingsActivity2 extends Activity {
         hotel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
+            	
+            	System.out.println("Array position of Hotel");
                 MyData d = items4[position];
 
                 //Get selected value of key 
@@ -553,6 +588,7 @@ public class SettingsActivity2 extends Activity {
 	     email = cur.getString(indexEmail);
 	     userName = cur.getString(indexName);
 		 
+	     System.out.println("Getting email address");
 		 return email;
 	 }
 	 

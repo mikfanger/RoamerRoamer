@@ -1,11 +1,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content" android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minHeight="650dp" >
     
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="700dp"
+    android:layout_height="wrap_content"
     android:background="@color/RoamerGrey"
+    android:minHeight="650dp"
     tools:context=".SettingsActivity2" >
     
      <ProgressBar
@@ -17,16 +20,6 @@
         android:layout_centerVertical="true"
         android:layout_marginBottom="16dp"
         android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/imageChildImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:adjustViewBounds="true"
-        android:background="@color/transparent"
-        android:src="@drawable/createaccount_bottom_image" />
 
     <ImageView
         android:id="@+id/backFromEvents"
@@ -225,6 +218,16 @@
         android:layout_marginTop="23dp"
         android:background="@color/transparent"
         android:src="@drawable/save" />
+
+    <ImageView
+        android:id="@+id/imageChildImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:background="@color/transparent"
+        android:src="@drawable/createaccount_bottom_image" />
 
 </RelativeLayout>
 
