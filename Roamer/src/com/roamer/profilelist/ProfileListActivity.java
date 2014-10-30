@@ -186,6 +186,7 @@ public class ProfileListActivity extends Activity {
    	if (locationInt != 0){
    	 ParseQuery<ParseObject> query = ParseQuery.getQuery("Roamer");
    	 query.whereEqualTo("CurrentLocation", locationInt);
+   	 query.whereEqualTo("EmailVerified", 1);
    	 query.orderByAscending("Username");  	
    	 query.findInBackground(new FindCallback<ParseObject>() {
    	    public void done(List<ParseObject> roamerList, ParseException e) {

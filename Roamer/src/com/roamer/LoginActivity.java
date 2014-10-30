@@ -614,8 +614,10 @@ public class LoginActivity extends Activity {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
-
 					 
+					 //set email verified to true for searchability
+					 object.put("EmailVerified", 1);
+					 object.saveInBackground();
 
 
 					 int pSex1 = 1;

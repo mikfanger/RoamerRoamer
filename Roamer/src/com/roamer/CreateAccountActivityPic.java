@@ -562,6 +562,7 @@ public class CreateAccountActivityPic extends Activity {
 		user1.put("Male", sexbool);
 		user1.put("Airline", airline);
 		user1.put("LoginCount", 1);
+		user1.put("EmailVerified",0);
 		user1.put("Pic", imgFile);
 		
 		ParseUser.enableAutomaticUser();
