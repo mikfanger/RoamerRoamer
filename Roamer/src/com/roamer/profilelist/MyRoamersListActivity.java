@@ -118,17 +118,17 @@ public class MyRoamersListActivity extends Activity {
 	        	    
 	        	    int sexInt = ConvertCode.convertFromSex(sex);
 	        	    int travelInt = ConvertCode.convertFromTravel(travel);
-	        	    int industryInt = 0;
-	        	    int jobInt = 0;
-	        	    int hotelInt = 0;
-	        	    int airInt = 0;
+	        	    int industryInt = ConvertCode.convertFromIndustry(industry);
+	        	    int jobInt = ConvertCode.convertFromJob(job);
+	        	    int hotelInt = ConvertCode.convertFromHotel(hotel);
+	        	    int airInt = ConvertCode.convertFromAirline(air);
 	        	    
 	        	    //Convert sex
 	        	    if (sex.equals("male")){
 	        	    	sexInt = 1;
 	        	    }
-	        	    addToTempRoamer(name,icon,sexInt,travelInt,5,5,
-	        	    		5,5, location, start, location);
+	        	    addToTempRoamer(name,icon,sexInt,travelInt,industryInt,jobInt,
+	        	    		hotelInt,airInt, location, start, location);
 	
 	            	Intent i=new Intent(MyRoamersListActivity.this,RoamerProfileActivity.class);
 	                startActivity(i);

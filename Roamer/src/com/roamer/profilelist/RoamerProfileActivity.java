@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import com.roamer.HomeScreenActivity;
 import com.roamer.R;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -200,5 +201,12 @@ public class RoamerProfileActivity extends Activity {
 		getMenuInflater().inflate(R.menu.roamer_profile, menu);
 		return true;
 	}
+	
+	   @Override
+	   public void onBackPressed() 
+	   {
+	   	 Intent i=new Intent(RoamerProfileActivity.this,MyRoamersListActivity.class);
+	       startActivity(i);
+	   }
 
 }

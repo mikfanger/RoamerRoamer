@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.roamer.HomeScreenActivity;
 import com.roamer.R;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -305,5 +306,12 @@ public class RoamerProfileShortActivity extends Activity {
 		return notexists;
 		
 	}
+	
+	   @Override
+	   public void onBackPressed() 
+	   {
+	   	 Intent i=new Intent(RoamerProfileShortActivity.this,ProfileListActivity.class);
+	       startActivity(i);
+	   }
 
 }

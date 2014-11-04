@@ -156,10 +156,9 @@ public static String convertIndustry(int industry){
    	case 15:
    		stringIndustry ="Government";
    		break;
-   	
    	case 16:
    		stringIndustry ="Healthcare";
-           break;
+        break;
    	case 17:
    		stringIndustry ="Insurance";
    		break;
@@ -215,6 +214,118 @@ public static String convertIndustry(int industry){
 	
 	return stringIndustry;
 	
+}
+
+public static int convertFromIndustry(String industry){
+	
+	int intIndustry = 0;
+	
+	switch (industry){
+	
+	case "Not Selected":
+		intIndustry = 0;
+		break;
+	case "Agriculture":
+		intIndustry = 1;
+       break;
+	case "Accounting":
+		intIndustry = 2;
+		break;
+	case "Advertising":
+		intIndustry = 3;
+		break;
+	case "Aerospace & Defense":
+		intIndustry = 4;
+		break;
+	case "Aircraft & Airline":
+		intIndustry = 5;
+		break;
+	case "Automotive":
+		intIndustry = 6;
+		break;
+	case "Banking & Finance":
+		intIndustry = 7;
+		break;
+	case "Biotechnology":
+		intIndustry = 8;
+		break;
+	case "Consumer Products":
+		intIndustry = 9;
+		break;
+	case "Chemical":
+		intIndustry = 10;
+		break;
+	case "Consulting":
+		intIndustry = 11;
+		break;
+	case "Education":
+		intIndustry = 12;
+		break;
+	case "Engineering":
+		intIndustry = 13;
+		break;
+	case "Entertainment":
+		intIndustry = 14;
+		break;
+	case "Government":
+		intIndustry = 15;
+		break;
+	case "Healthcare":
+		intIndustry = 16;
+    break;
+	case "Insurance":
+		intIndustry = 17;
+		break;
+	case "Legal":
+		intIndustry = 18;
+		break;
+	case "Marketing":
+		intIndustry = 19;
+		break;
+	case "Medical Products":
+		intIndustry = 20;
+		break;
+	case "Media & Design":
+		intIndustry = 21;
+		break;
+	case "Oil & Gas":
+		intIndustry = 22;
+		break;
+	case "Power & Utilities":
+		intIndustry = 23;
+		break;
+	case "Recruiting":
+		intIndustry = 24;
+		break;
+	case "Real Estate":
+		intIndustry = 25;
+		break;
+	case "Retail & Wholesale":
+		intIndustry = 26;
+		break;
+	case "Service":
+		intIndustry = 27;
+		break;
+	case "Sports":
+		intIndustry = 28;
+		break;
+	case "Student":
+		intIndustry = 29;
+		break;
+	case "Technology":
+		intIndustry = 30;
+		break;
+	case "Transportation":
+		intIndustry = 31;
+		break;
+	case "Travel & Hospitality":
+		intIndustry = 32;
+		break;
+	case "Other":
+		intIndustry = 33;
+		break;
+	}
+		return intIndustry;
 }
 
 /**
@@ -281,6 +392,67 @@ public static String convertJob(int job){
    		break;
 	}
 	return stringJob;
+	
+}
+
+public static int convertFromJob(String job){
+	
+	int intJob = 0;
+	
+	switch(job){
+   	case "Not Selected":
+   		intJob = 0;
+   		break;
+   	case "Accounting":
+   		intJob = 1;
+           break;
+   	case "Customer Service":
+   		intJob = 2;
+   		break;
+   	case "Engineering/Manufacturing":
+   		intJob = 3;
+   		break;
+   	case "Finance":
+   		intJob = 4;
+   		break;
+   	case "Health/Human Services":
+   		intJob = 5;
+   		break;
+   	case "IT":
+   		intJob = 6;
+   		break;
+   	case "Legal":
+   		intJob = 7;
+   		break;
+   	case "Maintenance":
+   		intJob = 8;
+   		break;
+   	case "Management":
+   		intJob = 9;
+   		break;
+   	case "Marketing":
+   		intJob = 10;
+   		break;
+   	case "Operations":
+   		intJob = 11;
+   		break;
+   	case "Research and Development":
+   		intJob = 12;
+   		break;
+   	case "Sales":
+   		intJob = 13;
+   		break;
+   	case "Shipping/Losgistics":
+   		intJob = 14;
+   		break;
+   	case "Transportation":
+   		intJob = 15;
+   		break;
+   	case "Other":
+   		intJob = 16;
+   		break;
+	}
+	return intJob;
 	
 }
 
@@ -440,6 +612,56 @@ public static String convertAirline(int air){
 }
 
 /**
+ * Convert airline.
+ *
+ * @param air the air
+ * @return the string
+ */
+public static int convertFromAirline(String air){
+	
+	int intAir = 0;
+	
+	switch(air){
+   	case "Not Selected":
+   		intAir = 0;
+   		break;
+   	case "Frontier":
+   		intAir = 1;
+           break;
+   	case "Virgin":
+   		intAir = 2;
+   		break;
+   	case "JetBlue":
+   		intAir = 3;
+   		break;
+   	case "Alaska":
+   		intAir = 4;
+   		break;
+   	case "Southwest":
+   		intAir = 5;
+   		break;
+   	case "Delta":
+   		intAir = 6;
+   		break;
+   	case "Airtran":
+   		intAir = 7;
+   		break;
+   	case "US Airways":
+   		intAir = 8;
+   		break;
+   	case "American Airlines":
+   		intAir = 9;
+   		break;
+   	case "United":
+   		intAir = 10;
+   		break;
+	}
+	
+	return intAir;
+	
+}
+
+/**
  * Convert hotel.
  *
  * @param hotel the hotel
@@ -482,6 +704,48 @@ public static String convertHotel(int hotel){
 }
 
 /**
+ * Convert hotel.
+ *
+ * @param hotel the hotel
+ * @return the string
+ */
+public static int convertFromHotel(String hotel){
+	
+	int intHotel = 0;
+	
+	switch(hotel){
+   	case "Not Selected":
+   		intHotel = 0;
+   		break;
+   	case "Hilton":
+   		intHotel = 1;
+           break;
+   	case "Marriott":
+   		intHotel = 2;
+   		break;
+   	case "Wyndham":
+   		intHotel = 3;
+   		break;
+   	case "Choice":
+   		intHotel = 4;
+   		break;
+   	case "Starwood":
+   		intHotel = 5;
+   		break;
+   	case "Hyatt":
+   		intHotel = 6;
+   		break;
+   	case "Intercontinental":
+   		intHotel = 7;
+   		break;
+	}
+	
+	
+	return intHotel;
+
+}
+
+/**
  * Convert type.
  *
  * @param type the type
@@ -517,6 +781,8 @@ public static String convertType(int type){
 	return stringHotel;
 
 }
+
+
 
 /**
  * Convert type back.
