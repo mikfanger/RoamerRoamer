@@ -14,7 +14,8 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/black_greyh_9_patch"
         android:gravity="center"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:textAlignment="center" />
 
     <ImageButton
         android:id="@+id/imageStartMessage"

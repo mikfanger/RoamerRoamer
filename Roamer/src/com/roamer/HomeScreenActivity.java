@@ -35,6 +35,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +45,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 // TODO: Auto-generated Javadoc
@@ -213,9 +215,17 @@ public class HomeScreenActivity extends Activity {
             @Override
             public void onClick(View v) {
             	
-            	Intent i=new Intent(HomeScreenActivity.this,CreateEventActivity.class);
-                startActivity(i);
-            		  
+            	if(location.getText().toString().equals("Not Selected")){
+            		
+            		Toast toast = Toast.makeText(context, "You need to select a location!",
+          				   Toast.LENGTH_LONG);
+             		toast.setGravity(Gravity.CENTER, -20, 0);
+             		toast.show();
+            	}
+            	else{
+                	Intent i=new Intent(HomeScreenActivity.this,CreateEventActivity.class);
+                    startActivity(i);
+            	}           		  
             }
         });
         
@@ -231,7 +241,6 @@ public class HomeScreenActivity extends Activity {
             }
         });
         
-        //ImageButton locationButton = (ImageButton) findViewById(R.id.imageButtonChangeLocation);
         textCity.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -322,7 +331,6 @@ public class HomeScreenActivity extends Activity {
 				
 				if (!eventList.get(i).getString("Name").equals("Not Selected")){
 					locations.add(eventList.get(i).getString("Name"));
-					System.out.println("Event List location is: "+eventList.get(i).getString("Name") );
 				}			
 				i++;
 			}
