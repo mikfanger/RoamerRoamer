@@ -243,7 +243,12 @@ public class HomeScreenActivity extends Activity {
 
     			dialog.show();
     			
-    			populateCities(dialog);
+    			try {
+					populateCities(dialog);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
     			ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.imageStartMessage);
     			// if button is clicked, close the custom dialog
     			dialogButton.setOnClickListener(new OnClickListener() {
@@ -309,13 +314,22 @@ public class HomeScreenActivity extends Activity {
     	try {
 			List<ParseObject> eventList = query.find();
 			
-			int i = 0;
+			int i = 1;
+			
+			
+			
 			while (i < eventList.size()){
-				locations.add(eventList.get(i).getString("Name"));
+				
+				if (!eventList.get(i).getString("Name").equals("Not Selected")){
+					locations.add(eventList.get(i).getString("Name"));
+					System.out.println("Event List location is: "+eventList.get(i).getString("Name") );
+				}			
 				i++;
 			}
-			
+								
 			Collections.sort(locations, String.CASE_INSENSITIVE_ORDER);
+			
+			locations.add(0,"Not Selected");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -337,21 +351,17 @@ public class HomeScreenActivity extends Activity {
     	
     	if (locations.size() > 0){
     		
-    		System.out.println("Location of city is: "+locNum);
-    		
     		if (locNum == 0){
     			curLocation = "Not Selected";
     		}
     		else{
-    			curLocation = locations.get(locNum-1);
+    			curLocation = locations.get(locNum);
     		}		
     	}
     		
     	//Add tables for MyRoamers
     			query = ParseQuery.getQuery("Roamer");
     	       	query.whereEqualTo("Email", email);
-    	       	
-    	       	System.out.println("Email is: "+email);
     	       	
     	       	ParseObject Roamer = null;
     	       	try{
@@ -405,39 +415,29 @@ public class HomeScreenActivity extends Activity {
      * Populate cities.
      *
      * @param dialog the dialog
+     * @throws ParseException 
      */
-    public void populateCities(Dialog dialog){
+    public void populateCities(Dialog dialog) throws ParseException{
     	
         
         position = (Spinner) dialog.findViewById(R.id.spinnerSelectRoamer);
          
 
         
-        final MyData items1[] = new MyData[locations.size()+1];
+        final MyData items1[] = new MyData[locations.size()];
 
        	//Populate cities in spinner
+        
+        getCurrentLocation();
+        
        	int i = 0;
-       	int m = 1;
-       	
-       	//items1[0] = new MyData("Not Selected", "Value2");
-       	
        	System.out.println (locations);
        	
-       	while (m < items1.length-1){
-       	
+       	while (i < locations.size()){
        		
-       		if (!locations.get(i).equals("Not Selected")){
-       			items1[m] = new MyData(locations.get(i),"Value2");
-       			m++;
-       			System.out.println("Location is: "+locations.get(i));
-       		}
-       		if (locations.get(i).equals("Not Selected")){
-       			items1[0] = new MyData(locations.get(i),"Value2");
-       			System.out.println("Location is: "+locations.get(i));
-       		}      		
-       		
+       		items1[i] = new MyData(locations.get(i),"Value2");
        		i++;
-       		//System.out.println("Location is: "+locations.get(i));
+       		
        	}
       	
            ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
