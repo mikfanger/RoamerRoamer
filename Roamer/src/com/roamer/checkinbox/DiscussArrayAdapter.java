@@ -6,6 +6,7 @@ import java.util.List;
 import com.roamer.R;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -60,7 +61,7 @@ public class DiscussArrayAdapter extends ArrayAdapter<OneComment> {
 
 		if (coment.left == true){
 			senderName.setText(coment.chatName+":");
-			senderName.setTextColor(Color.YELLOW);
+			senderName.setTextColor(Color.GRAY);
 		}
 		if (coment.left == false){
 			senderName.setText("Me"+":");

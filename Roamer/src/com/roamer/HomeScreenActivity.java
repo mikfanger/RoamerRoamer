@@ -336,7 +336,15 @@ public class HomeScreenActivity extends Activity {
     	int locNum = cur.getInt(index);
     	
     	if (locations.size() > 0){
-    		curLocation = locations.get(locNum-1);
+    		
+    		System.out.println("Location of city is: "+locNum);
+    		
+    		if (locNum == 0){
+    			curLocation = "Not Selected";
+    		}
+    		else{
+    			curLocation = locations.get(locNum-1);
+    		}		
     	}
     		
     	//Add tables for MyRoamers
@@ -408,13 +416,28 @@ public class HomeScreenActivity extends Activity {
         final MyData items1[] = new MyData[locations.size()+1];
 
        	//Populate cities in spinner
-       	int i = 1;
+       	int i = 0;
+       	int m = 1;
        	
-       	items1[0] = new MyData("Not Selected", "Value2");
-       	while (i < items1.length){
+       	//items1[0] = new MyData("Not Selected", "Value2");
        	
-       		items1[i] = new MyData(locations.get(i-1),"Value2");
+       	System.out.println (locations);
+       	
+       	while (m < items1.length-1){
+       	
+       		
+       		if (!locations.get(i).equals("Not Selected")){
+       			items1[m] = new MyData(locations.get(i),"Value2");
+       			m++;
+       			System.out.println("Location is: "+locations.get(i));
+       		}
+       		if (locations.get(i).equals("Not Selected")){
+       			items1[0] = new MyData(locations.get(i),"Value2");
+       			System.out.println("Location is: "+locations.get(i));
+       		}      		
+       		
        		i++;
+       		//System.out.println("Location is: "+locations.get(i));
        	}
       	
            ArrayAdapter<MyData> adapter1 = new ArrayAdapter<MyData>(this,
