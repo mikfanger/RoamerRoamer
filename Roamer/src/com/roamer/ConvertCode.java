@@ -538,19 +538,19 @@ public static String convertFromLocation(int location){
 	
 	switch(location){
 
-   	case 1:
+   	case 0:
    		stringTravel ="West";
            break;
-   	case 2:
+   	case 1:
    		stringTravel ="Southwest";
    		break;
-   	case 3:
+   	case 2:
    		stringTravel ="Midwest";
    		break;
-   	case 4:
+   	case 3:
    		stringTravel ="Southeast";
    		break;
-   	case 5:
+   	case 4:
    		stringTravel ="Northeast";
    		break;
 	}
@@ -559,7 +559,32 @@ public static String convertFromLocation(int location){
 	
 }
 
+public static int convertLocation(String location){
+	
+	int intLocation = 0;
+	
+	switch(location){
 
+   	case "West":
+   		intLocation = 0;
+           break;
+   	case "Southwest":
+   		intLocation = 1;
+   		break;
+   	case "Midwest":
+   		intLocation = 2;
+   		break;
+   	case "Southeast":
+   		intLocation = 3;
+   		break;
+   	case"Northeast":
+   		intLocation = 4;
+   		break;
+	}
+	
+	return intLocation;
+	
+}
 
 /**
  * Convert airline.
